@@ -87,9 +87,7 @@ import org.apache.catalina.util.StringManager;
  * @version $Revision: 1.8 $ $Date: 2002/06/09 02:19:43 $
  */
 
-public class FileLogger
-        extends LoggerBase
-        implements Lifecycle {
+public class FileLogger extends LoggerBase implements Lifecycle {
 
 
     // ----------------------------------------------------- Instance Variables
@@ -111,8 +109,7 @@ public class FileLogger
     /**
      * The descriptive information about this implementation.
      */
-    protected static final String info =
-            "org.apache.catalina.logger.FileLogger/1.0";
+    protected static final String info = "org.apache.catalina.logger.FileLogger/1.0";
 
 
     /**
@@ -130,8 +127,7 @@ public class FileLogger
     /**
      * The string manager for this package.
      */
-    private StringManager sm =
-            StringManager.getManager(Constants.Package);
+    private StringManager sm = StringManager.getManager(Constants.Package);
 
 
     /**
@@ -252,8 +248,7 @@ public class FileLogger
 
         boolean oldTimestamp = this.timestamp;
         this.timestamp = timestamp;
-        support.firePropertyChange("timestamp", new Boolean(oldTimestamp),
-                new Boolean(this.timestamp));
+        support.firePropertyChange("timestamp", new Boolean(oldTimestamp), new Boolean(this.timestamp));
 
     }
 
@@ -277,7 +272,7 @@ public class FileLogger
         String tsDate = tsString.substring(0, 10);
 
         // If the date has changed, switch log files
-        if (!date.equals(tsDate)) {
+        if (!date.equals(tsDate)) {     // 日期变化，切换新日志文件
             synchronized (this) {
                 if (!date.equals(tsDate)) {
                     close();
@@ -304,6 +299,8 @@ public class FileLogger
 
     /**
      * Close the currently open log file (if any)
+     *
+     * 负责确保所有的日志消息都写入文件
      */
     private void close() {
 
@@ -319,6 +316,8 @@ public class FileLogger
 
     /**
      * Open the new log file for the date specified by <code>date</code>.
+     *
+     * 在指定目录新建新的日志文件
      */
     private void open() {
 
@@ -330,8 +329,7 @@ public class FileLogger
 
         // Open the current log file
         try {
-            String pathname = dir.getAbsolutePath() + File.separator +
-                    prefix + date + suffix;
+            String pathname = dir.getAbsolutePath() + File.separator + prefix + date + suffix;
             writer = new PrintWriter(new FileWriter(pathname, true), true);
         } catch (IOException e) {
             writer = null;

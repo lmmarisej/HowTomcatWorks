@@ -72,6 +72,8 @@ package org.apache.catalina.loader;
  *
  * @author Craig R. McClanahan
  * @version $Revision: 1.5 $ $Date: 2001/07/22 20:25:10 $
+ *
+ * 实现context关联的类的自动重载功能
  */
 
 public interface Reloader {

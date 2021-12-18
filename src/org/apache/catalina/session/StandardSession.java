@@ -117,7 +117,7 @@ import org.apache.catalina.util.StringManager;
  * @version $Revision: 1.31 $ $Date: 2002/07/23 12:49:11 $
  */
 
-class StandardSession
+class StandardSession       // Catalina实际传递给Servlet的是StandardSessionFacade，不会直接传递StandardSession
         implements HttpSession, Session, Serializable {
 
 
@@ -622,9 +622,8 @@ class StandardSession
             manager.remove(this);
 
         // Unbind any objects associated with this session
-        String keys[] = keys();
-        for (int i = 0; i < keys.length; i++)
-            removeAttribute(keys[i], notify);
+        String[] keys = keys();
+        for (String key : keys) removeAttribute(key, notify);
 
         // Notify interested session event listeners
         if (notify) {
@@ -634,30 +633,22 @@ class StandardSession
         // Notify interested application event listeners
         // FIXME - Assumes we call listeners in reverse order
         Context context = (Context) manager.getContainer();
-        Object listeners[] = context.getApplicationListeners();
+        Object[] listeners = context.getApplicationListeners();
         if (notify && (listeners != null)) {
-            HttpSessionEvent event =
-                    new HttpSessionEvent(getSession());
+            HttpSessionEvent event = new HttpSessionEvent(getSession());
             for (int i = 0; i < listeners.length; i++) {
                 int j = (listeners.length - 1) - i;
                 if (!(listeners[j] instanceof HttpSessionListener))
                     continue;
-                HttpSessionListener listener =
-                        (HttpSessionListener) listeners[j];
+                HttpSessionListener listener = (HttpSessionListener) listeners[j];      // 触发各个组件的session失效事件
                 try {
-                    fireContainerEvent(context,
-                            "beforeSessionDestroyed",
-                            listener);
+                    fireContainerEvent(context, "beforeSessionDestroyed", listener);
                     listener.sessionDestroyed(event);
-                    fireContainerEvent(context,
-                            "afterSessionDestroyed",
-                            listener);
+                    fireContainerEvent(context, "afterSessionDestroyed", listener);
                 } catch (Throwable t) {
                     try {
-                        fireContainerEvent(context,
-                                "afterSessionDestroyed",
-                                listener);
-                    } catch (Exception e) {
+                        fireContainerEvent(context, "afterSessionDestroyed", listener);
+                    } catch (Exception ignored) {
                         ;
                     }
                     // FIXME - should we do anything besides log these?
@@ -705,9 +696,9 @@ class StandardSession
 
         // Notify ActivationListeners
         HttpSessionEvent event = null;
-        String keys[] = keys();
-        for (int i = 0; i < keys.length; i++) {
-            Object attribute = getAttribute(keys[i]);
+        String[] keys = keys();
+        for (String key : keys) {
+            Object attribute = getAttribute(key);
             if (attribute instanceof HttpSessionActivationListener) {
                 if (event == null)
                     event = new HttpSessionEvent(this);

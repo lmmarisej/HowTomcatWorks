@@ -462,15 +462,15 @@ public class SingleSignOn
 
         // Expire any associated sessions
         Session sessions[] = sso.findSessions();
-        for (int i = 0; i < sessions.length; i++) {
+        for (Session session : sessions) {
             if (debug >= 2)
-                log(" Invalidating session " + sessions[i]);
+                log(" Invalidating session " + session);
             // Remove from reverse cache first to avoid recursion
             synchronized (reverse) {
-                reverse.remove(sessions[i]);
+                reverse.remove(session);
             }
             // Invalidate this session
-            sessions[i].expire();
+            session.expire();
         }
 
         // NOTE:  Clients may still possess the old single sign on cookie,
@@ -590,11 +590,11 @@ class SingleSignOnEntry {
     }
 
     public synchronized void addSession(SingleSignOn sso, Session session) {
-        for (int i = 0; i < sessions.length; i++) {
-            if (session == sessions[i])
+        for (Session value : sessions) {
+            if (session == value)
                 return;
         }
-        Session results[] = new Session[sessions.length + 1];
+        Session[] results = new Session[sessions.length + 1];
         System.arraycopy(sessions, 0, results, 0, sessions.length);
         results[sessions.length] = session;
         sessions = results;

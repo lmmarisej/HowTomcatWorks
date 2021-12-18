@@ -20,7 +20,7 @@ public class ClientIPLoggerValve implements Valve, Contained {
             throws IOException, ServletException {
 
         // Pass this request on to the next valve in our pipeline
-        valveContext.invokeNext(request, response);
+        valveContext.invokeNext(request, response);     // 注意，先调用的invokeNext，如果都这样操作，那么basicValue将是最小被调用的
         System.out.println("Client IP Logger Valve");
         ServletRequest sreq = request.getRequest();
         System.out.println(sreq.getRemoteAddr());

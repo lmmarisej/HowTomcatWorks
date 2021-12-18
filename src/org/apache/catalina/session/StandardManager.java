@@ -105,7 +105,7 @@ import org.apache.catalina.util.LifecycleSupport;
  * @version $Revision: 1.19 $ $Date: 2002/06/09 02:19:43 $
  */
 
-public class StandardManager
+public class StandardManager    // 运行时：将session存于内存；关闭时：将session存于文件；启动时：从文件加载session到内存
         extends ManagerBase
         implements Lifecycle, PropertyChangeListener, Runnable {
 
@@ -151,7 +151,7 @@ public class StandardManager
      * temporary working directory provided by our context, available via
      * the <code>javax.servlet.context.tempdir</code> context attribute.
      */
-    private String pathname = "SESSIONS.ser";
+    private String pathname = "SESSIONS.ser";       // session序列化存储的文件名，每个context容器对象都有一个
 
 
     /**
@@ -323,10 +323,8 @@ public class StandardManager
      */
     public Session createSession() {
 
-        if ((maxActiveSessions >= 0) &&
-                (sessions.size() >= maxActiveSessions))
-            throw new IllegalStateException
-                    (sm.getString("standardManager.createSession.ise"));
+        if ((maxActiveSessions >= 0) && (sessions.size() >= maxActiveSessions))
+            throw new IllegalStateException(sm.getString("standardManager.createSession.ise"));
 
         return (super.createSession());
 
@@ -605,8 +603,7 @@ public class StandardManager
 
         // Validate and update our current component state
         if (started)
-            throw new LifecycleException
-                    (sm.getString("standardManager.alreadyStarted"));
+            throw new LifecycleException(sm.getString("standardManager.alreadyStarted"));
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
 

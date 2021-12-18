@@ -77,9 +77,11 @@ import javax.servlet.http.HttpSession;
  *
  * @author Craig R. McClanahan
  * @version $Revision: 1.5 $ $Date: 2001/07/31 02:00:02 $
+ *
+ * Session对象由javax.servlet.http.HttpSession接口表示
  */
 
-public interface Session {
+public interface Session {      // 专门给Catalina内部外观类org.apache.catalina.session.StandardSessionFacade使用的
 
 
     // ----------------------------------------------------- Manifest Constants
@@ -88,13 +90,13 @@ public interface Session {
     /**
      * The SessionEvent event type when a session is created.
      */
-    public static final String SESSION_CREATED_EVENT = "createSession";
+    String SESSION_CREATED_EVENT = "createSession";
 
 
     /**
      * The SessionEvent event type when a session is destroyed.
      */
-    public static final String SESSION_DESTROYED_EVENT = "destroySession";
+    String SESSION_DESTROYED_EVENT = "destroySession";
 
 
     // ------------------------------------------------------------- Properties
@@ -104,7 +106,7 @@ public interface Session {
      * Return the authentication type used to authenticate our cached
      * Principal, if any.
      */
-    public String getAuthType();
+    String getAuthType();
 
 
     /**
@@ -113,13 +115,13 @@ public interface Session {
      *
      * @param authType The new cached authentication type
      */
-    public void setAuthType(String authType);
+    void setAuthType(String authType);
 
 
     /**
      * Return the creation time for this session.
      */
-    public long getCreationTime();
+    long getCreationTime();
 
 
     /**
@@ -128,13 +130,13 @@ public interface Session {
      *
      * @param time The new creation time
      */
-    public void setCreationTime(long time);
+    void setCreationTime(long time);
 
 
     /**
      * Return the session identifier for this session.
      */
-    public String getId();
+    String getId();
 
 
     /**
@@ -142,7 +144,7 @@ public interface Session {
      *
      * @param id The new session identifier
      */
-    public void setId(String id);
+    void setId(String id);
 
 
     /**
@@ -150,7 +152,7 @@ public interface Session {
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
-    public String getInfo();
+    String getInfo();
 
 
     /**
@@ -159,13 +161,13 @@ public interface Session {
      * GMT.  Actions that your application takes, such as getting or setting
      * a value associated with the session, do not affect the access time.
      */
-    public long getLastAccessedTime();
+    long getLastAccessedTime();
 
 
     /**
      * Return the Manager within which this Session is valid.
      */
-    public Manager getManager();
+    Manager getManager();
 
 
     /**
@@ -173,7 +175,7 @@ public interface Session {
      *
      * @param manager The new Manager
      */
-    public void setManager(Manager manager);
+    void setManager(Manager manager);
 
 
     /**
@@ -181,7 +183,7 @@ public interface Session {
      * before the servlet container will invalidate the session.  A negative
      * time indicates that the session should never time out.
      */
-    public int getMaxInactiveInterval();
+    int getMaxInactiveInterval();
 
 
     /**
@@ -191,7 +193,7 @@ public interface Session {
      *
      * @param interval The new maximum interval
      */
-    public void setMaxInactiveInterval(int interval);
+    void setMaxInactiveInterval(int interval);
 
 
     /**
@@ -199,7 +201,7 @@ public interface Session {
      *
      * @param isNew The new value for the <code>isNew</code> flag
      */
-    public void setNew(boolean isNew);
+    void setNew(boolean isNew);
 
 
     /**
@@ -209,7 +211,7 @@ public interface Session {
      * <code>Realm.authenticate()</code> calls on every request.  If there
      * is no current associated Principal, return <code>null</code>.
      */
-    public Principal getPrincipal();
+    Principal getPrincipal();
 
 
     /**
@@ -220,14 +222,14 @@ public interface Session {
      *
      * @param principal The new Principal, or <code>null</code> if none
      */
-    public void setPrincipal(Principal principal);
+    void setPrincipal(Principal principal);
 
 
     /**
      * Return the <code>HttpSession</code> for which this object
      * is the facade.
      */
-    public HttpSession getSession();
+    HttpSession getSession();    // 获取被外观类修饰的Session对象
 
 
     /**
@@ -235,13 +237,13 @@ public interface Session {
      *
      * @param isValid The new value for the <code>isValid</code> flag
      */
-    public void setValid(boolean isValid);
+    void setValid(boolean isValid);
 
 
     /**
      * Return the <code>isValid</code> flag for this session.
      */
-    public boolean isValid();
+    boolean isValid();
 
 
     // --------------------------------------------------------- Public Methods
@@ -252,20 +254,20 @@ public interface Session {
      * should be called by the context when a request comes in for a particular
      * session, even if the application does not reference it.
      */
-    public void access();
+    void access();       // 每次session被访问，都会调用以对session的最后访问时间修改
 
 
     /**
      * Add a session event listener to this component.
      */
-    public void addSessionListener(SessionListener listener);
+    void addSessionListener(SessionListener listener);
 
 
     /**
      * Perform the internal processing required to invalidate this session,
      * without triggering an exception if the session has already expired.
      */
-    public void expire();
+    void expire();
 
 
     /**
@@ -274,21 +276,21 @@ public interface Session {
      *
      * @param name Name of the note to be returned
      */
-    public Object getNote(String name);
+    Object getNote(String name);
 
 
     /**
      * Return an Iterator containing the String names of all notes bindings
      * that exist for this session.
      */
-    public Iterator getNoteNames();
+    Iterator getNoteNames();
 
 
     /**
      * Release all object references, and initialize instance variables, in
      * preparation for reuse of this object.
      */
-    public void recycle();
+    void recycle();
 
 
     /**
@@ -297,13 +299,13 @@ public interface Session {
      *
      * @param name Name of the note to be removed
      */
-    public void removeNote(String name);
+    void removeNote(String name);
 
 
     /**
      * Remove a session event listener from this component.
      */
-    public void removeSessionListener(SessionListener listener);
+    void removeSessionListener(SessionListener listener);
 
 
     /**
@@ -313,7 +315,7 @@ public interface Session {
      * @param name  Name to which the object should be bound
      * @param value Object to be bound to the specified name
      */
-    public void setNote(String name, Object value);
+    void setNote(String name, Object value);
 
 
 }

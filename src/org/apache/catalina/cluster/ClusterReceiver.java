@@ -74,7 +74,8 @@ import org.apache.catalina.Logger;
  * @version $Revision: 1.2 $, $Date: 2001/07/22 20:25:06 $
  */
 
-public interface ClusterReceiver extends Runnable {
+public interface ClusterReceiver    // 用于从其他节点接收消息
+        extends Runnable {
 
     // --------------------------------------------------------- Public Methods
 

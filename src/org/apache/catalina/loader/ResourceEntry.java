@@ -73,6 +73,8 @@ import java.util.jar.Manifest;
  *
  * @author Remy Maucherat
  * @version $Revision: 1.1 $ $Date: 2002/07/22 19:52:40 $
+ *
+ * 保存其所代表的的class文件的字节流、最后修改时间、Manifest信息等
  */
 public class ResourceEntry {
 
@@ -93,7 +95,7 @@ public class ResourceEntry {
     /**
      * Loaded class.
      */
-    public Class loadedClass = null;
+    public volatile Class loadedClass = null;
 
 
     /**

@@ -39,7 +39,7 @@ public class SimpleContextValve implements Valve, Contained {
         // Select the Wrapper to be used for this Request
         Wrapper wrapper = null;
         try {
-            wrapper = (Wrapper) context.map(request, true);
+            wrapper = (Wrapper) context.map(request, true);     // 根据请求对象，返回负责处理当前请求的wrapper实例
         } catch (IllegalArgumentException e) {
             badRequest(requestURI, (HttpServletResponse) response.getResponse());
             return;
@@ -50,7 +50,7 @@ public class SimpleContextValve implements Valve, Contained {
         }
         // Ask this Wrapper to process this Request
         response.setContext(context);
-        wrapper.invoke(request, response);
+        wrapper.invoke(request, response);      // 对每个独立的servlet的处理是由wrapper
     }
 
     public String getInfo() {

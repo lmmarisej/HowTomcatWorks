@@ -17,6 +17,7 @@ import org.apache.catalina.connector.http.HttpConnector;
 public final class Bootstrap2 {
     public static void main(String[] args) {
         HttpConnector connector = new HttpConnector();
+
         Wrapper wrapper1 = new SimpleWrapper();
         wrapper1.setName("Primitive");
         wrapper1.setServletClass("PrimitiveServlet");
@@ -34,15 +35,16 @@ public final class Bootstrap2 {
         ((Pipeline) context).addValve(valve1);
         ((Pipeline) context).addValve(valve2);
 
-        Mapper mapper = new SimpleContextMapper();
+        Mapper mapper = new SimpleContextMapper();      // servlet容器支持使用不同的映射器来支持不同的链接协议
         mapper.setProtocol("http");
         context.addMapper(mapper);
         Loader loader = new SimpleLoader();
-        context.setLoader(loader);
+        context.setLoader(loader);  // wrapper1、wrapper2共享
         // context.addServletMapping(pattern, name);
         context.addServletMapping("/Primitive", "Primitive");
         context.addServletMapping("/Modern", "Modern");
-        connector.setContainer(context);
+
+        connector.setContainer(context);    // 连接器关联容器，也就关联了映射器
         try {
             connector.initialize();
             connector.start();

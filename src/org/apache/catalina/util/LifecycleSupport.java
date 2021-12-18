@@ -111,7 +111,7 @@ public final class LifecycleSupport {
     /**
      * The set of registered LifecycleListeners for event notifications.
      */
-    private LifecycleListener listeners[] = new LifecycleListener[0];
+    private LifecycleListener[] listeners = new LifecycleListener[0];
 
 
     // --------------------------------------------------------- Public Methods
@@ -125,10 +125,8 @@ public final class LifecycleSupport {
     public void addLifecycleListener(LifecycleListener listener) {
 
         synchronized (listeners) {
-            LifecycleListener results[] =
-                    new LifecycleListener[listeners.length + 1];
-            for (int i = 0; i < listeners.length; i++)
-                results[i] = listeners[i];
+            LifecycleListener[] results = new LifecycleListener[listeners.length + 1];
+            System.arraycopy(listeners, 0, results, 0, listeners.length);
             results[listeners.length] = listener;
             listeners = results;
         }
@@ -158,12 +156,12 @@ public final class LifecycleSupport {
     public void fireLifecycleEvent(String type, Object data) {
 
         LifecycleEvent event = new LifecycleEvent(lifecycle, type, data);
-        LifecycleListener interested[] = null;
+        LifecycleListener[] interested = null;
         synchronized (listeners) {
-            interested = (LifecycleListener[]) listeners.clone();
+            interested = (LifecycleListener[]) listeners.clone();   // 拷贝原数组
         }
-        for (int i = 0; i < interested.length; i++)
-            interested[i].lifecycleEvent(event);
+        for (LifecycleListener lifecycleListener : interested)
+            lifecycleListener.lifecycleEvent(event);    // 调用每一个监听器，传入要触发的事件
 
     }
 
@@ -185,8 +183,7 @@ public final class LifecycleSupport {
             }
             if (n < 0)
                 return;
-            LifecycleListener results[] =
-                    new LifecycleListener[listeners.length - 1];
+            LifecycleListener[] results = new LifecycleListener[listeners.length - 1];
             int j = 0;
             for (int i = 0; i < listeners.length; i++) {
                 if (i != n)

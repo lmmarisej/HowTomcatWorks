@@ -306,6 +306,8 @@ public abstract class ContainerBase
 
     /**
      * The property change support for this component.
+     *
+     * 监听对象属性的变化
      */
     protected PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -332,8 +334,7 @@ public abstract class ContainerBase
 
         int oldDebug = this.debug;
         this.debug = debug;
-        support.firePropertyChange("debug", new Integer(oldDebug),
-                new Integer(this.debug));
+        support.firePropertyChange("debug", Integer.valueOf(oldDebug), Integer.valueOf(this.debug));
 
     }
 
@@ -884,7 +885,7 @@ public abstract class ContainerBase
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
 
-        support.addPropertyChangeListener(listener);
+        support.addPropertyChangeListener(listener);        // 添加对象属性变化时的回调
 
     }
 
@@ -913,7 +914,7 @@ public abstract class ContainerBase
     public Container[] findChildren() {
 
         synchronized (children) {
-            Container results[] = new Container[children.size()];
+            Container[] results = new Container[children.size()];
             return ((Container[]) children.values().toArray(results));
         }
 
@@ -962,7 +963,7 @@ public abstract class ContainerBase
     public Mapper[] findMappers() {
 
         synchronized (mappers) {
-            Mapper results[] = new Mapper[mappers.size()];
+            Mapper[] results = new Mapper[mappers.size()];
             return ((Mapper[]) mappers.values().toArray(results));
         }
 

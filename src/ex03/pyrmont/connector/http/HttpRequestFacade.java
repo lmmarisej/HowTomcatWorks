@@ -15,7 +15,7 @@ import javax.servlet.ServletInputStream;
 
 public class HttpRequestFacade implements HttpServletRequest {
 
-    private HttpServletRequest request;
+    private HttpServletRequest request;     // 代理外界对HttpServletRequest的访问
 
     public HttpRequestFacade(HttpRequest request) {
         this.request = request;

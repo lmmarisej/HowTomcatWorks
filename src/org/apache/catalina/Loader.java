@@ -108,13 +108,13 @@ public interface Loader {
     /**
      * Return the Java class loader to be used by this Container.
      */
-    public ClassLoader getClassLoader();
+    ClassLoader getClassLoader();
 
 
     /**
      * Return the Container with which this Loader has been associated.
      */
-    public Container getContainer();
+    Container getContainer();
 
 
     /**
@@ -122,13 +122,13 @@ public interface Loader {
      *
      * @param container The associated Container
      */
-    public void setContainer(Container container);
+    void setContainer(Container container);
 
 
     /**
      * Return the DefaultContext with which this Manager is associated.
      */
-    public DefaultContext getDefaultContext();
+    DefaultContext getDefaultContext();
 
 
     /**
@@ -136,14 +136,14 @@ public interface Loader {
      *
      * @param defaultContext The newly associated DefaultContext
      */
-    public void setDefaultContext(DefaultContext defaultContext);
+    void setDefaultContext(DefaultContext defaultContext);
 
 
     /**
      * Return the "follow standard delegation model" flag used to configure
      * our ClassLoader.
      */
-    public boolean getDelegate();
+    boolean getDelegate();
 
 
     /**
@@ -152,7 +152,7 @@ public interface Loader {
      *
      * @param delegate The new flag
      */
-    public void setDelegate(boolean delegate);
+    void setDelegate(boolean delegate);
 
 
     /**
@@ -160,13 +160,13 @@ public interface Loader {
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
-    public String getInfo();
+    String getInfo();
 
 
     /**
      * Return the reloadable flag for this Loader.
      */
-    public boolean getReloadable();
+    boolean getReloadable();
 
 
     /**
@@ -174,7 +174,7 @@ public interface Loader {
      *
      * @param reloadable The new reloadable flag
      */
-    public void setReloadable(boolean reloadable);
+    void setReloadable(boolean reloadable);
 
 
     // --------------------------------------------------------- Public Methods
@@ -185,7 +185,7 @@ public interface Loader {
      *
      * @param listener The listener to add
      */
-    public void addPropertyChangeListener(PropertyChangeListener listener);
+    void addPropertyChangeListener(PropertyChangeListener listener);
 
 
     /**
@@ -193,21 +193,21 @@ public interface Loader {
      *
      * @param repository Repository to be added
      */
-    public void addRepository(String repository);
+    void addRepository(String repository);
 
 
     /**
      * Return the set of repositories defined for this class loader.
      * If none are defined, a zero-length array is returned.
      */
-    public String[] findRepositories();
+    String[] findRepositories();
 
 
     /**
      * Has the internal repository associated with this Loader been modified,
      * such that the loaded classes should be reloaded?
      */
-    public boolean modified();
+    boolean modified();
 
 
     /**
@@ -215,7 +215,7 @@ public interface Loader {
      *
      * @param listener The listener to remove
      */
-    public void removePropertyChangeListener(PropertyChangeListener listener);
+    void removePropertyChangeListener(PropertyChangeListener listener);
 
 
 }

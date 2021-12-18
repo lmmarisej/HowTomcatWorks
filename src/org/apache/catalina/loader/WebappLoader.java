@@ -122,7 +122,12 @@ import org.apache.catalina.util.StringManager;
  */
 
 public class WebappLoader
-        implements Lifecycle, Loader, PropertyChangeListener, Runnable {
+        implements
+        Lifecycle,  // 一键式启停
+        Loader,     // 负责载入web应用程序所使用的到的类
+        PropertyChangeListener,
+        Runnable    // 实现一个线程不断调用Reloader.modified方法检测是否发生修改
+{
 
 
     // ----------------------------------------------------------- Constructors
@@ -192,7 +197,7 @@ public class WebappLoader
      * The "follow standard delegation model" flag that will be used to
      * configure our ClassLoader.
      */
-    private boolean delegate = false;
+    private boolean delegate = false;       // 指明是否委托给一个父类加载器
 
 
     /**
@@ -213,8 +218,7 @@ public class WebappLoader
      * This class should extend WebappClassLoader, otherwise, a different
      * loader implementation must be used.
      */
-    private String loaderClass =
-            "org.apache.catalina.loader.WebappClassLoader";
+    private String loaderClass = "org.apache.catalina.loader.WebappClassLoader";
 
 
     /**
@@ -232,7 +236,7 @@ public class WebappLoader
     /**
      * The set of repositories associated with this class loader.
      */
-    private String repositories[] = new String[0];
+    private String[] repositories = new String[0];
 
 
     /**
@@ -416,8 +420,7 @@ public class WebappLoader
 
         boolean oldDelegate = this.delegate;
         this.delegate = delegate;
-        support.firePropertyChange("delegate", new Boolean(oldDelegate),
-                new Boolean(this.delegate));
+        support.firePropertyChange("delegate", Boolean.valueOf(oldDelegate), Boolean.valueOf(this.delegate));
 
     }
 
@@ -516,13 +519,12 @@ public class WebappLoader
         if (debug >= 1)
             log(sm.getString("webappLoader.addRepository", repository));
 
-        for (int i = 0; i < repositories.length; i++) {
-            if (repository.equals(repositories[i]))
+        for (String s : repositories) {
+            if (repository.equals(s))
                 return;
         }
-        String results[] = new String[repositories.length + 1];
-        for (int i = 0; i < repositories.length; i++)
-            results[i] = repositories[i];
+        String[] results = new String[repositories.length + 1];
+        System.arraycopy(repositories, 0, results, 0, repositories.length);
         results[repositories.length] = repository;
         repositories = results;
 
@@ -573,7 +575,7 @@ public class WebappLoader
      */
     public String toString() {
 
-        StringBuffer sb = new StringBuffer("WebappLoader[");
+        StringBuilder sb = new StringBuilder("WebappLoader[");
         if (container != null)
             sb.append(container.getName());
         sb.append("]");
@@ -629,21 +631,19 @@ public class WebappLoader
 
         // Validate and update our current component state
         if (started)
-            throw new LifecycleException
-                    (sm.getString("webappLoader.alreadyStarted"));
+            throw new LifecycleException(sm.getString("webappLoader.alreadyStarted"));
         if (debug >= 1)
             log(sm.getString("webappLoader.starting"));
-        lifecycle.fireLifecycleEvent(START_EVENT, null);
+        lifecycle.fireLifecycleEvent(START_EVENT, null);    // 通知其它组件启动
         started = true;
 
         if (container.getResources() == null)
             return;
 
         // Register a stream handler factory for the JNDI protocol
-        URLStreamHandlerFactory streamHandlerFactory =
-                new DirContextURLStreamHandlerFactory();
+        URLStreamHandlerFactory streamHandlerFactory = new DirContextURLStreamHandlerFactory();
         try {
-            URL.setURLStreamHandlerFactory(streamHandlerFactory);
+            URL.setURLStreamHandlerFactory(streamHandlerFactory);   // 指定构造URLStreamHandler的工厂实例
         } catch (Throwable t) {
             // Ignore the error here.
         }
@@ -651,27 +651,26 @@ public class WebappLoader
         // Construct a class loader based on our current repositories list
         try {
 
-            classLoader = createClassLoader();
+            classLoader = createClassLoader();      // 创建一个类加载器，默认使用org.apache.catalina.loader.WebappClassLoader
             classLoader.setResources(container.getResources());
             classLoader.setDebug(this.debug);
             classLoader.setDelegate(this.delegate);
 
-            for (int i = 0; i < repositories.length; i++) {
-                classLoader.addRepository(repositories[i]);
+            for (String repository : repositories) {
+                classLoader.addRepository(repository);  // 向URLClassLoader追加被加载类的搜索路径
             }
 
             // Configure our repositories
-            setRepositories();
-            setClassPath();
+            setRepositories();      // 给类加载器设置加载路径和jar包
+            setClassPath();         // 将类加载器加载路径设置为容器org.apache.catalina.jsp_classpath属性的classpath
 
             setPermissions();
 
-            if (classLoader instanceof Lifecycle)
-                ((Lifecycle) classLoader).start();
+            if (classLoader != null)
+                ((Lifecycle) classLoader).start();      // 启动classLoader组件
 
             // Binding the Webapp class loader to the directory context
-            DirContextURLStreamHandler.bind
-                    ((ClassLoader) classLoader, this.container.getResources());
+            DirContextURLStreamHandler.bind(classLoader, this.container.getResources());
 
         } catch (Throwable t) {
             throw new LifecycleException("start: ", t);
@@ -684,7 +683,7 @@ public class WebappLoader
         if (reloadable) {
             log(sm.getString("webappLoader.reloading"));
             try {
-                threadStart();
+                threadStart();      // 启动一个守护线程以支持自动重载，默认支持/WEB-INF/lib和/WEB-INF/classes两个目录
             } catch (IllegalStateException e) {
                 throw new LifecycleException(e);
             }
@@ -764,13 +763,12 @@ public class WebappLoader
     /**
      * Create associated classLoader.
      */
-    private WebappClassLoader createClassLoader()
-            throws Exception {
+    private WebappClassLoader createClassLoader() throws Exception {
 
-        Class clazz = Class.forName(loaderClass);
+        Class clazz = Class.forName(loaderClass);       // 默认类加载器
         WebappClassLoader classLoader = null;
 
-        if (parentClassLoader == null) {
+        if (parentClassLoader == null) {        // 通过构造器指定parentClassLoader
             // Will cause a ClassCast is the class does not extend WCL, but
             // this is on purpose (the exception will be caught and rethrown)
             classLoader = (WebappClassLoader) clazz.newInstance();
@@ -778,6 +776,7 @@ public class WebappLoader
             Class[] argTypes = {ClassLoader.class};
             Object[] args = {parentClassLoader};
             Constructor constr = clazz.getConstructor(argTypes);
+            // 将用户自定义的ClassLoader作为WebappClassLoader的父加载器
             classLoader = (WebappClassLoader) constr.newInstance(args);
         }
 
@@ -966,8 +965,7 @@ public class WebappLoader
             return;
 
         // Loading the work directory
-        File workDir =
-                (File) servletContext.getAttribute(Globals.WORK_DIR_ATTR);
+        File workDir = (File) servletContext.getAttribute(Globals.WORK_DIR_ATTR);
         if (workDir == null)
             return;
         log(sm.getString("webappLoader.deploy", workDir.getAbsolutePath()));
@@ -993,8 +991,7 @@ public class WebappLoader
 
             File classRepository = null;
 
-            String absoluteClassesPath =
-                    servletContext.getRealPath(classesPath);
+            String absoluteClassesPath = servletContext.getRealPath(classesPath);
 
             if (absoluteClassesPath != null) {
 
@@ -1099,12 +1096,11 @@ public class WebappLoader
         // Validate our current state information
         if (!(container instanceof Context))
             return;
-        ServletContext servletContext =
-                ((Context) container).getServletContext();
+        ServletContext servletContext = ((Context) container).getServletContext();
         if (servletContext == null)
             return;
 
-        StringBuffer classpath = new StringBuffer();
+        StringBuilder classpath = new StringBuilder();
 
         // Assemble the class path information from our class loader chain
         ClassLoader loader = getClassLoader();
@@ -1113,24 +1109,22 @@ public class WebappLoader
         while ((layers < 3) && (loader != null)) {
             if (!(loader instanceof URLClassLoader))
                 break;
-            URL repositories[] =
-                    ((URLClassLoader) loader).getURLs();
-            for (int i = 0; i < repositories.length; i++) {
-                String repository = repositories[i].toString();
+            URL[] repositories = ((URLClassLoader) loader).getURLs();
+            for (URL url : repositories) {
+                String repository = url.toString();
                 if (repository.startsWith("file://"))
                     repository = repository.substring(7);
                 else if (repository.startsWith("file:"))
                     repository = repository.substring(5);
                 else if (repository.startsWith("jndi:"))
-                    repository =
-                            servletContext.getRealPath(repository.substring(5));
+                    repository = servletContext.getRealPath(repository.substring(5));
                 else
                     continue;
                 if (repository == null)
                     continue;
                 if (n > 0)
                     classpath.append(File.pathSeparator);
-                classpath.append(repository);
+                classpath.append(repository);   // 将指定目录的所有目录都设置为classpath路径
                 n++;
             }
             loader = loader.getParent();
@@ -1138,8 +1132,7 @@ public class WebappLoader
         }
 
         // Store the assembled class path as a servlet context attribute
-        servletContext.setAttribute(Globals.CLASS_PATH_ATTR,
-                classpath.toString());
+        servletContext.setAttribute(Globals.CLASS_PATH_ATTR, classpath.toString());     // 给容器设置加载路径属性
 
     }
 
@@ -1239,11 +1232,9 @@ public class WebappLoader
 
         // Validate our current state
         if (!reloadable)
-            throw new IllegalStateException
-                    (sm.getString("webappLoader.notReloadable"));
+            throw new IllegalStateException(sm.getString("webappLoader.notReloadable"));
         if (!(container instanceof Context))
-            throw new IllegalStateException
-                    (sm.getString("webappLoader.notContext"));
+            throw new IllegalStateException(sm.getString("webappLoader.notContext"));
 
         // Start the background thread
         if (debug >= 1)
@@ -1292,28 +1283,25 @@ public class WebappLoader
         ClassLoader classLoader = getClassLoader();
         if (classLoader instanceof WebappClassLoader) {
 
-            Extension available[] =
-                    ((WebappClassLoader) classLoader).findAvailable();
-            Extension required[] =
-                    ((WebappClassLoader) classLoader).findRequired();
+            Extension[] available = ((WebappClassLoader) classLoader).findAvailable();
+            Extension[] required = ((WebappClassLoader) classLoader).findRequired();
             if (debug >= 1)
                 log("Optional Packages:  available=" +
                         available.length + ", required=" +
                         required.length);
 
-            for (int i = 0; i < required.length; i++) {
+            for (Extension extension : required) {
                 if (debug >= 1)
-                    log("Checking for required package " + required[i]);
+                    log("Checking for required package " + extension);
                 boolean found = false;
-                for (int j = 0; j < available.length; j++) {
-                    if (available[j].isCompatibleWith(required[i])) {
+                for (Extension value : available) {
+                    if (value.isCompatibleWith(extension)) {
                         found = true;
                         break;
                     }
                 }
                 if (!found)
-                    throw new LifecycleException
-                            ("Missing optional package " + required[i]);
+                    throw new LifecycleException("Missing optional package " + extension);
             }
 
         }

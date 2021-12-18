@@ -97,6 +97,8 @@ public interface Logger {
 
     public static final int INFORMATION = 3;
 
+    // debug日志应该包含上面所有日志类型，因此只有当设置的日志级别等于DEBUG时才全被记录
+    // 小于debug的，debug日志将不会记录
     public static final int DEBUG = 4;
 
 

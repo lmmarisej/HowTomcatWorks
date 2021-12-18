@@ -74,7 +74,8 @@ import org.apache.catalina.Logger;
  * @version $Revision: 1.2 $, $Date: 2001/07/22 20:25:06 $
  */
 
-public interface ClusterSender {
+public interface ClusterSender  // 用于向其他节点发送消息
+{
 
     // --------------------------------------------------------- Public Methods
 

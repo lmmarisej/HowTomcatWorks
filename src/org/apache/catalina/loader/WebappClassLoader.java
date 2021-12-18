@@ -64,44 +64,28 @@
 
 package org.apache.catalina.loader;
 
-import java.io.File;
-import java.io.FilePermission;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.security.AccessControlException;
-import java.security.AccessController;
-import java.security.CodeSource;
-import java.security.Permission;
-import java.security.PermissionCollection;
-import java.security.Policy;
-import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
-import java.util.jar.JarFile;
-import java.util.jar.JarEntry;
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
-import java.util.jar.Attributes.Name;
-
-import javax.naming.directory.DirContext;
-import javax.naming.NamingException;
-import javax.naming.NamingEnumeration;
-import javax.naming.NameClassPair;
-
 import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
-
 import org.apache.naming.JndiPermission;
-import org.apache.naming.resources.ResourceAttributes;
 import org.apache.naming.resources.Resource;
+import org.apache.naming.resources.ResourceAttributes;
+
+import javax.naming.NameClassPair;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.*;
+import java.util.*;
+import java.util.jar.Attributes;
+import java.util.jar.Attributes.Name;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 /**
  * Specialized web application class loader.
@@ -140,21 +124,58 @@ import org.apache.naming.resources.Resource;
  * @author Craig R. McClanahan
  * @version $Revision: 1.46 $ $Date: 2002/08/28 10:05:05 $
  */
-public class WebappClassLoader
+// tomcat启动脚本里重写了classpath，这就导致了AppClassLoader不会加载web工程中用户自己写的的类，用户web程序中的类加载就用这个类加载器
+// 在此之前会先用StandardClassLoader类加载。
+public class WebappClassLoader      // 每个项目一个WebappClassLoader可以达到隔绝项目类冲突的问题
         extends URLClassLoader
         implements Reloader, Lifecycle {
 
-    protected class PrivilegedFindResource
-            implements PrivilegedAction {
+    protected class PrivilegedFindResource implements PrivilegedAction {
 
-        private String name;
-        private String path;
+        private final String name;
+        private final String path;
 
         PrivilegedFindResource(String name, String path) {
             this.name = name;
             this.path = path;
         }
 
+        /*
+
+        Java的安全模型
+            Java程序可以安全地访问资源，并进行可控的授权。
+
+        沙箱模型
+            提供了一个非常受限的运行环境供应用程序运行。
+           优点
+                在沙箱中的程序没有访问操作系统资源的权限，比如访问文件、网络等等。这个版本的安全模型有效地将远程代码和本地代码隔离开，
+                防止恶意的远程代码对本地计算机系统的破坏。
+           缺点
+                当一些没有权限的代码希望访问系统资源的时候，沙箱模型的限制将阻碍这些功能的实现。
+           改进
+                在Java 1.2中，又再次对Java的沙箱模型进行了改进，增加了代码签名机制。不管是远程代码还是本地代码，都需要按照安全策略的配置，
+                由类加载器加载到JVM中权限不同的运行空间，进行权限的差异化控制。
+        域模型
+            虚拟机会将所有代码加载到不同的域中。
+
+            系统域负责和操作系统的资源进行交互，而各个应用域对系统资源的访问需要通过系统域的代理来实现受限访问。
+            JVM中的不同域关联了不同的权限，处于域中的类将拥有这个域所包含的所有权限。
+
+        */
+//        java.security.AccessController.doPrivileged(java.security.PrivilegedAction<T>)
+        // doPrivileged：只要Caller执行了doPrivileged()方法，那么这个Caller就会被标记为privilege，Java安全模型就不会去检查这个Caller的权限。
+        // 在进行权限检查的时候，回溯调用链的过程中，一旦遇到被标记为privilege的Caller，那么AccessController将停止向上回溯，权限检查通过。
+        /*
+        * 建立个my.policy文件
+        *   grant codeBase  "file:/home/h/client/*"   {
+        *       permission java.io.FilePermission  "/1.txt","read";
+        *   };
+        * 意思：/home/h/client/下面的jar包或class类 可以读取/1.txt.
+        *
+        * 启动配置
+        *   -Djava.security.manager
+        *   -Djava.security.policy=/home/h/my.policy
+        * */
         public Object run() {
             return findResourceInternal(name, path);
         }
@@ -172,6 +193,8 @@ public class WebappClassLoader
      * components that have been integrated into the JDK for later versions,
      * but where the corresponding JAR files are required to run on
      * earlier versions.
+     *
+     * 不允许载入的类
      */
     private static final String[] triggers = {
             "javax.servlet.Servlet"                     // Servlet API
@@ -348,14 +371,14 @@ public class WebappClassLoader
      * A list of read File and Jndi Permission's required if this loader
      * is for a web application context.
      */
-    private ArrayList permissionList = new ArrayList();
+    private final ArrayList permissionList = new ArrayList();
 
 
     /**
      * The PermissionCollection for each CodeSource for a web
      * application context.
      */
-    private HashMap loaderPC = new HashMap();
+    private final HashMap loaderPC = new HashMap();
 
 
     /**
@@ -391,7 +414,7 @@ public class WebappClassLoader
     /**
      * All permission.
      */
-    private Permission allPermission = new java.security.AllPermission();
+    private final Permission allPermission = new java.security.AllPermission();
 
 
     // ------------------------------------------------------------- Properties
@@ -539,8 +562,7 @@ public class WebappClassLoader
 
         // Ignore any of the standard repositories, as they are set up using
         // either addJar or addRepository
-        if (repository.startsWith("/WEB-INF/lib")
-                || repository.startsWith("/WEB-INF/classes"))
+        if (repository.startsWith("/WEB-INF/lib") || repository.startsWith("/WEB-INF/classes"))
             return;
 
         // Add this repository to our underlying class loader
@@ -710,14 +732,14 @@ public class WebappClassLoader
                 break;
             if (!(loader instanceof WebappClassLoader))
                 continue;
-            Extension extensions[] =
+            Extension[] extensions =
                     ((WebappClassLoader) loader).findAvailable();
             for (int i = 0; i < extensions.length; i++)
                 results.add(extensions[i]);
         }
 
         // Return the results as an array
-        Extension extensions[] = new Extension[results.size()];
+        Extension[] extensions = new Extension[results.size()];
         return ((Extension[]) results.toArray(extensions));
 
     }
@@ -757,14 +779,14 @@ public class WebappClassLoader
                 break;
             if (!(loader instanceof WebappClassLoader))
                 continue;
-            Extension extensions[] =
+            Extension[] extensions =
                     ((WebappClassLoader) loader).findRequired();
             for (int i = 0; i < extensions.length; i++)
                 results.add(extensions[i]);
         }
 
         // Return the results as an array
-        Extension extensions[] = new Extension[results.size()];
+        Extension[] extensions = new Extension[results.size()];
         return ((Extension[]) results.toArray(extensions));
 
     }
@@ -868,33 +890,31 @@ public class WebappClassLoader
      */
     public String toString() {
 
-        StringBuffer sb = new StringBuffer("WebappClassLoader\r\n");
+        StringBuilder sb = new StringBuilder("WebappClassLoader\r\n");
         sb.append("  available:\r\n");
-        Iterator available = this.available.iterator();
-        while (available.hasNext()) {
+        for (Object o : this.available) {
             sb.append("    ");
-            sb.append(available.next().toString());
+            sb.append(o.toString());
             sb.append("\r\n");
         }
         sb.append("  delegate: ");
         sb.append(delegate);
         sb.append("\r\n");
         sb.append("  repositories:\r\n");
-        for (int i = 0; i < repositories.length; i++) {
+        for (String repository : repositories) {
             sb.append("    ");
-            sb.append(repositories[i]);
+            sb.append(repository);
             sb.append("\r\n");
         }
         sb.append("  required:\r\n");
-        Iterator required = this.required.iterator();
-        while (required.hasNext()) {
+        for (Object o : this.required) {
             sb.append("    ");
-            sb.append(required.next().toString());
+            sb.append(o.toString());
             sb.append("\r\n");
         }
         if (this.parent != null) {
             sb.append("----------> Parent Classloader:\r\n");
-            sb.append(this.parent.toString());
+            sb.append(this.parent);
             sb.append("\r\n");
         }
         return (sb.toString());
@@ -1002,8 +1022,7 @@ public class WebappClassLoader
         ResourceEntry entry = (ResourceEntry) resourceEntries.get(name);
         if (entry == null) {
             if (securityManager != null) {
-                PrivilegedAction dp =
-                        new PrivilegedFindResource(name, name);
+                PrivilegedAction dp = new PrivilegedFindResource(name, name);
                 entry = (ResourceEntry) AccessController.doPrivileged(dp);
             } else {
                 entry = findResourceInternal(name, name);
@@ -1018,7 +1037,7 @@ public class WebappClassLoader
 
         if (debug >= 3) {
             if (url != null)
-                log("    --> Returning '" + url.toString() + "'");
+                log("    --> Returning '" + url + "'");
             else
                 log("    --> Resource not found, returning null");
         }
@@ -1059,7 +1078,7 @@ public class WebappClassLoader
                 } catch (MalformedURLException e) {
                     // Ignore
                 }
-            } catch (NamingException e) {
+            } catch (NamingException ignored) {
             }
         }
 
@@ -1131,7 +1150,7 @@ public class WebappClassLoader
             url = loader.getResource(name);
             if (url != null) {
                 if (debug >= 2)
-                    log("  --> Returning '" + url.toString() + "'");
+                    log("  --> Returning '" + url + "'");
                 return (url);
             }
         }
@@ -1142,7 +1161,7 @@ public class WebappClassLoader
         url = findResource(name);
         if (url != null) {
             if (debug >= 2)
-                log("  --> Returning '" + url.toString() + "'");
+                log("  --> Returning '" + url + "'");
             return (url);
         }
 
@@ -1154,7 +1173,7 @@ public class WebappClassLoader
             url = loader.getResource(name);
             if (url != null) {
                 if (debug >= 2)
-                    log("  --> Returning '" + url.toString() + "'");
+                    log("  --> Returning '" + url + "'");
                 return (url);
             }
         }
@@ -1219,7 +1238,7 @@ public class WebappClassLoader
                 if (hasExternalRepositories && (stream == null))
                     stream = url.openStream();
             } catch (IOException e) {
-                ; // Ignore
+                // Ignore
             }
             if (stream != null)
                 return (stream);
@@ -1369,7 +1388,6 @@ public class WebappClassLoader
                     return (clazz);
                 }
             } catch (ClassNotFoundException e) {
-                ;
             }
         }
 
@@ -1386,7 +1404,6 @@ public class WebappClassLoader
                 return (clazz);
             }
         } catch (ClassNotFoundException e) {
-            ;
         }
 
         // (3) Delegate to parent unconditionally
@@ -1406,7 +1423,6 @@ public class WebappClassLoader
                     return (clazz);
                 }
             } catch (ClassNotFoundException e) {
-                ;
             }
         }
 
@@ -1433,9 +1449,8 @@ public class WebappClassLoader
         if ((pc = (PermissionCollection) loaderPC.get(codeUrl)) == null) {
             pc = super.getPermissions(codeSource);
             if (pc != null) {
-                Iterator perms = permissionList.iterator();
-                while (perms.hasNext()) {
-                    Permission p = (Permission) perms.next();
+                for (Object o : permissionList) {
+                    Permission p = (Permission) o;
                     pc.add(p);
                 }
                 loaderPC.put(codeUrl, pc);
@@ -1942,8 +1957,8 @@ public class WebappClassLoader
         else
             return false;
 
-        for (int i = 0; i < packageTriggers.length; i++) {
-            if (packageName.startsWith(packageTriggers[i]))
+        for (String packageTrigger : packageTriggers) {
+            if (packageName.startsWith(packageTrigger))
                 return true;
         }
 
@@ -1966,10 +1981,8 @@ public class WebappClassLoader
 
         if (name == null)
             return false;
-        if (name.startsWith("java."))
-            return false;
 
-        return true;
+        return !name.startsWith("java.");
 
     }
 
@@ -1987,29 +2000,27 @@ public class WebappClassLoader
         if (triggers == null)
             return (true);
         JarFile jarFile = new JarFile(jarfile);
-        for (int i = 0; i < triggers.length; i++) {
+        for (String trigger : triggers) {
             Class clazz = null;
             try {
                 if (parent != null) {
-                    clazz = parent.loadClass(triggers[i]);
+                    clazz = parent.loadClass(trigger);
                 } else {
-                    clazz = Class.forName(triggers[i]);
+                    clazz = Class.forName(trigger);
                 }
             } catch (Throwable t) {
                 clazz = null;
             }
             if (clazz == null)
                 continue;
-            String name = triggers[i].replace('.', '/') + ".class";
+            String name = trigger.replace('.', '/') + ".class";
             if (debug >= 2)
                 log(" Checking for " + name);
             JarEntry jarEntry = jarFile.getJarEntry(name);
             if (jarEntry != null) {
-                log("validateJarFile(" + jarfile +
-                        ") - jar not loaded. See Servlet Spec 2.3, "
-                        + "section 9.7.2. Offending class: " + name);
+                log("validateJarFile(" + jarfile + ") - jar not loaded. See Servlet Spec 2.3, " + "section 9.7.2. Offending class: " + name);
                 jarFile.close();
-                return (false);
+                return (false);     // 指定的jar中包含triggers中的类，就不允许载入该jar
             }
         }
         jarFile.close();

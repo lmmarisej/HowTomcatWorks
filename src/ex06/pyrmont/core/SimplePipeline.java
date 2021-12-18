@@ -21,7 +21,7 @@ public class SimplePipeline implements Pipeline, Lifecycle {
     }
 
     // The basic Valve (if any) associated with this Pipeline.
-    protected Valve basic = null;
+    protected Valve basic = null;   // basic负责载入servlet，并对请求进行响应
     // The Container with which this Pipeline is associated.
     protected Container container = null;
     // the array of Valves
@@ -97,9 +97,9 @@ public class SimplePipeline implements Pipeline, Lifecycle {
             stage = stage + 1;
             // Invoke the requested Valve for the current request thread
             if (subscript < valves.length) {
-                valves[subscript].invoke(request, response, this);
+                valves[subscript].invoke(request, response, this);      // 调用日志类、Filter等依次处理
             } else if ((subscript == valves.length) && (basic != null)) {
-                basic.invoke(request, response, this);
+                basic.invoke(request, response, this);      // 最后一个，调用开发者用户编写servlet业务逻辑来处理
             } else {
                 throw new ServletException("No valve");
             }

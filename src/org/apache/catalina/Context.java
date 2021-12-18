@@ -111,7 +111,7 @@ public interface Context extends Container {
     /**
      * The LifecycleEvent type sent when a context is reloaded.
      */
-    public static final String RELOAD_EVENT = "reload";
+    String RELOAD_EVENT = "reload";
 
 
     // ------------------------------------------------------------- Properties
@@ -125,7 +125,7 @@ public interface Context extends Container {
      * @throws IllegalStateException if this method is called before
      *                               this application has started, or after it has been stopped
      */
-    public Object[] getApplicationListeners();
+    Object[] getApplicationListeners();
 
 
     /**
@@ -135,13 +135,13 @@ public interface Context extends Container {
      *
      * @param listeners The set of instantiated listener objects.
      */
-    public void setApplicationListeners(Object listeners[]);
+    void setApplicationListeners(Object[] listeners);
 
 
     /**
      * Return the application available flag for this Context.
      */
-    public boolean getAvailable();
+    boolean getAvailable();
 
 
     /**
@@ -149,13 +149,13 @@ public interface Context extends Container {
      *
      * @param available The new application available flag
      */
-    public void setAvailable(boolean available);
+    void setAvailable(boolean available);
 
 
     /**
      * Return the Locale to character set mapper for this Context.
      */
-    public CharsetMapper getCharsetMapper();
+    CharsetMapper getCharsetMapper();
 
 
     /**
@@ -163,13 +163,13 @@ public interface Context extends Container {
      *
      * @param mapper The new mapper
      */
-    public void setCharsetMapper(CharsetMapper mapper);
+    void setCharsetMapper(CharsetMapper mapper);
 
 
     /**
      * Return the "correctly configured" flag for this Context.
      */
-    public boolean getConfigured();
+    boolean getConfigured();
 
 
     /**
@@ -179,13 +179,13 @@ public interface Context extends Container {
      *
      * @param configured The new correctly configured flag
      */
-    public void setConfigured(boolean configured);
+    void setConfigured(boolean configured);
 
 
     /**
      * Return the "use cookies for session ids" flag.
      */
-    public boolean getCookies();
+    boolean getCookies();
 
 
     /**
@@ -193,13 +193,13 @@ public interface Context extends Container {
      *
      * @param cookies The new flag
      */
-    public void setCookies(boolean cookies);
+    void setCookies(boolean cookies);
 
 
     /**
      * Return the "allow crossing servlet contexts" flag.
      */
-    public boolean getCrossContext();
+    boolean getCrossContext();
 
 
     /**
@@ -207,13 +207,13 @@ public interface Context extends Container {
      *
      * @param crossContext The new cross contexts flag
      */
-    public void setCrossContext(boolean crossContext);
+    void setCrossContext(boolean crossContext);
 
 
     /**
      * Return the display name of this web application.
      */
-    public String getDisplayName();
+    String getDisplayName();
 
 
     /**
@@ -221,13 +221,13 @@ public interface Context extends Container {
      *
      * @param displayName The new display name
      */
-    public void setDisplayName(String displayName);
+    void setDisplayName(String displayName);
 
 
     /**
      * Return the distributable flag for this web application.
      */
-    public boolean getDistributable();
+    boolean getDistributable();
 
 
     /**
@@ -235,14 +235,14 @@ public interface Context extends Container {
      *
      * @param distributable The new distributable flag
      */
-    public void setDistributable(boolean distributable);
+    void setDistributable(boolean distributable);
 
 
     /**
      * Return the document root for this Context.  This can be an absolute
      * pathname, a relative pathname, or a URL.
      */
-    public String getDocBase();
+    String getDocBase();
 
 
     /**
@@ -251,13 +251,13 @@ public interface Context extends Container {
      *
      * @param docBase The new document root
      */
-    public void setDocBase(String docBase);
+    void setDocBase(String docBase);
 
 
     /**
      * Return the login configuration descriptor for this web application.
      */
-    public LoginConfig getLoginConfig();
+    LoginConfig getLoginConfig();
 
 
     /**
@@ -265,13 +265,13 @@ public interface Context extends Container {
      *
      * @param config The new login configuration
      */
-    public void setLoginConfig(LoginConfig config);
+    void setLoginConfig(LoginConfig config);
 
 
     /**
      * Return the naming resources associated with this web application.
      */
-    public NamingResources getNamingResources();
+    NamingResources getNamingResources();
 
 
     /**
@@ -279,13 +279,13 @@ public interface Context extends Container {
      *
      * @param namingResources The new naming resources
      */
-    public void setNamingResources(NamingResources namingResources);
+    void setNamingResources(NamingResources namingResources);
 
 
     /**
      * Return the context path for this web application.
      */
-    public String getPath();
+    String getPath();
 
 
     /**
@@ -293,14 +293,14 @@ public interface Context extends Container {
      *
      * @param path The new context path
      */
-    public void setPath(String path);
+    void setPath(String path);
 
 
     /**
      * Return the public identifier of the deployment descriptor DTD that is
      * currently being parsed.
      */
-    public String getPublicId();
+    String getPublicId();
 
 
     /**
@@ -309,13 +309,13 @@ public interface Context extends Container {
      *
      * @param publicId The public identifier
      */
-    public void setPublicId(String publicId);
+    void setPublicId(String publicId);
 
 
     /**
      * Return the reloadable flag for this web application.
      */
-    public boolean getReloadable();
+    boolean getReloadable();
 
 
     /**
@@ -323,13 +323,13 @@ public interface Context extends Container {
      *
      * @param reloadable The new reloadable flag
      */
-    public void setReloadable(boolean reloadable);
+    void setReloadable(boolean reloadable);
 
 
     /**
      * Return the override flag for this web application.
      */
-    public boolean getOverride();
+    boolean getOverride();
 
 
     /**
@@ -337,13 +337,13 @@ public interface Context extends Container {
      *
      * @param override The new override flag
      */
-    public void setOverride(boolean override);
+    void setOverride(boolean override);
 
 
     /**
      * Return the privileged flag for this web application.
      */
-    public boolean getPrivileged();
+    boolean getPrivileged();
 
 
     /**
@@ -351,20 +351,20 @@ public interface Context extends Container {
      *
      * @param privileged The new privileged flag
      */
-    public void setPrivileged(boolean privileged);
+    void setPrivileged(boolean privileged);
 
 
     /**
      * Return the servlet context for which this Context is a facade.
      */
-    public ServletContext getServletContext();
+    ServletContext getServletContext();
 
 
     /**
      * Return the default session timeout (in minutes) for this
      * web application.
      */
-    public int getSessionTimeout();
+    int getSessionTimeout();
 
 
     /**
@@ -373,14 +373,14 @@ public interface Context extends Container {
      *
      * @param timeout The new default session timeout
      */
-    public void setSessionTimeout(int timeout);
+    void setSessionTimeout(int timeout);
 
 
     /**
      * Return the Java class name of the Wrapper implementation used
      * for servlets registered in this Context.
      */
-    public String getWrapperClass();
+    String getWrapperClass();
 
 
     /**
@@ -389,7 +389,7 @@ public interface Context extends Container {
      *
      * @param wrapperClass The new wrapper class
      */
-    public void setWrapperClass(String wrapperClass);
+    void setWrapperClass(String wrapperClass);
 
 
     // --------------------------------------------------------- Public Methods
@@ -401,7 +401,7 @@ public interface Context extends Container {
      *
      * @param listener Java class name of a listener class
      */
-    public void addApplicationListener(String listener);
+    void addApplicationListener(String listener);
 
 
     /**
@@ -409,13 +409,13 @@ public interface Context extends Container {
      *
      * @param parameter The new application parameter
      */
-    public void addApplicationParameter(ApplicationParameter parameter);
+    void addApplicationParameter(ApplicationParameter parameter);
 
 
     /**
      * Add a security constraint to the set for this web application.
      */
-    public void addConstraint(SecurityConstraint constraint);
+    void addConstraint(SecurityConstraint constraint);
 
 
     /**
@@ -423,7 +423,7 @@ public interface Context extends Container {
      *
      * @param ejb New EJB resource reference
      */
-    public void addEjb(ContextEjb ejb);
+    void addEjb(ContextEjb ejb);
 
 
     /**
@@ -431,7 +431,7 @@ public interface Context extends Container {
      *
      * @param environment New environment entry
      */
-    public void addEnvironment(ContextEnvironment environment);
+    void addEnvironment(ContextEnvironment environment);
 
 
     /**
@@ -439,7 +439,7 @@ public interface Context extends Container {
      *
      * @param errorPage The error page definition to be added
      */
-    public void addErrorPage(ErrorPage errorPage);
+    void addErrorPage(ErrorPage errorPage);
 
 
     /**
@@ -447,7 +447,7 @@ public interface Context extends Container {
      *
      * @param filterDef The filter definition to be added
      */
-    public void addFilterDef(FilterDef filterDef);
+    void addFilterDef(FilterDef filterDef);
 
 
     /**
@@ -455,7 +455,7 @@ public interface Context extends Container {
      *
      * @param filterMap The filter mapping to be added
      */
-    public void addFilterMap(FilterMap filterMap);
+    void addFilterMap(FilterMap filterMap);
 
 
     /**
@@ -464,7 +464,7 @@ public interface Context extends Container {
      *
      * @param listener Java class name of an InstanceListener class
      */
-    public void addInstanceListener(String listener);
+    void addInstanceListener(String listener);
 
 
     /**
@@ -472,7 +472,7 @@ public interface Context extends Container {
      *
      * @param ejb New local EJB resource reference
      */
-    public void addLocalEjb(ContextLocalEjb ejb);
+    void addLocalEjb(ContextLocalEjb ejb);
 
 
     /**
@@ -482,7 +482,7 @@ public interface Context extends Container {
      * @param extension Filename extension being mapped
      * @param mimeType  Corresponding MIME type
      */
-    public void addMimeMapping(String extension, String mimeType);
+    void addMimeMapping(String extension, String mimeType);
 
 
     /**
@@ -492,7 +492,7 @@ public interface Context extends Container {
      * @param name  Name of the new parameter
      * @param value Value of the new  parameter
      */
-    public void addParameter(String name, String value);
+    void addParameter(String name, String value);
 
 
     /**
@@ -500,7 +500,7 @@ public interface Context extends Container {
      *
      * @param resource New resource reference
      */
-    public void addResource(ContextResource resource);
+    void addResource(ContextResource resource);
 
 
     /**
@@ -509,7 +509,7 @@ public interface Context extends Container {
      * @param name The resource environment reference name
      * @param type The resource environment reference type
      */
-    public void addResourceEnvRef(String name, String type);
+    void addResourceEnvRef(String name, String type);
 
 
     /**
@@ -517,7 +517,7 @@ public interface Context extends Container {
      *
      * @param resource New resource link
      */
-    public void addResourceLink(ContextResourceLink resourceLink);
+    void addResourceLink(ContextResourceLink resourceLink);
 
 
     /**
@@ -526,7 +526,7 @@ public interface Context extends Container {
      * @param role Security role used in the application
      * @param link Actual security role to check for
      */
-    public void addRoleMapping(String role, String link);
+    void addRoleMapping(String role, String link);
 
 
     /**
@@ -534,7 +534,7 @@ public interface Context extends Container {
      *
      * @param role New security role
      */
-    public void addSecurityRole(String role);
+    void addSecurityRole(String role);
 
 
     /**
@@ -544,7 +544,7 @@ public interface Context extends Container {
      * @param pattern URL pattern to be mapped
      * @param name    Name of the corresponding servlet to execute
      */
-    public void addServletMapping(String pattern, String name);
+    void addServletMapping(String pattern, String name);
 
 
     /**
@@ -553,7 +553,7 @@ public interface Context extends Container {
      * @param uri      URI, relative to the web.xml file, of this tag library
      * @param location Location of the tag library descriptor
      */
-    public void addTaglib(String uri, String location);
+    void addTaglib(String uri, String location);
 
 
     /**
@@ -561,7 +561,7 @@ public interface Context extends Container {
      *
      * @param name New welcome file name
      */
-    public void addWelcomeFile(String name);
+    void addWelcomeFile(String name);
 
 
     /**
@@ -570,7 +570,7 @@ public interface Context extends Container {
      *
      * @param listener Java class name of a LifecycleListener class
      */
-    public void addWrapperLifecycle(String listener);
+    void addWrapperLifecycle(String listener);
 
 
     /**
@@ -579,7 +579,7 @@ public interface Context extends Container {
      *
      * @param listener Java class name of a ContainerListener class
      */
-    public void addWrapperListener(String listener);
+    void addWrapperListener(String listener);
 
 
     /**
@@ -588,27 +588,27 @@ public interface Context extends Container {
      * implementation.  The constructor of the instantiated Wrapper
      * will have been called, but no properties will have been set.
      */
-    public Wrapper createWrapper();
+    Wrapper createWrapper();
 
 
     /**
      * Return the set of application listener class names configured
      * for this application.
      */
-    public String[] findApplicationListeners();
+    String[] findApplicationListeners();
 
 
     /**
      * Return the set of application parameters for this application.
      */
-    public ApplicationParameter[] findApplicationParameters();
+    ApplicationParameter[] findApplicationParameters();
 
 
     /**
      * Return the set of security constraints for this web application.
      * If there are none, a zero-length array is returned.
      */
-    public SecurityConstraint[] findConstraints();
+    SecurityConstraint[] findConstraints();
 
 
     /**
@@ -617,14 +617,14 @@ public interface Context extends Container {
      *
      * @param name Name of the desired EJB resource reference
      */
-    public ContextEjb findEjb(String name);
+    ContextEjb findEjb(String name);
 
 
     /**
      * Return the defined EJB resource references for this application.
      * If there are none, a zero-length array is returned.
      */
-    public ContextEjb[] findEjbs();
+    ContextEjb[] findEjbs();
 
 
     /**
@@ -633,7 +633,7 @@ public interface Context extends Container {
      *
      * @param name Name of the desired environment entry
      */
-    public ContextEnvironment findEnvironment(String name);
+    ContextEnvironment findEnvironment(String name);
 
 
     /**
@@ -641,7 +641,7 @@ public interface Context extends Container {
      * application.  If none have been defined, a zero-length array
      * is returned.
      */
-    public ContextEnvironment[] findEnvironments();
+    ContextEnvironment[] findEnvironments();
 
 
     /**
@@ -650,7 +650,7 @@ public interface Context extends Container {
      *
      * @param errorCode Error code to look up
      */
-    public ErrorPage findErrorPage(int errorCode);
+    ErrorPage findErrorPage(int errorCode);
 
 
     /**
@@ -659,14 +659,14 @@ public interface Context extends Container {
      *
      * @param exceptionType Exception type to look up
      */
-    public ErrorPage findErrorPage(String exceptionType);
+    ErrorPage findErrorPage(String exceptionType);
 
 
     /**
      * Return the set of defined error pages for all specified error codes
      * and exception types.
      */
-    public ErrorPage[] findErrorPages();
+    ErrorPage[] findErrorPages();
 
 
     /**
@@ -675,26 +675,26 @@ public interface Context extends Container {
      *
      * @param filterName Filter name to look up
      */
-    public FilterDef findFilterDef(String filterName);
+    FilterDef findFilterDef(String filterName);
 
 
     /**
      * Return the set of defined filters for this Context.
      */
-    public FilterDef[] findFilterDefs();
+    FilterDef[] findFilterDefs();
 
 
     /**
      * Return the set of filter mappings for this Context.
      */
-    public FilterMap[] findFilterMaps();
+    FilterMap[] findFilterMaps();
 
 
     /**
      * Return the set of InstanceListener classes that will be added to
      * newly created Wrappers automatically.
      */
-    public String[] findInstanceListeners();
+    String[] findInstanceListeners();
 
 
     /**
@@ -703,14 +703,14 @@ public interface Context extends Container {
      *
      * @param name Name of the desired EJB resource reference
      */
-    public ContextLocalEjb findLocalEjb(String name);
+    ContextLocalEjb findLocalEjb(String name);
 
 
     /**
      * Return the defined local EJB resource references for this application.
      * If there are none, a zero-length array is returned.
      */
-    public ContextLocalEjb[] findLocalEjbs();
+    ContextLocalEjb[] findLocalEjbs();
 
 
     /**
@@ -719,14 +719,14 @@ public interface Context extends Container {
      *
      * @param extension Extension to map to a MIME type
      */
-    public String findMimeMapping(String extension);
+    String findMimeMapping(String extension);
 
 
     /**
      * Return the extensions for which MIME mappings are defined.  If there
      * are none, a zero-length array is returned.
      */
-    public String[] findMimeMappings();
+    String[] findMimeMappings();
 
 
     /**
@@ -735,7 +735,7 @@ public interface Context extends Container {
      *
      * @param name Name of the parameter to return
      */
-    public String findParameter(String name);
+    String findParameter(String name);
 
 
     /**
@@ -743,7 +743,7 @@ public interface Context extends Container {
      * for this Context.  If no parameters are defined, a zero-length
      * array is returned.
      */
-    public String[] findParameters();
+    String[] findParameters();
 
 
     /**
@@ -752,7 +752,7 @@ public interface Context extends Container {
      *
      * @param name Name of the desired resource reference
      */
-    public ContextResource findResource(String name);
+    ContextResource findResource(String name);
 
 
     /**
@@ -761,7 +761,7 @@ public interface Context extends Container {
      *
      * @param name Name of the desired resource environment reference
      */
-    public String findResourceEnvRef(String name);
+    String findResourceEnvRef(String name);
 
 
     /**
@@ -769,7 +769,7 @@ public interface Context extends Container {
      * web application.  If none have been specified, a zero-length
      * array is returned.
      */
-    public String[] findResourceEnvRefs();
+    String[] findResourceEnvRefs();
 
 
     /**
@@ -778,21 +778,21 @@ public interface Context extends Container {
      *
      * @param name Name of the desired resource link
      */
-    public ContextResourceLink findResourceLink(String name);
+    ContextResourceLink findResourceLink(String name);
 
 
     /**
      * Return the defined resource links for this application.  If
      * none have been defined, a zero-length array is returned.
      */
-    public ContextResourceLink[] findResourceLinks();
+    ContextResourceLink[] findResourceLinks();
 
 
     /**
      * Return the defined resource references for this application.  If
      * none have been defined, a zero-length array is returned.
      */
-    public ContextResource[] findResources();
+    ContextResource[] findResources();
 
 
     /**
@@ -802,7 +802,7 @@ public interface Context extends Container {
      *
      * @param role Security role to map
      */
-    public String findRoleMapping(String role);
+    String findRoleMapping(String role);
 
 
     /**
@@ -811,14 +811,14 @@ public interface Context extends Container {
      *
      * @param role Security role to verify
      */
-    public boolean findSecurityRole(String role);
+    boolean findSecurityRole(String role);
 
 
     /**
      * Return the security roles defined for this application.  If none
      * have been defined, a zero-length array is returned.
      */
-    public String[] findSecurityRoles();
+    String[] findSecurityRoles();
 
 
     /**
@@ -827,14 +827,14 @@ public interface Context extends Container {
      *
      * @param pattern Pattern for which a mapping is requested
      */
-    public String findServletMapping(String pattern);
+    String findServletMapping(String pattern);
 
 
     /**
      * Return the patterns of all defined servlet mappings for this
      * Context.  If no mappings are defined, a zero-length array is returned.
      */
-    public String[] findServletMappings();
+    String[] findServletMappings();
 
 
     /**
@@ -843,7 +843,7 @@ public interface Context extends Container {
      *
      * @param status HTTP status code to look up
      */
-    public String findStatusPage(int status);
+    String findStatusPage(int status);
 
 
     /**
@@ -851,7 +851,7 @@ public interface Context extends Container {
      * been specified.  If none are specified, a zero-length array
      * is returned.
      */
-    public int[] findStatusPages();
+    int[] findStatusPages();
 
 
     /**
@@ -860,7 +860,7 @@ public interface Context extends Container {
      *
      * @param uri URI, relative to the web.xml file
      */
-    public String findTaglib(String uri);
+    String findTaglib(String uri);
 
 
     /**
@@ -868,7 +868,7 @@ public interface Context extends Container {
      * descriptor location has been specified.  If none are specified,
      * a zero-length array is returned.
      */
-    public String[] findTaglibs();
+    String[] findTaglibs();
 
 
     /**
@@ -877,28 +877,28 @@ public interface Context extends Container {
      *
      * @param name Welcome file to verify
      */
-    public boolean findWelcomeFile(String name);
+    boolean findWelcomeFile(String name);
 
 
     /**
      * Return the set of welcome files defined for this Context.  If none are
      * defined, a zero-length array is returned.
      */
-    public String[] findWelcomeFiles();
+    String[] findWelcomeFiles();
 
 
     /**
      * Return the set of LifecycleListener classes that will be added to
      * newly created Wrappers automatically.
      */
-    public String[] findWrapperLifecycles();
+    String[] findWrapperLifecycles();
 
 
     /**
      * Return the set of ContainerListener classes that will be added to
      * newly created Wrappers automatically.
      */
-    public String[] findWrapperListeners();
+    String[] findWrapperListeners();
 
 
     /**
@@ -907,7 +907,7 @@ public interface Context extends Container {
      * @throws IllegalStateException if the <code>reloadable</code>
      *                               property is set to <code>false</code>.
      */
-    public void reload();
+    void reload();
 
 
     /**
@@ -916,7 +916,7 @@ public interface Context extends Container {
      *
      * @param listener Java class name of the listener to be removed
      */
-    public void removeApplicationListener(String listener);
+    void removeApplicationListener(String listener);
 
 
     /**
@@ -925,7 +925,7 @@ public interface Context extends Container {
      *
      * @param name Name of the application parameter to remove
      */
-    public void removeApplicationParameter(String name);
+    void removeApplicationParameter(String name);
 
 
     /**
@@ -933,7 +933,7 @@ public interface Context extends Container {
      *
      * @param constraint Constraint to be removed
      */
-    public void removeConstraint(SecurityConstraint constraint);
+    void removeConstraint(SecurityConstraint constraint);
 
 
     /**
@@ -941,7 +941,7 @@ public interface Context extends Container {
      *
      * @param name Name of the EJB resource reference to remove
      */
-    public void removeEjb(String name);
+    void removeEjb(String name);
 
 
     /**
@@ -949,7 +949,7 @@ public interface Context extends Container {
      *
      * @param name Name of the environment entry to remove
      */
-    public void removeEnvironment(String name);
+    void removeEnvironment(String name);
 
 
     /**
@@ -958,7 +958,7 @@ public interface Context extends Container {
      *
      * @param errorPage The error page definition to be removed
      */
-    public void removeErrorPage(ErrorPage errorPage);
+    void removeErrorPage(ErrorPage errorPage);
 
 
     /**
@@ -967,7 +967,7 @@ public interface Context extends Container {
      *
      * @param filterDef Filter definition to be removed
      */
-    public void removeFilterDef(FilterDef filterDef);
+    void removeFilterDef(FilterDef filterDef);
 
 
     /**
@@ -975,7 +975,7 @@ public interface Context extends Container {
      *
      * @param filterMap The filter mapping to be removed
      */
-    public void removeFilterMap(FilterMap filterMap);
+    void removeFilterMap(FilterMap filterMap);
 
 
     /**
@@ -984,7 +984,7 @@ public interface Context extends Container {
      *
      * @param listener Class name of an InstanceListener class to be removed
      */
-    public void removeInstanceListener(String listener);
+    void removeInstanceListener(String listener);
 
 
     /**
@@ -992,7 +992,7 @@ public interface Context extends Container {
      *
      * @param name Name of the EJB resource reference to remove
      */
-    public void removeLocalEjb(String name);
+    void removeLocalEjb(String name);
 
 
     /**
@@ -1001,7 +1001,7 @@ public interface Context extends Container {
      *
      * @param extension Extension to remove the mapping for
      */
-    public void removeMimeMapping(String extension);
+    void removeMimeMapping(String extension);
 
 
     /**
@@ -1010,7 +1010,7 @@ public interface Context extends Container {
      *
      * @param name Name of the parameter to remove
      */
-    public void removeParameter(String name);
+    void removeParameter(String name);
 
 
     /**
@@ -1018,7 +1018,7 @@ public interface Context extends Container {
      *
      * @param name Name of the resource reference to remove
      */
-    public void removeResource(String name);
+    void removeResource(String name);
 
 
     /**
@@ -1026,7 +1026,7 @@ public interface Context extends Container {
      *
      * @param name Name of the resource environment reference to remove
      */
-    public void removeResourceEnvRef(String name);
+    void removeResourceEnvRef(String name);
 
 
     /**
@@ -1034,7 +1034,7 @@ public interface Context extends Container {
      *
      * @param name Name of the resource link to remove
      */
-    public void removeResourceLink(String name);
+    void removeResourceLink(String name);
 
 
     /**
@@ -1042,7 +1042,7 @@ public interface Context extends Container {
      *
      * @param role Security role (as used in the application) to remove
      */
-    public void removeRoleMapping(String role);
+    void removeRoleMapping(String role);
 
 
     /**
@@ -1050,7 +1050,7 @@ public interface Context extends Container {
      *
      * @param role Security role to remove
      */
-    public void removeSecurityRole(String role);
+    void removeSecurityRole(String role);
 
 
     /**
@@ -1059,7 +1059,7 @@ public interface Context extends Container {
      *
      * @param pattern URL pattern of the mapping to remove
      */
-    public void removeServletMapping(String pattern);
+    void removeServletMapping(String pattern);
 
 
     /**
@@ -1067,7 +1067,7 @@ public interface Context extends Container {
      *
      * @param uri URI, relative to the web.xml file
      */
-    public void removeTaglib(String uri);
+    void removeTaglib(String uri);
 
 
     /**
@@ -1076,7 +1076,7 @@ public interface Context extends Container {
      *
      * @param name Name of the welcome file to be removed
      */
-    public void removeWelcomeFile(String name);
+    void removeWelcomeFile(String name);
 
 
     /**
@@ -1085,7 +1085,7 @@ public interface Context extends Container {
      *
      * @param listener Class name of a LifecycleListener class to be removed
      */
-    public void removeWrapperLifecycle(String listener);
+    void removeWrapperLifecycle(String listener);
 
 
     /**
@@ -1094,7 +1094,7 @@ public interface Context extends Container {
      *
      * @param listener Class name of a ContainerListener class to be removed
      */
-    public void removeWrapperListener(String listener);
+    void removeWrapperListener(String listener);
 
 
 }

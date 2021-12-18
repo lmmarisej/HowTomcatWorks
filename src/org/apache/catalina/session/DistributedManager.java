@@ -89,7 +89,9 @@ import org.apache.catalina.util.CustomObjectInputStream;
  * @version $Revision: 1.5 $, $Date: 2002/01/03 08:52:57 $
  */
 
-public final class DistributedManager extends PersistentManagerBase {
+public final class DistributedManager   // 主要用于集群间session对象的复制、销毁
+
+        extends PersistentManagerBase {
 
 
     // ----------------------------------------------------- Instance Variables
@@ -202,10 +204,10 @@ public final class DistributedManager extends PersistentManagerBase {
         byte[] buf = new byte[5000];
         ReplicationWrapper repObj = null;
 
-        for (int i = 0; i < objs.length; i++) {
+        for (Object obj : objs) {
             try {
                 bis = new ByteArrayInputStream(buf);
-                repObj = (ReplicationWrapper) objs[i];
+                repObj = (ReplicationWrapper) obj;
                 buf = repObj.getDataStream();
                 bis = new ByteArrayInputStream(buf, 0, buf.length);
 
@@ -216,8 +218,7 @@ public final class DistributedManager extends PersistentManagerBase {
                     classLoader = loader.getClassLoader();
 
                 if (classLoader != null)
-                    ois = new CustomObjectInputStream(bis,
-                            classLoader);
+                    ois = new CustomObjectInputStream(bis, classLoader);
                 else
                     ois = new ObjectInputStream(bis);
 
@@ -227,18 +228,14 @@ public final class DistributedManager extends PersistentManagerBase {
 
                 if (debug > 0)
                     log("Loading replicated session: " + _session.getId());
-            } catch (IOException e) {
-                log("Error occurred when trying to read replicated session: " +
-                        e.toString());
-            } catch (ClassNotFoundException e) {
-                log("Error occurred when trying to read replicated session: " +
-                        e.toString());
+            } catch (IOException | ClassNotFoundException e) {
+                log("Error occurred when trying to read replicated session: " + e.toString());
             } finally {
                 if (ois != null) {
                     try {
                         ois.close();
                         bis = null;
-                    } catch (IOException e) {
+                    } catch (IOException ignored) {
                         ;
                     }
                 }
@@ -253,7 +250,7 @@ public final class DistributedManager extends PersistentManagerBase {
         // Loop until the termination semaphore is set
         while (!threadDone) {
             threadSleep();
-            processClusterReceiver();
+            processClusterReceiver();       // 相比父类增加从集群其他节点接收session的功能
             processExpires();
             processPersistenceChecks();
         }

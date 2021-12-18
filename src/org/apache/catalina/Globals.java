@@ -45,8 +45,7 @@ public final class Globals {
      * The JNDI directory context which is associated with the context. This
      * context can be used to manipulate static files.
      */
-    public static final String RESOURCES_ATTR =
-            "org.apache.catalina.resources";
+    public static final String RESOURCES_ATTR = "org.apache.catalina.resources";
 
 
     /**
@@ -54,16 +53,14 @@ public final class Globals {
      * for our application class loader (as an object of type String),
      * delimited with the appropriate path delimiter for this platform.
      */
-    public static final String CLASS_PATH_ATTR =
-            "org.apache.catalina.jsp_classpath";
+    public static final String CLASS_PATH_ATTR = "org.apache.catalina.jsp_classpath";
 
 
     /**
      * The request attribute under which the original context path is stored
      * on an included dispatcher request.
      */
-    public static final String CONTEXT_PATH_ATTR =
-            "javax.servlet.include.context_path";
+    public static final String CONTEXT_PATH_ATTR = "javax.servlet.include.context_path";
 
 
     /**

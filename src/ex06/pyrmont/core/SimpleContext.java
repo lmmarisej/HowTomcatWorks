@@ -691,18 +691,18 @@ public class SimpleContext implements Context, Pipeline, Lifecycle {
             throw new LifecycleException("SimpleContext has already started");
 
         // Notify our interested LifecycleListeners
-        lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);
+        lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);     // 触发启动前事件
         started = true;
         try {
             // Start our subordinate components, if any
-            if ((loader != null) && (loader instanceof Lifecycle))
+            if ((loader != null) && (loader instanceof Lifecycle))      // 将启动事件传递给加载器组件实例
                 ((Lifecycle) loader).start();
 
             // Start our child containers, if any
-            Container children[] = findChildren();
-            for (int i = 0; i < children.length; i++) {
-                if (children[i] instanceof Lifecycle)
-                    ((Lifecycle) children[i]).start();
+            Container[] children = findChildren();
+            for (Container child : children) {
+                if (child instanceof Lifecycle)
+                    ((Lifecycle) child).start();
             }
 
             // Start the Valves in our pipeline (including the basic),
@@ -710,13 +710,13 @@ public class SimpleContext implements Context, Pipeline, Lifecycle {
             if (pipeline instanceof Lifecycle)
                 ((Lifecycle) pipeline).start();
             // Notify our interested LifecycleListeners
-            lifecycle.fireLifecycleEvent(START_EVENT, null);
+            lifecycle.fireLifecycleEvent(START_EVENT, null);        // 触发启动事件
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         // Notify our interested LifecycleListeners
-        lifecycle.fireLifecycleEvent(AFTER_START_EVENT, null);
+        lifecycle.fireLifecycleEvent(AFTER_START_EVENT, null);      // 触发启动后事件
     }
 
     public void stop() throws LifecycleException {

@@ -122,7 +122,7 @@ public interface ValveContext {
      * @throws ServletException if there are no further Valves configured
      *                          in the Pipeline currently being processed
      */
-    public void invokeNext(Request request, Response response)
+    public void invokeNext(Request request, Response response)  // 不用for，易于扩展
             throws IOException, ServletException;
 
 

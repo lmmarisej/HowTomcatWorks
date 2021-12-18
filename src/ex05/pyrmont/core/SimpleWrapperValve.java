@@ -36,13 +36,13 @@ public class SimpleWrapperValve implements Valve, Contained {
 
         // Allocate a servlet instance to process this request
         try {
-            servlet = wrapper.allocate();
+            servlet = wrapper.allocate();   // 将servlet加载到容器
             if (hres != null && hreq != null) {
-                servlet.service(hreq, hres);
+                servlet.service(hreq, hres);    // 使用servlet处理业务
             } else {
                 servlet.service(sreq, sres);
             }
-        } catch (ServletException e) {
+        } catch (ServletException ignored) {
         }
     }
 

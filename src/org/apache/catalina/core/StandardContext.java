@@ -961,9 +961,7 @@ public class StandardContext
 
         boolean oldPrivileged = this.privileged;
         this.privileged = privileged;
-        support.firePropertyChange("privileged",
-                new Boolean(oldPrivileged),
-                new Boolean(this.privileged));
+        support.firePropertyChange("privileged", Boolean.valueOf(oldPrivileged), Boolean.valueOf(this.privileged));
 
     }
 
@@ -973,13 +971,11 @@ public class StandardContext
      *
      * @param reloadable The new reloadable flag
      */
-    public void setReloadable(boolean reloadable) {
+    public void setReloadable(boolean reloadable) {     // 指明是否支持载入器自动重载
 
         boolean oldReloadable = this.reloadable;
         this.reloadable = reloadable;
-        support.firePropertyChange("reloadable",
-                new Boolean(oldReloadable),
-                new Boolean(this.reloadable));
+        support.firePropertyChange("reloadable", Boolean.valueOf(oldReloadable), Boolean.valueOf(this.reloadable));
 
     }
 
@@ -993,9 +989,7 @@ public class StandardContext
 
         boolean oldOverride = this.override;
         this.override = override;
-        support.firePropertyChange("override",
-                new Boolean(oldOverride),
-                new Boolean(this.override));
+        support.firePropertyChange("override", Boolean.valueOf(oldOverride), Boolean.valueOf(this.override));
 
     }
 
@@ -2416,9 +2410,9 @@ public class StandardContext
         }
 
         // Shut down the current version of all active servlets
-        Container children[] = findChildren();
-        for (int i = 0; i < children.length; i++) {
-            Wrapper wrapper = (Wrapper) children[i];
+        Container[] children = findChildren();
+        for (Container child : children) {
+            Wrapper wrapper = (Wrapper) child;
             if (wrapper instanceof Lifecycle) {
                 try {
                     ((Lifecycle) wrapper).stop();
@@ -2486,11 +2480,9 @@ public class StandardContext
         oldCCL = bindThread();
 
         // Restart our application event listeners and filters
-        if (ok) {
-            if (!listenerStart()) {
-                log(sm.getString("standardContext.listenerStartFailed"));
-                ok = false;
-            }
+        if (!listenerStart()) {
+            log(sm.getString("standardContext.listenerStartFailed"));
+            ok = false;
         }
         if (ok) {
             if (!filterStart()) {
@@ -2504,10 +2496,10 @@ public class StandardContext
         postWelcomeFiles();
 
         // Restart our currently defined servlets
-        for (int i = 0; i < children.length; i++) {
+        for (Container child : children) {
             if (!ok)
                 break;
-            Wrapper wrapper = (Wrapper) children[i];
+            Wrapper wrapper = (Wrapper) child;
             if (wrapper instanceof Lifecycle) {
                 try {
                     ((Lifecycle) wrapper).start();

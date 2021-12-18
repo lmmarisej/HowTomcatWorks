@@ -92,7 +92,8 @@ import org.apache.catalina.util.StringManager;
  * @version $Revision: 1.12 $ $Date: 2002/09/19 22:55:48 $
  */
 
-public abstract class ManagerBase implements Manager {
+public abstract class ManagerBase       // 所有的session管理器都会继承，提供一些功能方法
+        implements Manager {
 
 
     // ----------------------------------------------------- Instance Variables
@@ -673,15 +674,15 @@ public abstract class ManagerBase implements Manager {
 
         // Generate a byte array containing a session identifier
         Random random = getRandom();
-        byte bytes[] = new byte[SESSION_ID_BYTES];
-        getRandom().nextBytes(bytes);
+        byte[] bytes = new byte[SESSION_ID_BYTES];
+        random.nextBytes(bytes);
         bytes = getDigest().digest(bytes);
 
         // Render the result as a String of hexadecimal digits
-        StringBuffer result = new StringBuffer();
-        for (int i = 0; i < bytes.length; i++) {
-            byte b1 = (byte) ((bytes[i] & 0xf0) >> 4);
-            byte b2 = (byte) (bytes[i] & 0x0f);
+        StringBuilder result = new StringBuilder();
+        for (byte aByte : bytes) {
+            byte b1 = (byte) ((aByte & 0xf0) >> 4);
+            byte b2 = (byte) (aByte & 0x0f);
             if (b1 < 10)
                 result.append((char) ('0' + b1));
             else

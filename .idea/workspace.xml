@@ -5,33 +5,52 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="90ea6886-fcac-477e-b0ac-7d53f08e6a66" name="Default" comment="init">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/commons-beanutils.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/commons-collections.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/commons-daemon.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/commons-digester.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/commons-logging.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/commons-modeler.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/jaas.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/jakarta-regexp-1.2.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/jcert.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/jnet.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/jsse.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/mx4j.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/naming-common.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/naming-factory.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/naming-resources.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/servlet.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/tomcat-util.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/xercesImpl.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/xmlParserAPIs.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/myApp/WEB-INF/classes/ModernServlet.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/myApp/WEB-INF/classes/PrimitiveServlet.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/myApp/WEB-INF/classes/SessionServlet.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/org/apache/catalina/cluster/ClusterReceiver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/org/apache/catalina/cluster/ClusterSender.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/org/apache/catalina/cluster/Constants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/org/apache/catalina/servlets/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex03/pyrmont/connector/http/HttpRequestFacade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex03/pyrmont/connector/http/HttpRequestFacade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex05/pyrmont/core/SimpleContextValve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex05/pyrmont/core/SimpleContextValve.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex05/pyrmont/core/SimpleWrapperValve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex05/pyrmont/core/SimpleWrapperValve.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex05/pyrmont/startup/Bootstrap2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex05/pyrmont/startup/Bootstrap2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex05/pyrmont/valves/ClientIPLoggerValve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex05/pyrmont/valves/ClientIPLoggerValve.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex06/pyrmont/core/SimpleContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex06/pyrmont/core/SimpleContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex06/pyrmont/core/SimpleContextLifecycleListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex06/pyrmont/core/SimpleContextLifecycleListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex06/pyrmont/core/SimplePipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex06/pyrmont/core/SimplePipeline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex06/pyrmont/core/SimpleWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex06/pyrmont/core/SimpleWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex06/pyrmont/startup/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex06/pyrmont/startup/Bootstrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex07/pyrmont/core/SimpleWrapperValve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex07/pyrmont/core/SimpleWrapperValve.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Connector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Connector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Context.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Context.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Globals.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Globals.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Lifecycle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Lifecycle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/LifecycleListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/LifecycleListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Loader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Loader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Logger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Logger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Manager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Session.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Session.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/ValveContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/ValveContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/authenticator/SingleSignOn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/authenticator/SingleSignOn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/cluster/ClusterReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/cluster/ClusterReceiver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/cluster/ClusterSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/cluster/ClusterSender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/cluster/MulticastSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/cluster/MulticastSender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/connector/HttpRequestBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/connector/HttpRequestBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/ContainerBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/ContainerBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/loader/Reloader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/loader/Reloader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/loader/ResourceEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/loader/ResourceEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/loader/StandardClassLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/loader/StandardClassLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/loader/WebappClassLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/loader/WebappClassLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/loader/WebappLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/loader/WebappLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/logger/FileLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/logger/FileLogger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/logger/SystemOutLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/logger/SystemOutLogger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/session/DistributedManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/session/DistributedManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/session/ManagerBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/session/ManagerBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/session/PersistentManagerBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/session/PersistentManagerBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/session/StandardManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/session/StandardManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/session/StandardSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/session/StandardSession.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/session/StandardSessionFacade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/session/StandardSessionFacade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/session/StoreBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/session/StoreBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/startup/Embedded.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/startup/Embedded.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/util/LifecycleSupport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/util/LifecycleSupport.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,6 +178,8 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
@@ -175,7 +196,7 @@
   <component name="RebelAgentSelection">
     <selection>jr</selection>
   </component>
-  <component name="RunManager" selected="Application.Bootstrap">
+  <component name="RunManager" selected="Application.Bootstrap2">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="WIDTH" value="400" />
       <option name="HEIGHT" value="300" />
@@ -207,13 +228,27 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="HttpServer (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="cxs01.pyrmont.HttpServer" />
+    <configuration name="Bootstrap1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ex05.pyrmont.startup.Bootstrap1" />
       <module name="HowTomcatWorks" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="cxs01.pyrmont.*" />
+          <option name="PATTERN" value="ex05.pyrmont.startup.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Bootstrap2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ex05.pyrmont.startup.Bootstrap2" />
+      <module name="HowTomcatWorks" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ex05.pyrmont.startup.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -242,20 +277,6 @@
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.brainysoftware.pyrmont.util.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MySwingApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="cxs16.pyrmont.shutdownhook.MySwingApp" />
-      <module name="HowTomcatWorks" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="cxs16.pyrmont.shutdownhook.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -295,19 +316,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.MySwingApp" />
-      <item itemvalue="Application.HttpServer (1)" />
       <item itemvalue="Application.HttpSniffer" />
       <item itemvalue="Application.HttpServer2" />
       <item itemvalue="Application.Bootstrap" />
+      <item itemvalue="Application.Bootstrap2" />
+      <item itemvalue="Application.Bootstrap1" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.HttpSniffer" />
+        <item itemvalue="Application.Bootstrap1" />
+        <item itemvalue="Application.Bootstrap2" />
         <item itemvalue="Application.Bootstrap" />
         <item itemvalue="Application.HttpServer2" />
-        <item itemvalue="Application.HttpServer (1)" />
-        <item itemvalue="Application.MySwingApp" />
       </list>
     </recent_temporary>
   </component>
@@ -327,7 +348,12 @@
       <workItem from="1510737547686" duration="393000" />
       <workItem from="1639575614051" duration="7180000" />
       <workItem from="1639666499438" duration="8546000" />
-      <workItem from="1639722342241" duration="5994000" />
+      <workItem from="1639722342241" duration="36339000" />
+      <workItem from="1639817664100" duration="27000" />
+      <workItem from="1639817707027" duration="271000" />
+      <workItem from="1639817998416" duration="29000" />
+      <workItem from="1639818041131" duration="45000" />
+      <workItem from="1639818100935" duration="6450000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1639729728189</created>
@@ -336,7 +362,14 @@
       <option name="project" value="LOCAL" />
       <updated>1639729728189</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="init">
+      <created>1639729837799</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1639729837799</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">

@@ -184,8 +184,7 @@ public class MulticastSender
 
             byte[] obs = bos.toByteArray();
             int size = obs.length;
-            DatagramPacket p = new DatagramPacket(obs, size,
-                    multicastAddress, multicastPort);
+            DatagramPacket p = new DatagramPacket(obs, size, multicastAddress, multicastPort);
             send(p);
         } catch (IOException e) {
             log(sm.getString("multicastSender.sendException", e.toString()));

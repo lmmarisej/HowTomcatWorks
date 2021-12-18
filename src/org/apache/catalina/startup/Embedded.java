@@ -947,21 +947,16 @@ public class Embedded implements Lifecycle {
             // Backwards compatibility patch for J2EE RI 1.3
             String j2eeHome = System.getProperty("com.sun.enterprise.home");
             if (j2eeHome != null)
-                System.setProperty
-                        ("catalina.home",
-                                System.getProperty("com.sun.enterprise.home"));
+                System.setProperty("catalina.home", System.getProperty("com.sun.enterprise.home"));
             else
-                throw new LifecycleException
-                        ("Must set 'catalina.home' system property");
+                throw new LifecycleException("Must set 'catalina.home' system property");
         }
         if (System.getProperty("catalina.base") == null)
-            System.setProperty("catalina.base",
-                    System.getProperty("catalina.home"));
+            System.setProperty("catalina.base", System.getProperty("catalina.home"));
 
         // Validate and update our current component state
         if (started)
-            throw new LifecycleException
-                    (sm.getString("embedded.alreadyStarted"));
+            throw new LifecycleException(sm.getString("embedded.alreadyStarted"));
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
 
@@ -971,27 +966,25 @@ public class Embedded implements Lifecycle {
         } else {
             System.setProperty("catalina.useNaming", "true");
             String value = "org.apache.naming";
-            String oldValue =
-                    System.getProperty(javax.naming.Context.URL_PKG_PREFIXES);
+            String oldValue = System.getProperty(javax.naming.Context.URL_PKG_PREFIXES);
             if (oldValue != null) {
                 value = oldValue + ":" + value;
             }
             System.setProperty(javax.naming.Context.URL_PKG_PREFIXES, value);
-            System.setProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY,
-                    "org.apache.naming.java.javaURLContextFactory");
+            System.setProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
         }
 
         // Start our defined Engines first
-        for (int i = 0; i < engines.length; i++) {
-            if (engines[i] instanceof Lifecycle)
-                ((Lifecycle) engines[i]).start();
+        for (Engine engine : engines) {
+            if (engine instanceof Lifecycle)
+                ((Lifecycle) engine).start();
         }
 
         // Start our defined Connectors second
-        for (int i = 0; i < connectors.length; i++) {
-            connectors[i].initialize();
-            if (connectors[i] instanceof Lifecycle)
-                ((Lifecycle) connectors[i]).start();
+        for (Connector connector : connectors) {
+            connector.initialize();
+            if (connector instanceof Lifecycle)
+                ((Lifecycle) connector).start();
         }
 
     }

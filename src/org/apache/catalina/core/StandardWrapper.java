@@ -644,7 +644,7 @@ public final class StandardWrapper
                 synchronized (this) {
                     if (instance == null) {
                         try {
-                            instance = loadServlet();   // 查找、加载、实例化servlet
+                            instance = loadServlet();   // 查找、加载、实例化servlet、并调用servlet生命周期
                         } catch (ServletException e) {
                             throw e;
                         } catch (Throwable e) {
@@ -797,7 +797,7 @@ public final class StandardWrapper
      *                          an exception
      * @throws ServletException if some other loading problem occurs
      */
-    public synchronized void load() throws ServletException {
+    public synchronized void load() throws ServletException {   // 加载并初始化
         instance = loadServlet();
     }
 
@@ -879,7 +879,7 @@ public final class StandardWrapper
 
             // Instantiate and initialize an instance of the servlet class itself
             try {
-                servlet = (Servlet) classClass.newInstance();
+                servlet = (Servlet) classClass.newInstance();   // 实例化
             } catch (ClassCastException e) {
                 unavailable(null);
                 // Restore the context ClassLoader
@@ -913,7 +913,7 @@ public final class StandardWrapper
             try {
                 instanceSupport.fireInstanceEvent(InstanceEvent.BEFORE_INIT_EVENT,
                         servlet);
-                servlet.init(facade);
+                servlet.init(facade);   // 初始化
                 // Invoke jspInit on JSP pages
                 if ((loadOnStartup > 0) && (jspFile != null)) {
                     // Invoking jspInit
@@ -921,7 +921,7 @@ public final class StandardWrapper
                     HttpResponseBase res = new HttpResponseBase();
                     req.setServletPath(jspFile);
                     req.setQueryString("jsp_precompile=true");
-                    servlet.service(req, res);
+                    servlet.service(req, res);  // 业务处理
                 }
                 instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_INIT_EVENT,
                         servlet);

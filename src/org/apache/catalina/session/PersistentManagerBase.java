@@ -91,7 +91,7 @@ import org.apache.catalina.util.LifecycleSupport;
  * @version $Revision: 1.9 $ $Date: 2002/08/28 17:08:58 $
  */
 
-public abstract class PersistentManagerBase
+public abstract class PersistentManagerBase     // 将session存入辅助器中
         extends ManagerBase
         implements Lifecycle, PropertyChangeListener, Runnable {
 
@@ -585,7 +585,7 @@ public abstract class PersistentManagerBase
      * class. In order to use it, a subclass must specifically call it,
      * for example in the start() and/or processPersistenceChecks() methods.
      */
-    public void load() {
+    public void load() {        // 将Manager实现的介质中的session对象重新载入到内存，是所有持久化型的session管理器的父类
 
         // Initialize our internal data structures
         recycled.clear();
@@ -609,9 +609,9 @@ public abstract class PersistentManagerBase
         if (debug >= 1)
             log(sm.getString("persistentManager.loading", String.valueOf(n)));
 
-        for (int i = 0; i < n; i++)
+        for (String id : ids)
             try {
-                swapIn(ids[i]);
+                swapIn(id);
             } catch (IOException e) {
                 log("Failed load session from store, " + e.getMessage(), e);
             }
@@ -649,23 +649,22 @@ public abstract class PersistentManagerBase
      * class. In order to use it, a subclass must specifically call it,
      * for example in the stop() and/or processPersistenceChecks() methods.
      */
-    public void unload() {
+    public void unload() {      // 将当前活动的session对象存储到Manager实现的介质中
 
         if (store == null)
             return;
 
-        Session sessions[] = findSessions();
+        Session[] sessions = findSessions();
         int n = sessions.length;
         if (n == 0)
             return;
 
         if (debug >= 1)
-            log(sm.getString("persistentManager.unloading",
-                    String.valueOf(n)));
+            log(sm.getString("persistentManager.unloading", String.valueOf(n)));
 
-        for (int i = 0; i < n; i++)
+        for (Session session : sessions)
             try {
-                swapOut(sessions[i]);
+                swapOut(session);
             } catch (IOException e) {
                 ;   // This is logged in writeSession()
             }
@@ -837,7 +836,7 @@ public abstract class PersistentManagerBase
             ((Lifecycle) store).start();
 
         // Start the background reaper thread
-        threadStart();
+        threadStart();      // 后台线程伴随组件的启动而启动
 
     }
 
@@ -869,9 +868,9 @@ public abstract class PersistentManagerBase
             unload();
         } else {
             // Expire all active sessions
-            Session sessions[] = findSessions();
-            for (int i = 0; i < sessions.length; i++) {
-                StandardSession session = (StandardSession) sessions[i];
+            Session[] sessions = findSessions();
+            for (Session value : sessions) {
+                StandardSession session = (StandardSession) value;
                 if (!session.isValid())
                     continue;
                 session.expire();
@@ -931,8 +930,7 @@ public abstract class PersistentManagerBase
         if (maxInactiveInterval >= 0) {
             int timeIdle = // Truncate, do not round up
                     (int) ((timeNow - session.getLastAccessedTime()) / 1000L);
-            if (timeIdle >= maxInactiveInterval)
-                return true;
+            return timeIdle >= maxInactiveInterval;
         }
 
         return false;
@@ -951,8 +949,8 @@ public abstract class PersistentManagerBase
         long timeNow = System.currentTimeMillis();
         Session sessions[] = findSessions();
 
-        for (int i = 0; i < sessions.length; i++) {
-            StandardSession session = (StandardSession) sessions[i];
+        for (Session value : sessions) {
+            StandardSession session = (StandardSession) value;
             if (!session.isValid())
                 continue;
             if (isSessionStale(session, timeNow))
@@ -977,8 +975,8 @@ public abstract class PersistentManagerBase
         // FIXME: What's preventing us from mangling a session during
         // a request?
         if (maxIdleSwap >= 0) {
-            for (int i = 0; i < sessions.length; i++) {
-                StandardSession session = (StandardSession) sessions[i];
+            for (Session value : sessions) {
+                StandardSession session = (StandardSession) value;
                 if (!session.isValid())
                     continue;
                 int timeIdle = // Truncate, do not round up
@@ -987,7 +985,7 @@ public abstract class PersistentManagerBase
                     if (debug > 1)
                         log(sm.getString
                                 ("persistentManager.swapMaxIdle",
-                                        session.getId(), new Integer(timeIdle)));
+                                        session.getId(), timeIdle));
                     try {
                         swapOut(session);
                     } catch (IOException e) {
@@ -1055,8 +1053,8 @@ public abstract class PersistentManagerBase
 
         // Back up all sessions idle longer than maxIdleBackup
         if (maxIdleBackup >= 0) {
-            for (int i = 0; i < sessions.length; i++) {
-                StandardSession session = (StandardSession) sessions[i];
+            for (Session value : sessions) {
+                StandardSession session = (StandardSession) value;
                 if (!session.isValid())
                     continue;
                 int timeIdle = // Truncate, do not round up
@@ -1087,7 +1085,7 @@ public abstract class PersistentManagerBase
 
         try {
             Thread.sleep(checkInterval * 1000L);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
             ;
         }
 
@@ -1145,7 +1143,7 @@ public abstract class PersistentManagerBase
         // Loop until the termination semaphore is set
         while (!threadDone) {
             threadSleep();
-            processExpires();
+            processExpires();   // 过期session清除
             processPersistenceChecks();
         }
 

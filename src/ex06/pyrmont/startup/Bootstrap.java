@@ -31,7 +31,7 @@ public final class Bootstrap {
         Mapper mapper = new SimpleContextMapper();
         mapper.setProtocol("http");
         LifecycleListener listener = new SimpleContextLifecycleListener();
-        ((Lifecycle) context).addLifecycleListener(listener);
+        ((Lifecycle) context).addLifecycleListener(listener);       // 注册自定义事件
         context.addMapper(mapper);
         Loader loader = new SimpleLoader();
         context.setLoader(loader);
@@ -41,7 +41,7 @@ public final class Bootstrap {
         connector.setContainer(context);
         try {
             connector.initialize();
-            ((Lifecycle) connector).start();
+            ((Lifecycle) connector).start();        // 只需启动HttpConnector组件的start，其它组件将自动启动
             ((Lifecycle) context).start();
 
             // make the application wait until we press a key.

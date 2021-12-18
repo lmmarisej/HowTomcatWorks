@@ -87,6 +87,8 @@ import java.io.IOException;
  *
  * @author Craig R. McClanahan
  * @version $Revision: 1.6 $ $Date: 2002/09/19 22:55:47 $
+ *
+ * 用于管理建立的session对象，负责创建、更新、销毁session，当请求到来时，要返回一个有效的session对象
  */
 
 public interface Manager {
@@ -98,7 +100,7 @@ public interface Manager {
     /**
      * Return the Container with which this Manager is associated.
      */
-    public Container getContainer();
+    public Container getContainer();        // 需要与一个context容器关联，也必须与该容器关联
 
 
     /**

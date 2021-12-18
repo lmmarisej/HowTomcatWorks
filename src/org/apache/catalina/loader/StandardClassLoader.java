@@ -115,7 +115,7 @@ import org.apache.naming.JndiPermission;
  * @version $Revision: 1.28 $ $Date: 2002/08/06 00:16:59 $
  */
 
-public class StandardClassLoader
+public class StandardClassLoader    // 加载tomcat容器相关的类
         extends URLClassLoader
         implements Reloader {
 

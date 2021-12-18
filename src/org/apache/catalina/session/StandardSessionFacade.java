@@ -77,13 +77,12 @@ import javax.servlet.http.HttpSessionContext;
  * @author Remy Maucherat
  * @version $Revision: 1.1 $ $Date: 2001/05/14 04:07:55 $
  */
-
-public class StandardSessionFacade
+public class StandardSessionFacade      // 使用外观模式，间接地将StandardSession对象交给Servlet实例使用
+        // 通过HttpSession在Servlet之间进行传递，避免Servlet程序员将StandardSessionFacade转型为StandardSession，也就阻止了敏感方法的访问
         implements HttpSession {
 
 
     // ----------------------------------------------------------- Constructors
-
 
     /**
      * Construct a new session facade.

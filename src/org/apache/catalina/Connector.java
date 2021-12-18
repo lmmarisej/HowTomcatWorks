@@ -64,7 +64,7 @@ public interface Connector {
      * Return the Container used for processing requests received by this
      * Connector.
      */
-    public Container getContainer();
+    Container getContainer();
 
 
     /**
@@ -73,13 +73,13 @@ public interface Connector {
      *
      * @param container The new Container to use
      */
-    public void setContainer(Container container);
+    void setContainer(Container container);
 
 
     /**
      * Return the "enable DNS lookups" flag.
      */
-    public boolean getEnableLookups();
+    boolean getEnableLookups();
 
 
     /**
@@ -87,13 +87,13 @@ public interface Connector {
      *
      * @param enableLookups The new "enable DNS lookups" flag value
      */
-    public void setEnableLookups(boolean enableLookups);
+    void setEnableLookups(boolean enableLookups);
 
 
     /**
      * Return the server socket factory used by this Container.
      */
-    public ServerSocketFactory getFactory();
+    ServerSocketFactory getFactory();
 
 
     /**
@@ -101,13 +101,13 @@ public interface Connector {
      *
      * @param factory The new server socket factory
      */
-    public void setFactory(ServerSocketFactory factory);
+    void setFactory(ServerSocketFactory factory);
 
 
     /**
      * Return descriptive information about this Connector implementation.
      */
-    public String getInfo();
+    String getInfo();
 
 
     /**
@@ -115,7 +115,7 @@ public interface Connector {
      * it comes in on a non-SSL port and is subject to a security constraint
      * with a transport guarantee that requires SSL.
      */
-    public int getRedirectPort();
+    int getRedirectPort();
 
 
     /**
@@ -123,14 +123,14 @@ public interface Connector {
      *
      * @param redirectPort The redirect port number (non-SSL to SSL)
      */
-    public void setRedirectPort(int redirectPort);
+    void setRedirectPort(int redirectPort);
 
 
     /**
      * Return the scheme that will be assigned to requests received
      * through this connector.  Default value is "http".
      */
-    public String getScheme();
+    String getScheme();
 
 
     /**
@@ -139,14 +139,14 @@ public interface Connector {
      *
      * @param scheme The new scheme
      */
-    public void setScheme(String scheme);
+    void setScheme(String scheme);
 
 
     /**
      * Return the secure connection flag that will be assigned to requests
      * received through this connector.  Default value is "false".
      */
-    public boolean getSecure();
+    boolean getSecure();
 
 
     /**
@@ -155,13 +155,13 @@ public interface Connector {
      *
      * @param secure The new secure connection flag
      */
-    public void setSecure(boolean secure);
+    void setSecure(boolean secure);
 
 
     /**
      * Return the <code>Service</code> with which we are associated (if any).
      */
-    public Service getService();
+    Service getService();
 
 
     /**
@@ -169,7 +169,7 @@ public interface Connector {
      *
      * @param service The service that owns this Engine
      */
-    public void setService(Service service);
+    void setService(Service service);
 
 
     // --------------------------------------------------------- Public Methods
@@ -179,14 +179,14 @@ public interface Connector {
      * Create (or allocate) and return a Request object suitable for
      * specifying the contents of a Request to the responsible Container.
      */
-    public Request createRequest();
+    Request createRequest();
 
 
     /**
      * Create (or allocate) and return a Response object suitable for
      * receiving the contents of a Response from the responsible Container.
      */
-    public Response createResponse();
+    Response createResponse();
 
     /**
      * Invoke a pre-startup initialization. This is used to allow connectors
@@ -194,7 +194,6 @@ public interface Connector {
      *
      * @throws LifecycleException If this server was already initialized.
      */
-    public void initialize()
-            throws LifecycleException;
+    void initialize() throws LifecycleException;
 
 }

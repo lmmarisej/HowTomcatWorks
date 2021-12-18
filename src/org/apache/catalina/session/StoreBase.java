@@ -301,9 +301,9 @@ public abstract class StoreBase
             return;
         }
 
-        for (int i = 0; i < keys.length; i++) {
+        for (String key : keys) {
             try {
-                StandardSession session = (StandardSession) load(keys[i]);
+                StandardSession session = (StandardSession) load(key);
                 if (!session.isValid())
                     continue;
                 int maxInactiveInterval = session.getMaxInactiveInterval();
@@ -312,7 +312,7 @@ public abstract class StoreBase
                 int timeIdle = // Truncate, do not round up
                         (int) ((timeNow - session.getLastAccessedTime()) / 1000L);
                 if (timeIdle >= maxInactiveInterval) {
-                    if (((PersistentManagerBase) manager).isLoaded(keys[i])) {
+                    if (((PersistentManagerBase) manager).isLoaded(key)) {
                         // recycle old backup session
                         session.recycle();
                     } else {
@@ -321,10 +321,7 @@ public abstract class StoreBase
                     }
                     remove(session.getId());
                 }
-            } catch (IOException e) {
-                log(e.toString());
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 log(e.toString());
                 e.printStackTrace();
             }
