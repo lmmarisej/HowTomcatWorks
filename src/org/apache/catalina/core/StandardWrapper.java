@@ -101,9 +101,10 @@ import org.apache.tomcat.util.log.SystemLogHandler;
  * @version $Revision: 1.40 $ $Date: 2002/08/29 10:37:55 $
  */
 
-public final class StandardWrapper
+public final class StandardWrapper      // 载入（load）所代表的Servlet类，并进行实例化
         extends ContainerBase
-        implements ServletConfig, Wrapper {
+        implements ServletConfig,   // 通过ServletConfig，将自身包装成StandardWrapperFacade，以对Servlet程序员隐藏大部分接口
+        Wrapper {
 
 
     // ----------------------------------------------------------- Constructors
@@ -162,7 +163,7 @@ public final class StandardWrapper
     /**
      * The (single) initialized instance of this servlet.
      */
-    private Servlet instance = null;
+    private volatile Servlet instance = null;
 
 
     /**
@@ -427,7 +428,6 @@ public final class StandardWrapper
      * Set the maximum number of instances that will be allocated when a single
      * thread model servlet is used.
      *
-     * @param maxInstnces New value of maxInstances
      */
     public void setMaxInstances(int maxInstances) {
 
@@ -446,10 +446,8 @@ public final class StandardWrapper
      */
     public void setParent(Container container) {
 
-        if ((container != null) &&
-                !(container instanceof Context))
-            throw new IllegalArgumentException
-                    (sm.getString("standardWrapper.notContext"));
+        if ((container != null) && !(container instanceof Context))     // wrapper的父容器只能是Context类型
+            throw new IllegalArgumentException(sm.getString("standardWrapper.notContext"));
         super.setParent(container);
 
     }
@@ -467,9 +465,7 @@ public final class StandardWrapper
 
     /**
      * Set the run-as identity for this servlet.
-     *
-     * @param value New run-as identity value
-     */
+     **/
     public void setRunAs(String runAs) {
 
         String oldRunAs = this.runAs;
@@ -560,10 +556,9 @@ public final class StandardWrapper
      *
      * @param child Child container to be added
      */
-    public void addChild(Container child) {
+    public void addChild(Container child) {     // wrapper表示一个Servlet，因此不能再有子容器
 
-        throw new IllegalStateException
-                (sm.getString("standardWrapper.notChild"));
+        throw new IllegalStateException(sm.getString("standardWrapper.notChild"));
 
     }
 
@@ -626,30 +621,28 @@ public final class StandardWrapper
      *                          an exception
      * @throws ServletException if a loading error occurs
      */
-    public Servlet allocate() throws ServletException {
+    public Servlet allocate() throws ServletException {     // 自己不调用Servlet的service方法，为StandardWrapperValve提供Servlet给其调用service
 
         if (debug >= 1)
             log("Allocating an instance");
 
         // If we are currently unloading this servlet, throw an exception
         if (unloading)
-            throw new ServletException
-                    (sm.getString("standardWrapper.unloading", getName()));
+            throw new ServletException(sm.getString("standardWrapper.unloading", getName()));
 
         // If not SingleThreadedModel, return the same instance every time
         if (!singleThreadModel) {
 
             // Load and initialize our instance if necessary
             if (instance == null) {
-                synchronized (this) {
+                synchronized (this) {           // double check 保证instance只被实例化一次
                     if (instance == null) {
                         try {
                             instance = loadServlet();   // 查找、加载、实例化servlet、并调用servlet生命周期
                         } catch (ServletException e) {
                             throw e;
                         } catch (Throwable e) {
-                            throw new ServletException
-                                    (sm.getString("standardWrapper.allocate"), e);
+                            throw new ServletException(sm.getString("standardWrapper.allocate"), e);
                         }
                     }
                 }
@@ -658,30 +651,29 @@ public final class StandardWrapper
             if (!singleThreadModel) {
                 if (debug >= 2)
                     log("  Returning non-STM instance");
-                countAllocated++;
-                return (instance);
+                countAllocated++;   // 一个线程占有了一个Servlet实例
+                return (instance);      // 在 singleThreadModel 为false的情况下，始终返回相同的instance，因此需要Servlet程序要来保证service方法的线程安全
             }
 
         }
 
-        synchronized (instancePool) {
+        synchronized (instancePool) {       // 为了获得更好的性能，在STM下，StandardWrapper维护了一个Servlet池
 
-            while (countAllocated >= nInstances) {
+            while (countAllocated >= nInstances) {      // 当池中的元素还未达到允许的池大小上限
                 // Allocate a new instance if possible, or else wait
                 if (nInstances < maxInstances) {
                     try {
-                        instancePool.push(loadServlet());
+                        instancePool.push(loadServlet());       // 对于STM Servlet，将其放入池
                         nInstances++;
                     } catch (ServletException e) {
                         throw e;
                     } catch (Throwable e) {
-                        throw new ServletException
-                                (sm.getString("standardWrapper.allocate"), e);
+                        throw new ServletException(sm.getString("standardWrapper.allocate"), e);
                     }
-                } else {
+                } else {    // 创建的Servlet实例已经达到maxInstances指定的上限了
                     try {
-                        instancePool.wait();
-                    } catch (InterruptedException e) {
+                        instancePool.wait();    // 阻塞当前线程
+                    } catch (InterruptedException ignored) {
                         ;
                     }
                 }
@@ -716,7 +708,7 @@ public final class StandardWrapper
         synchronized (instancePool) {
             countAllocated--;
             instancePool.push(servlet);
-            instancePool.notify();
+            instancePool.notify();      // 当前线程处理完成，归还Servlet到Servlet池，通知等待线程启动
         }
 
     }
@@ -825,25 +817,22 @@ public final class StandardWrapper
             // order to be completely effective
             String actualClass = servletClass;
             if ((actualClass == null) && (jspFile != null)) {
-                Wrapper jspWrapper = (Wrapper)
-                        ((Context) getParent()).findChild(Constants.JSP_SERVLET_NAME);
+                Wrapper jspWrapper = (Wrapper) ((Context) getParent()).findChild(Constants.JSP_SERVLET_NAME);
                 if (jspWrapper != null)
-                    actualClass = jspWrapper.getServletClass();
+                    actualClass = jspWrapper.getServletClass();     // 对于jsp，获取其实际的Servlet类
             }
 
             // Complain if no servlet class has been specified
             if (actualClass == null) {
                 unavailable(null);
-                throw new ServletException
-                        (sm.getString("standardWrapper.notClass", getName()));
+                throw new ServletException(sm.getString("standardWrapper.notClass", getName()));
             }
 
             // Acquire an instance of the class loader to be used
             Loader loader = getLoader();
             if (loader == null) {
                 unavailable(null);
-                throw new ServletException
-                        (sm.getString("standardWrapper.missingLoader", getName()));
+                throw new ServletException(sm.getString("standardWrapper.missingLoader", getName()));
             }
 
             ClassLoader classLoader = loader.getClassLoader();
@@ -851,8 +840,7 @@ public final class StandardWrapper
             // Special case class loader for a container provided servlet
             if (isContainerProvidedServlet(actualClass)) {
                 classLoader = this.getClass().getClassLoader();
-                log(sm.getString
-                        ("standardWrapper.containerServlet", getName()));
+                log(sm.getString("standardWrapper.containerServlet", getName()));
             }
 
             // Load the specified servlet class from the appropriate class loader
@@ -867,14 +855,11 @@ public final class StandardWrapper
                 }
             } catch (ClassNotFoundException e) {
                 unavailable(null);
-                throw new ServletException
-                        (sm.getString("standardWrapper.missingClass", actualClass),
-                                e);
+                throw new ServletException(sm.getString("standardWrapper.missingClass", actualClass), e);
             }
             if (classClass == null) {
                 unavailable(null);
-                throw new ServletException
-                        (sm.getString("standardWrapper.missingClass", actualClass));
+                throw new ServletException(sm.getString("standardWrapper.missingClass", actualClass));
             }
 
             // Instantiate and initialize an instance of the servlet class itself
@@ -894,25 +879,22 @@ public final class StandardWrapper
 
             // Check if loading the servlet in this web application should be
             // allowed
-            if (!isServletAllowed(servlet)) {
-                throw new SecurityException
-                        (sm.getString("standardWrapper.privilegedServlet",
-                                actualClass));
+            if (!isServletAllowed(servlet)) {   // 检查该Servlet类是否允许载入
+                throw new SecurityException(sm.getString("standardWrapper.privilegedServlet", actualClass));
             }
 
             // Special handling for ContainerServlet instances
-            if ((servlet instanceof ContainerServlet) &&
-                    isContainerProvidedServlet(actualClass)) {
+            // 访问Servlet容器内部数据专用Servlet类，isContainerProvidedServlet检测
+            if ((servlet instanceof ContainerServlet) && isContainerProvidedServlet(actualClass)) {
                 System.out.println("calling setWrapper");
-                ((ContainerServlet) servlet).setWrapper(this);
+                ((ContainerServlet) servlet).setWrapper(this);  // 对于ContainerServlet会将StandardWrapper传入
                 System.out.println("after calling setWrapper");
             }
 
 
             // Call the initialization method of this servlet
             try {
-                instanceSupport.fireInstanceEvent(InstanceEvent.BEFORE_INIT_EVENT,
-                        servlet);
+                instanceSupport.fireInstanceEvent(InstanceEvent.BEFORE_INIT_EVENT, servlet);    // 触发事件
                 servlet.init(facade);   // 初始化
                 // Invoke jspInit on JSP pages
                 if ((loadOnStartup > 0) && (jspFile != null)) {
@@ -921,32 +903,28 @@ public final class StandardWrapper
                     HttpResponseBase res = new HttpResponseBase();
                     req.setServletPath(jspFile);
                     req.setQueryString("jsp_precompile=true");
-                    servlet.service(req, res);  // 业务处理
+                    servlet.service(req, res);  // 对于jsp，直接调用其service方法
                 }
-                instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_INIT_EVENT,
-                        servlet);
+                instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_INIT_EVENT, servlet);
             } catch (UnavailableException f) {
-                instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_INIT_EVENT,
-                        servlet, f);
+                instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_INIT_EVENT, servlet, f);
                 unavailable(f);
                 throw f;
             } catch (ServletException f) {
-                instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_INIT_EVENT,
-                        servlet, f);
+                instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_INIT_EVENT, servlet, f);
                 // If the servlet wanted to be unavailable it would have
                 // said so, so do not call unavailable(null).
                 throw f;
             } catch (Throwable f) {
-                instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_INIT_EVENT,
-                        servlet, f);
+                instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_INIT_EVENT, servlet, f);
                 // If the servlet wanted to be unavailable it would have
                 // said so, so do not call unavailable(null).
-                throw new ServletException
-                        (sm.getString("standardWrapper.initException", getName()), f);
+                throw new ServletException(sm.getString("standardWrapper.initException", getName()), f);
             }
 
             // Register our newly initialized instance
-            singleThreadModel = servlet instanceof SingleThreadModel;
+            // 由Servlet容器保证，控制对单一Servlet实例的同步访问实现；但并不能保证Servlet去访问临界资源造成的同步问题
+            singleThreadModel = servlet instanceof SingleThreadModel;       // 根据Servlet规范，实现改接口是保证Servlet实例一次只处理一个请求
             if (singleThreadModel) {
                 if (instancePool == null)
                     instancePool = new Stack();
@@ -1044,8 +1022,7 @@ public final class StandardWrapper
             int unavailableSeconds = unavailable.getUnavailableSeconds();
             if (unavailableSeconds <= 0)
                 unavailableSeconds = 60;        // Arbitrary default
-            setAvailable(System.currentTimeMillis() +
-                    (unavailableSeconds * 1000L));
+            setAvailable(System.currentTimeMillis() + (unavailableSeconds * 1000L));
         }
 
     }
@@ -1074,20 +1051,19 @@ public final class StandardWrapper
             int nRetries = 0;
             while (nRetries < 10) {
                 if (nRetries == 0) {
-                    log("Waiting for " + countAllocated +
-                            " instance(s) to be deallocated");
+                    log("Waiting for " + countAllocated + " instance(s) to be deallocated");
                 }
                 try {
                     Thread.sleep(50);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                     ;
                 }
                 nRetries++;
             }
         }
 
-        ClassLoader oldCtxClassLoader =
-                Thread.currentThread().getContextClassLoader();
+        // TCC模式
+        ClassLoader oldCtxClassLoader = Thread.currentThread().getContextClassLoader();
         ClassLoader classLoader = instance.getClass().getClassLoader();
 
         PrintStream out = System.out;
@@ -1095,26 +1071,21 @@ public final class StandardWrapper
 
         // Call the servlet destroy() method
         try {
-            instanceSupport.fireInstanceEvent
-                    (InstanceEvent.BEFORE_DESTROY_EVENT, instance);
-            Thread.currentThread().setContextClassLoader(classLoader);
-            instance.destroy();
-            instanceSupport.fireInstanceEvent
-                    (InstanceEvent.AFTER_DESTROY_EVENT, instance);
+            instanceSupport.fireInstanceEvent(InstanceEvent.BEFORE_DESTROY_EVENT, instance);    // 发送Servlet销毁事件
+            Thread.currentThread().setContextClassLoader(classLoader);  // 切换到Servlet的类加载器
+            instance.destroy();         // 执行Servlet销毁回调
+            instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_DESTROY_EVENT, instance);
         } catch (Throwable t) {
-            instanceSupport.fireInstanceEvent
-                    (InstanceEvent.AFTER_DESTROY_EVENT, instance, t);
+            instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_DESTROY_EVENT, instance, t);
             instance = null;
             instancePool = null;
             nInstances = 0;
             fireContainerEvent("unload", this);
             unloading = false;
-            throw new ServletException
-                    (sm.getString("standardWrapper.destroyException", getName()),
-                            t);
+            throw new ServletException(sm.getString("standardWrapper.destroyException", getName()), t);
         } finally {
             // restore the context ClassLoader
-            Thread.currentThread().setContextClassLoader(oldCtxClassLoader);
+            Thread.currentThread().setContextClassLoader(oldCtxClassLoader);        // 恢复类加载器
             // Write captured output
             String log = SystemLogHandler.stopCapture();
             if (log != null && log.length() > 0) {
@@ -1133,20 +1104,17 @@ public final class StandardWrapper
             try {
                 Thread.currentThread().setContextClassLoader(classLoader);
                 while (!instancePool.isEmpty()) {
-                    ((Servlet) instancePool.pop()).destroy();
+                    ((Servlet) instancePool.pop()).destroy();       // 将Servlet池中所有实例一并销毁
                 }
             } catch (Throwable t) {
                 instancePool = null;
                 nInstances = 0;
                 unloading = false;
                 fireContainerEvent("unload", this);
-                throw new ServletException
-                        (sm.getString("standardWrapper.destroyException",
-                                getName()), t);
+                throw new ServletException(sm.getString("standardWrapper.destroyException", getName()), t);
             } finally {
                 // restore the context ClassLoader
-                Thread.currentThread().setContextClassLoader
-                        (oldCtxClassLoader);
+                Thread.currentThread().setContextClassLoader(oldCtxClassLoader);
             }
             instancePool = null;
             nInstances = 0;
@@ -1190,7 +1158,7 @@ public final class StandardWrapper
     /**
      * Return the servlet context with which this servlet is associated.
      */
-    public ServletContext getServletContext() {
+    public ServletContext getServletContext() {     // wrapper实例必须驻留在某个context
 
         if (parent == null)
             return (null);
@@ -1236,7 +1204,6 @@ public final class StandardWrapper
      * container provided servlet class that should be loaded by the
      * server class loader.
      *
-     * @param name Name of the class to be checked
      */
     private boolean isContainerProvidedServlet(String classname) {
 

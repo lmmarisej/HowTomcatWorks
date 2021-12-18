@@ -21,7 +21,7 @@ public final class Bootstrap {
 
         System.setProperty("catalina.base", System.getProperty("user.dir"));
         Connector connector = new HttpConnector();
-        Wrapper wrapper1 = new StandardWrapper();
+        Wrapper wrapper1 = new StandardWrapper();       // 演示如何使用StandardWrapper，就是一个Servlet
         wrapper1.setName("Primitive");
         wrapper1.setServletClass("PrimitiveServlet");
         Wrapper wrapper2 = new StandardWrapper();

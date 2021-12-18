@@ -77,7 +77,7 @@ import java.util.Map;
  * @version $Revision: 1.2 $ $Date: 2001/07/22 20:25:10 $
  */
 
-public final class FilterDef {
+public final class FilterDef {      // 表示一个过滤器的定义
 
 
     // ------------------------------------------------------------- Properties
@@ -158,7 +158,7 @@ public final class FilterDef {
      * The set of initialization parameters for this filter, keyed by
      * parameter name.
      */
-    private Map parameters = new HashMap();
+    private Map parameters = new HashMap();     // 存储了初始化filter时所需的所有参数
 
     public Map getParameterMap() {
 

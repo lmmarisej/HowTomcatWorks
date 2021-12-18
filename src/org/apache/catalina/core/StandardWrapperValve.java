@@ -31,7 +31,7 @@ import org.apache.catalina.valves.ValveBase;
  * @version $Revision: 1.34 $ $Date: 2002/03/15 19:12:49 $
  */
 
-final class StandardWrapperValve
+final class StandardWrapperValve        // 是StandardWrapper的基础阀，作用：执行与该Servlet相关的所有Filter、调用service方法
         extends ValveBase {
 
 
@@ -90,9 +90,7 @@ final class StandardWrapperValve
      * @throws IOException      if an input/output error occurred
      * @throws ServletException if a servlet error occurred
      */
-    public void invoke(Request request, Response response,
-                       ValveContext valveContext)
-            throws IOException, ServletException {
+    public void invoke(Request request, Response response, ValveContext valveContext) throws IOException, ServletException {
         // Initialize local variables we may need
         boolean unavailable = false;
         Throwable throwable = null;
@@ -109,24 +107,20 @@ final class StandardWrapperValve
 
         // Check for the application being marked unavailable
         if (!((Context) wrapper.getParent()).getAvailable()) {
-            hres.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,
-                    sm.getString("standardContext.isUnavailable"));
+            hres.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, sm.getString("standardContext.isUnavailable"));
             unavailable = true;
         }
 
         // Check for the servlet being marked unavailable
         if (!unavailable && wrapper.isUnavailable()) {
-            log(sm.getString("standardWrapper.isUnavailable",
-                    wrapper.getName()));
+            log(sm.getString("standardWrapper.isUnavailable", wrapper.getName()));
             if (hres == null) {
-                ;       // NOTE - Not much we can do generically
+                // ignored； NOTE - Not much we can do generically
             } else {
                 long available = wrapper.getAvailable();
                 if ((available > 0L) && (available < Long.MAX_VALUE))
                     hres.setDateHeader("Retry-After", available);
-                hres.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,
-                        sm.getString("standardWrapper.isUnavailable",
-                                wrapper.getName()));
+                hres.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, sm.getString("standardWrapper.isUnavailable", wrapper.getName()));
             }
             unavailable = true;
         }
@@ -134,17 +128,15 @@ final class StandardWrapperValve
         // Allocate a servlet instance to process this request
         try {
             if (!unavailable) {
-                servlet = wrapper.allocate();
+                servlet = wrapper.allocate();       // 获取该wrapper实例表示的Servlet
             }
         } catch (ServletException e) {
-            log(sm.getString("standardWrapper.allocateException",
-                    wrapper.getName()), e);
+            log(sm.getString("standardWrapper.allocateException", wrapper.getName()), e);
             throwable = e;
             exception(request, response, e);
             servlet = null;
         } catch (Throwable e) {
-            log(sm.getString("standardWrapper.allocateException",
-                    wrapper.getName()), e);
+            log(sm.getString("standardWrapper.allocateException", wrapper.getName()), e);
             throwable = e;
             exception(request, response, e);
             servlet = null;
@@ -155,8 +147,7 @@ final class StandardWrapperValve
             response.sendAcknowledgement();
         } catch (IOException e) {
             sreq.removeAttribute(Globals.JSP_FILE_ATTR);
-            log(sm.getString("standardWrapper.acknowledgeException",
-                    wrapper.getName()), e);
+            log(sm.getString("standardWrapper.acknowledgeException", wrapper.getName()), e);
             throwable = e;
             exception(request, response, e);
         } catch (Throwable e) {
@@ -168,8 +159,7 @@ final class StandardWrapperValve
         }
 
         // Create the filter chain for this request
-        ApplicationFilterChain filterChain =
-                createFilterChain(request, servlet);
+        ApplicationFilterChain filterChain = createFilterChain(request, servlet);       // 过滤器链
 
         // Call the filter chain for this request
         // NOTE: This also calls the servlet's service() method
@@ -180,40 +170,34 @@ final class StandardWrapperValve
             else
                 sreq.removeAttribute(Globals.JSP_FILE_ATTR);
             if ((servlet != null) && (filterChain != null)) {
-                filterChain.doFilter(sreq, sres);
+                filterChain.doFilter(sreq, sres);       // StandardWrapperValve的主要职责之一，执行所有关联的filter
             }
             sreq.removeAttribute(Globals.JSP_FILE_ATTR);
         } catch (IOException e) {
             sreq.removeAttribute(Globals.JSP_FILE_ATTR);
-            log(sm.getString("standardWrapper.serviceException",
-                    wrapper.getName()), e);
+            log(sm.getString("standardWrapper.serviceException", wrapper.getName()), e);
             throwable = e;
             exception(request, response, e);
         } catch (UnavailableException e) {
             sreq.removeAttribute(Globals.JSP_FILE_ATTR);
-            log(sm.getString("standardWrapper.serviceException",
-                    wrapper.getName()), e);
+            log(sm.getString("standardWrapper.serviceException", wrapper.getName()), e);
             //            throwable = e;
             //            exception(request, response, e);
             wrapper.unavailable(e);
             long available = wrapper.getAvailable();
             if ((available > 0L) && (available < Long.MAX_VALUE))
                 hres.setDateHeader("Retry-After", available);
-            hres.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,
-                    sm.getString("standardWrapper.isUnavailable",
-                            wrapper.getName()));
+            hres.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, sm.getString("standardWrapper.isUnavailable", wrapper.getName()));
             // Do not save exception in 'throwable', because we
             // do not want to do exception(request, response, e) processing
         } catch (ServletException e) {
             sreq.removeAttribute(Globals.JSP_FILE_ATTR);
-            log(sm.getString("standardWrapper.serviceException",
-                    wrapper.getName()), e);
+            log(sm.getString("standardWrapper.serviceException", wrapper.getName()), e);
             throwable = e;
             exception(request, response, e);
         } catch (Throwable e) {
             sreq.removeAttribute(Globals.JSP_FILE_ATTR);
-            log(sm.getString("standardWrapper.serviceException",
-                    wrapper.getName()), e);
+            log(sm.getString("standardWrapper.serviceException", wrapper.getName()), e);
             throwable = e;
             exception(request, response, e);
         }
@@ -221,10 +205,9 @@ final class StandardWrapperValve
         // Release the filter chain (if any) for this request
         try {
             if (filterChain != null)
-                filterChain.release();
+                filterChain.release();      // 释放过滤器链
         } catch (Throwable e) {
-            log(sm.getString("standardWrapper.releaseFilters",
-                    wrapper.getName()), e);
+            log(sm.getString("standardWrapper.releaseFilters", wrapper.getName()), e);
             if (throwable == null) {
                 throwable = e;
                 exception(request, response, e);
@@ -234,11 +217,10 @@ final class StandardWrapperValve
         // Deallocate the allocated servlet instance
         try {
             if (servlet != null) {
-                wrapper.deallocate(servlet);
+                wrapper.deallocate(servlet);        // 修改Servlet创建的实例个数、将STM Servlet归还到Servlet池
             }
         } catch (Throwable e) {
-            log(sm.getString("standardWrapper.deallocateException",
-                    wrapper.getName()), e);
+            log(sm.getString("standardWrapper.deallocateException", wrapper.getName()), e);
             if (throwable == null) {
                 throwable = e;
                 exception(request, response, e);
@@ -248,13 +230,11 @@ final class StandardWrapperValve
         // If this servlet has been marked permanently unavailable,
         // unload it and release this instance
         try {
-            if ((servlet != null) &&
-                    (wrapper.getAvailable() == Long.MAX_VALUE)) {
-                wrapper.unload();
+            if ((servlet != null) && (wrapper.getAvailable() == Long.MAX_VALUE)) {
+                wrapper.unload();   // 如果该Servlet类不再用，执行Servlet卸载（Servlet销毁事件发送、destroy回调），对于STM类型，将池中的一并卸载
             }
         } catch (Throwable e) {
-            log(sm.getString("standardWrapper.unloadException",
-                    wrapper.getName()), e);
+            log(sm.getString("standardWrapper.unloadException", wrapper.getName()), e);
             if (throwable == null) {
                 throwable = e;
                 exception(request, response, e);
@@ -293,7 +273,7 @@ final class StandardWrapperValve
 
         // Acquire the filter mappings for this Context
         StandardContext context = (StandardContext) wrapper.getParent();
-        FilterMap filterMaps[] = context.findFilterMaps();
+        FilterMap[] filterMaps = context.findFilterMaps();
 
         // If there are no filter mappings, we are done
         if ((filterMaps == null) || (filterMaps.length == 0))
@@ -322,14 +302,14 @@ final class StandardWrapperValve
         int n = 0;
 
         // Add the relevant path-mapped filters to this filter chain
-        for (int i = 0; i < filterMaps.length; i++) {
+        for (FilterMap filterMap : filterMaps) {
 //            if (debug >= 2)
 //                log(" Checking path-mapped filter '" +
 //                    filterMaps[i] + "'");
-            if (!matchFiltersURL(filterMaps[i], requestPath))
+            if (!matchFiltersURL(filterMap, requestPath))
                 continue;
             ApplicationFilterConfig filterConfig = (ApplicationFilterConfig)
-                    context.findFilterConfig(filterMaps[i].getFilterName());
+                    context.findFilterConfig(filterMap.getFilterName());
             if (filterConfig == null) {
 //                if (debug >= 2)
 //                    log(" Missing path-mapped filter '" +
@@ -345,14 +325,14 @@ final class StandardWrapperValve
         }
 
         // Add filters that match on servlet name second
-        for (int i = 0; i < filterMaps.length; i++) {
+        for (FilterMap filterMap : filterMaps) {
 //            if (debug >= 2)
 //                log(" Checking servlet-mapped filter '" +
 //                    filterMaps[i] + "'");
-            if (!matchFiltersServlet(filterMaps[i], servletName))
+            if (!matchFiltersServlet(filterMap, servletName))
                 continue;
             ApplicationFilterConfig filterConfig = (ApplicationFilterConfig)
-                    context.findFilterConfig(filterMaps[i].getFilterName());
+                    context.findFilterConfig(filterMap.getFilterName());
             if (filterConfig == null) {
 //                if (debug >= 2)
 //                    log(" Missing servlet-mapped filter '" +

@@ -1386,12 +1386,13 @@ public abstract class ContainerBase
         if (listeners.size() < 1)
             return;
         ContainerEvent event = new ContainerEvent(this, type, data);
-        ContainerListener list[] = new ContainerListener[0];
+        ContainerListener[] list = new ContainerListener[0];
         synchronized (listeners) {
-            list = (ContainerListener[]) listeners.toArray(list);
+            list = (ContainerListener[]) listeners.toArray(list);   // 浅拷贝listeners到list，仅仅只是将存储元素引用的集合深拷贝了一次
         }
-        for (int i = 0; i < list.length; i++)
-            ((ContainerListener) list[i]).containerEvent(event);
+
+        for (ContainerListener containerListener : list)
+            containerListener.containerEvent(event);
 
     }
 

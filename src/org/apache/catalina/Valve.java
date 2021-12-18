@@ -85,7 +85,7 @@ import javax.servlet.ServletException;
  * @version $Revision: 1.4 $ $Date: 2001/07/22 20:13:30 $
  */
 
-public interface Valve {
+public interface Valve {    // 结合pipeline使用
 
 
     //-------------------------------------------------------------- Properties

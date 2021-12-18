@@ -87,7 +87,8 @@ import org.apache.catalina.util.Enumerator;
  * @version $Revision: 1.7 $ $Date: 2001/07/22 20:25:08 $
  */
 
-final class ApplicationFilterConfig implements FilterConfig {
+final class ApplicationFilterConfig // 管理web应用程序第一次启动时创建的所有过滤器实例
+        implements FilterConfig {
 
 
     // ----------------------------------------------------------- Constructors
@@ -244,11 +245,10 @@ final class ApplicationFilterConfig implements FilterConfig {
         else
             classLoader = context.getLoader().getClassLoader();
 
-        ClassLoader oldCtxClassLoader =
-                Thread.currentThread().getContextClassLoader();
+        ClassLoader oldCtxClassLoader = Thread.currentThread().getContextClassLoader();
 
         // Instantiate a new instance of this filter and return it
-        Class clazz = classLoader.loadClass(filterClass);
+        Class clazz = classLoader.loadClass(filterClass);       // 根据过滤器定义信息，加载并实例化
         this.filter = (Filter) clazz.newInstance();
         filter.init(this);
         return (this.filter);

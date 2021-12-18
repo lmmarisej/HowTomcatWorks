@@ -94,7 +94,9 @@ import org.apache.catalina.util.StringManager;
  * @version $Revision: 1.11 $ $Date: 2001/10/11 23:30:58 $
  */
 
-final class ApplicationFilterChain implements FilterChain {
+final class ApplicationFilterChain      // 被StandardWrapperValve#invoke中创建实例
+        implements FilterChain      // 实现Java EE接口
+{
 
 
     // ----------------------------------------------------------- Constructors
@@ -121,8 +123,7 @@ final class ApplicationFilterChain implements FilterChain {
 
     /**
      * The iterator that is used to maintain the current position in the filter chain.
-     * This iterator is called the first time that <code>doFilter()</code>
-     * is called.
+     * This iterator is called the first time that <code>doFilter()</code> is called.
      */
     private Iterator iterator = null;
 
@@ -196,75 +197,61 @@ final class ApplicationFilterChain implements FilterChain {
 
         // Construct an iterator the first time this method is called
         if (this.iterator == null)
-            this.iterator = filters.iterator();
+            this.iterator = filters.iterator();     // 创建一个iterator，维护当前filter的位置
 
         // Call the next filter if there is one
         if (this.iterator.hasNext()) {
-            ApplicationFilterConfig filterConfig =
-                    (ApplicationFilterConfig) iterator.next();
+            ApplicationFilterConfig filterConfig = (ApplicationFilterConfig) iterator.next();
             Filter filter = null;
             try {
                 filter = filterConfig.getFilter();
-                support.fireInstanceEvent(InstanceEvent.BEFORE_FILTER_EVENT,
-                        filter, request, response);
-                filter.doFilter(request, response, this);
-                support.fireInstanceEvent(InstanceEvent.AFTER_FILTER_EVENT,
-                        filter, request, response);
+                support.fireInstanceEvent(InstanceEvent.BEFORE_FILTER_EVENT, filter, request, response);    // 触发filter执行事件
+                // 过滤器处理请求
+                filter.doFilter(request, response,
+                        this);   // 将自身作为参数传递给下一个filter
+                support.fireInstanceEvent(InstanceEvent.AFTER_FILTER_EVENT, filter, request, response);
             } catch (IOException e) {
                 if (filter != null)
-                    support.fireInstanceEvent(InstanceEvent.AFTER_FILTER_EVENT,
-                            filter, request, response, e);
+                    support.fireInstanceEvent(InstanceEvent.AFTER_FILTER_EVENT, filter, request, response, e);
                 throw e;
             } catch (ServletException e) {
                 if (filter != null)
-                    support.fireInstanceEvent(InstanceEvent.AFTER_FILTER_EVENT,
-                            filter, request, response, e);
+                    support.fireInstanceEvent(InstanceEvent.AFTER_FILTER_EVENT, filter, request, response, e);
                 throw e;
             } catch (RuntimeException e) {
                 if (filter != null)
-                    support.fireInstanceEvent(InstanceEvent.AFTER_FILTER_EVENT,
-                            filter, request, response, e);
+                    support.fireInstanceEvent(InstanceEvent.AFTER_FILTER_EVENT, filter, request, response, e);
                 throw e;
             } catch (Throwable e) {
                 if (filter != null)
-                    support.fireInstanceEvent(InstanceEvent.AFTER_FILTER_EVENT,
-                            filter, request, response, e);
-                throw new ServletException
-                        (sm.getString("filterChain.filter"), e);
+                    support.fireInstanceEvent(InstanceEvent.AFTER_FILTER_EVENT, filter, request, response, e);
+                throw new ServletException(sm.getString("filterChain.filter"), e);
             }
             return;
         }
 
         // We fell off the end of the chain -- call the servlet instance
+        // 没有过滤器或过滤器执行完毕，处理Servlet业务
         try {
-            support.fireInstanceEvent(InstanceEvent.BEFORE_SERVICE_EVENT,
-                    servlet, request, response);
-            if ((request instanceof HttpServletRequest) &&
-                    (response instanceof HttpServletResponse)) {
-                servlet.service((HttpServletRequest) request,
-                        (HttpServletResponse) response);
+            support.fireInstanceEvent(InstanceEvent.BEFORE_SERVICE_EVENT, servlet, request, response);
+            if ((request instanceof HttpServletRequest) && (response instanceof HttpServletResponse)) {
+                servlet.service((HttpServletRequest) request, (HttpServletResponse) response);
             } else {
                 servlet.service(request, response);
             }
-            support.fireInstanceEvent(InstanceEvent.AFTER_SERVICE_EVENT,
-                    servlet, request, response);
+            support.fireInstanceEvent(InstanceEvent.AFTER_SERVICE_EVENT, servlet, request, response);
         } catch (IOException e) {
-            support.fireInstanceEvent(InstanceEvent.AFTER_SERVICE_EVENT,
-                    servlet, request, response, e);
+            support.fireInstanceEvent(InstanceEvent.AFTER_SERVICE_EVENT, servlet, request, response, e);
             throw e;
         } catch (ServletException e) {
-            support.fireInstanceEvent(InstanceEvent.AFTER_SERVICE_EVENT,
-                    servlet, request, response, e);
+            support.fireInstanceEvent(InstanceEvent.AFTER_SERVICE_EVENT, servlet, request, response, e);
             throw e;
         } catch (RuntimeException e) {
-            support.fireInstanceEvent(InstanceEvent.AFTER_SERVICE_EVENT,
-                    servlet, request, response, e);
+            support.fireInstanceEvent(InstanceEvent.AFTER_SERVICE_EVENT, servlet, request, response, e);
             throw e;
         } catch (Throwable e) {
-            support.fireInstanceEvent(InstanceEvent.AFTER_SERVICE_EVENT,
-                    servlet, request, response, e);
-            throw new ServletException
-                    (sm.getString("filterChain.servlet"), e);
+            support.fireInstanceEvent(InstanceEvent.AFTER_SERVICE_EVENT, servlet, request, response, e);
+            throw new ServletException(sm.getString("filterChain.servlet"), e);
         }
 
     }
@@ -290,9 +277,9 @@ final class ApplicationFilterChain implements FilterChain {
      */
     void release() {
 
-        this.filters.clear();
-        this.iterator = iterator;
-        this.servlet = null;
+        this.filters.clear();       // 取消对所有filter的引用
+        this.iterator = iterator;   // ？？？
+        this.servlet = null;        // 将Servlet一并释放
 
     }
 

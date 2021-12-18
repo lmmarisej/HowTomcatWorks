@@ -4,23 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="90ea6886-fcac-477e-b0ac-7d53f08e6a66" name="Default" comment="add session、连接器、日志、加载器、容器、lifecycle增加注释">
-      <change afterPath="$PROJECT_DIR$/work/_/_/myApp/SESSIONS.ser" afterDir="false" />
+    <list default="true" id="90ea6886-fcac-477e-b0ac-7d53f08e6a66" name="Default" comment="add 安全部分注释">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ex10/pyrmont/core/SimpleContextConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex10/pyrmont/core/SimpleContextConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ex10/pyrmont/realm/SimpleRealm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex10/pyrmont/realm/SimpleRealm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ex10/pyrmont/realm/SimpleUserDatabaseRealm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex10/pyrmont/realm/SimpleUserDatabaseRealm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ex10/pyrmont/startup/Bootstrap1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex10/pyrmont/startup/Bootstrap1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Authenticator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Authenticator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Realm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Realm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/authenticator/AuthenticatorBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/authenticator/AuthenticatorBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/authenticator/NonLoginAuthenticator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/authenticator/NonLoginAuthenticator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex11/pyrmont/startup/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex11/pyrmont/startup/Bootstrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Response.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Response.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Valve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Valve.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/ApplicationContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/ApplicationContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/ApplicationFilterChain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/ApplicationFilterChain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/ApplicationFilterConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/ApplicationFilterConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/ContainerBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/ContainerBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/deploy/LoginConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/deploy/LoginConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/deploy/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/deploy/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/realm/GenericPrincipal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/realm/GenericPrincipal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/valves/AccessLogValve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/valves/AccessLogValve.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardWrapperFacade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardWrapperFacade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardWrapperValve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardWrapperValve.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/deploy/FilterDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/deploy/FilterDef.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,6 +79,9 @@
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="MavenProjectNavigator">
     <treeState>
@@ -166,23 +165,12 @@
   <component name="RebelAgentSelection">
     <selection>jr</selection>
   </component>
-  <component name="RunManager" selected="Application.Bootstrap1 (1)">
+  <component name="RunManager" selected="Application.ContainerBase">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="WIDTH" value="400" />
       <option name="HEIGHT" value="300" />
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <module />
-    </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
     </configuration>
     <configuration name="Bootstrap1 (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ex10.pyrmont.startup.Bootstrap1" />
@@ -198,13 +186,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Bootstrap1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ex05.pyrmont.startup.Bootstrap1" />
+    <configuration name="ContainerBase" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.apache.catalina.core.ContainerBase" />
       <module name="HowTomcatWorks" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="ex05.pyrmont.startup.*" />
+          <option name="PATTERN" value="org.apache.catalina.core.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -260,6 +248,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -287,18 +288,18 @@
     </configuration>
     <list>
       <item itemvalue="Application.HttpSniffer" />
-      <item itemvalue="Application.Bootstrap1" />
       <item itemvalue="Application.Test" />
       <item itemvalue="Application.SimpleUserDatabaseRealm" />
       <item itemvalue="Application.Bootstrap1 (1)" />
+      <item itemvalue="Application.ContainerBase" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ContainerBase" />
         <item itemvalue="Application.Bootstrap1 (1)" />
         <item itemvalue="Application.SimpleUserDatabaseRealm" />
         <item itemvalue="Application.Test" />
         <item itemvalue="Application.HttpSniffer" />
-        <item itemvalue="Application.Bootstrap1" />
       </list>
     </recent_temporary>
   </component>
@@ -323,7 +324,8 @@
       <workItem from="1639817707027" duration="271000" />
       <workItem from="1639817998416" duration="29000" />
       <workItem from="1639818041131" duration="45000" />
-      <workItem from="1639818100935" duration="11886000" />
+      <workItem from="1639818100935" duration="21898000" />
+      <workItem from="1639851111529" duration="688000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1639729728189</created>
@@ -346,7 +348,14 @@
       <option name="project" value="LOCAL" />
       <updated>1639830878118</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add 安全部分注释">
+      <created>1639836243650</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1639836243650</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -396,14 +405,14 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="init" />
     <MESSAGE value="add session、连接器、日志、加载器、容器、lifecycle增加注释" />
-    <option name="LAST_COMMIT_MESSAGE" value="add session、连接器、日志、加载器、容器、lifecycle增加注释" />
+    <MESSAGE value="add 安全部分注释" />
+    <option name="LAST_COMMIT_MESSAGE" value="add 安全部分注释" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/cxs02/pyrmont/HttpServer1.java">

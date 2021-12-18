@@ -994,7 +994,7 @@ public class ApplicationContext
     /**
      * Return the facade associated with this ApplicationContext.
      */
-    ServletContext getFacade() {
+    ServletContext getFacade() {        // 对外暴露被隐藏过部分方法的自身实例
 
         return (this.facade);
 

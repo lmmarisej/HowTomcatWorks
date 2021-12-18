@@ -221,8 +221,7 @@ public interface Response {
      *
      * @throws IOException if an input/output error occurs
      */
-    public void sendAcknowledgement()
-            throws IOException;
+    public void sendAcknowledgement() throws IOException;
 
 
 }
