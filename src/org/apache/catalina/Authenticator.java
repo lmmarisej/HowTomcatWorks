@@ -76,7 +76,7 @@ package org.apache.catalina;
  * @version $Revision: 1.3 $ $Date: 2001/07/22 20:13:30 $
  */
 
-public interface Authenticator {
+public interface Authenticator {    // 用来标记一个类是否为一个验证器
 
 
 }

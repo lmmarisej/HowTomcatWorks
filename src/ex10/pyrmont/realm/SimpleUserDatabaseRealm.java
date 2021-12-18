@@ -1,17 +1,14 @@
 package ex10.pyrmont.realm;
 // modification of org.apache.catalina.realm.UserDatabaseRealm
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.apache.catalina.Group;
-import org.apache.catalina.Role;
-import org.apache.catalina.User;
-import org.apache.catalina.UserDatabase;
+import org.apache.catalina.*;
 import org.apache.catalina.realm.GenericPrincipal;
 import org.apache.catalina.realm.RealmBase;
 import org.apache.catalina.users.MemoryUserDatabase;
+
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class SimpleUserDatabaseRealm extends RealmBase {
 
@@ -61,8 +58,7 @@ public class SimpleUserDatabaseRealm extends RealmBase {
                 }
             }
         }
-        return (new GenericPrincipal(this, user.getUsername(),
-                user.getPassword(), combined));
+        return (new GenericPrincipal(this, user.getUsername(), user.getPassword(), combined));
     }
 
     // ------------------------------------------------------ Lifecycle Methods

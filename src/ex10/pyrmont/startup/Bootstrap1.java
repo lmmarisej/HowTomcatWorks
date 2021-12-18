@@ -19,23 +19,29 @@ import org.apache.catalina.deploy.SecurityConstraint;
 import org.apache.catalina.loader.WebappLoader;
 
 public final class Bootstrap1 {
+
     public static void main(String[] args) {
 
         //invoke: http://localhost:8080/Modern or  http://localhost:8080/Primitive
 
         System.setProperty("catalina.base", System.getProperty("user.dir"));
+
         Connector connector = new HttpConnector();
+
         Wrapper wrapper1 = new SimpleWrapper();
         wrapper1.setName("Primitive");
         wrapper1.setServletClass("PrimitiveServlet");
+
         Wrapper wrapper2 = new SimpleWrapper();
         wrapper2.setName("Modern");
         wrapper2.setServletClass("ModernServlet");
 
         Context context = new StandardContext();
+
         // StandardContext's start method adds a default mapper
         context.setPath("/myApp");
         context.setDocBase("myApp");
+
         LifecycleListener listener = new SimpleContextConfig();
         ((Lifecycle) context).addLifecycleListener(listener);
 
@@ -55,16 +61,16 @@ public final class Bootstrap1 {
 
         // add constraint
         SecurityCollection securityCollection = new SecurityCollection();
-        securityCollection.addPattern("/");
-        securityCollection.addMethod("GET");
+        securityCollection.addPattern("/");     // 指定那些需要遵循安全限制
+        securityCollection.addMethod("GET");    // 指定安全限制要使用哪种验证方法
 
         SecurityConstraint constraint = new SecurityConstraint();
         constraint.addCollection(securityCollection);
-        constraint.addAuthRole("manager");
+        constraint.addAuthRole("manager");      // 设置哪种角色能访问受限制资源
         LoginConfig loginConfig = new LoginConfig();
         loginConfig.setRealmName("Simple Realm");
         // add realm
-        Realm realm = new SimpleRealm();
+        Realm realm = new SimpleRealm();    // 包含用户信息
 
         context.setRealm(realm);
         context.addConstraint(constraint);

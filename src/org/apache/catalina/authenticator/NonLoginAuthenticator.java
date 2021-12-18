@@ -80,7 +80,7 @@ import org.apache.catalina.deploy.LoginConfig;
  * @version $Revision: 1.3 $ $Date: 2001/07/22 20:09:19 $
  */
 
-public final class NonLoginAuthenticator
+public final class NonLoginAuthenticator    // 未指定访问者身份验证方法时生效
         extends AuthenticatorBase {
 
 

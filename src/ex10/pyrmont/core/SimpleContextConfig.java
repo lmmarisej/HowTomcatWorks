@@ -26,7 +26,7 @@ public class SimpleContextConfig implements LifecycleListener {
 
     private synchronized void authenticatorConfig() {
         // Does this Context require an Authenticator?
-        SecurityConstraint constraints[] = context.findConstraints();
+        SecurityConstraint[] constraints = context.findConstraints();
         if ((constraints == null) || (constraints.length == 0))
             return;
         LoginConfig loginConfig = context.getLoginConfig();
@@ -39,11 +39,11 @@ public class SimpleContextConfig implements LifecycleListener {
         Pipeline pipeline = ((StandardContext) context).getPipeline();
         if (pipeline != null) {
             Valve basic = pipeline.getBasic();
-            if ((basic != null) && (basic instanceof Authenticator))
+            if ((basic instanceof Authenticator))
                 return;
-            Valve valves[] = pipeline.getValves();
-            for (int i = 0; i < valves.length; i++) {
-                if (valves[i] instanceof Authenticator)
+            Valve[] valves = pipeline.getValves();
+            for (Valve valve : valves) {
+                if (valve instanceof Authenticator)
                     return;
             }
         } else { // no Pipeline, cannot install authenticator valve
@@ -62,7 +62,7 @@ public class SimpleContextConfig implements LifecycleListener {
         try {
             Class authenticatorClass = Class.forName(authenticatorName);
             authenticator = (Valve) authenticatorClass.newInstance();
-            ((StandardContext) context).addValve(authenticator);
+            ((StandardContext) context).addValve(authenticator);        // 将BasicAuthenticator对象安装到StandardContext对象中
             System.out.println("Added authenticator valve to Context");
         } catch (Throwable t) {
         }

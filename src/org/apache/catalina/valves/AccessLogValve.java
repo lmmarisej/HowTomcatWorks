@@ -905,8 +905,7 @@ public final class AccessLogValve
 
         // Validate and update our current component state
         if (!started)
-            throw new LifecycleException
-                    (sm.getString("accessLogValve.notStarted"));
+            throw new LifecycleException(sm.getString("accessLogValve.notStarted"));
         lifecycle.fireLifecycleEvent(STOP_EVENT, null);
         started = false;
 

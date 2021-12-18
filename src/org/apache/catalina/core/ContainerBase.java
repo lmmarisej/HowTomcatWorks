@@ -797,8 +797,7 @@ public abstract class ContainerBase
      */
     public void addChild(Container child) {
         if (System.getSecurityManager() != null) {
-            PrivilegedAction dp =
-                    new PrivilegedAddChild(child);
+            PrivilegedAction dp = new PrivilegedAddChild(child);
             AccessController.doPrivileged(dp);
         } else {
             addChildInternal(child);
@@ -815,7 +814,7 @@ public abstract class ContainerBase
             child.setParent((Container) this);  // May throw IAE
             if (started && (child instanceof Lifecycle)) {
                 try {
-                    ((Lifecycle) child).start();
+                    ((Lifecycle) child).start();    // 是一个组件则启动
                 } catch (LifecycleException e) {
                     log("ContainerBase.addChild: start: ", e);
                     throw new IllegalStateException
@@ -823,7 +822,7 @@ public abstract class ContainerBase
                 }
             }
             children.put(child.getName(), child);
-            fireContainerEvent(ADD_CHILD_EVENT, child);
+            fireContainerEvent(ADD_CHILD_EVENT, child);     // 发出节点增加事件
         }
 
     }

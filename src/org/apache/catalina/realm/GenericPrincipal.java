@@ -80,7 +80,8 @@ import org.apache.catalina.Realm;
  * @version $Revision: 1.4 $ $Date: 2001/10/27 20:29:03 $
  */
 
-public class GenericPrincipal implements Principal {
+public class GenericPrincipal       // 必须始终与一个realm对象相关联
+        implements Principal {
 
 
     // ----------------------------------------------------------- Constructors
@@ -111,8 +112,7 @@ public class GenericPrincipal implements Principal {
      * @param password Credentials used to authenticate this user
      * @param roles    List of roles (must be Strings) possessed by this user
      */
-    public GenericPrincipal(Realm realm, String name, String password,
-                            List roles) {
+    public GenericPrincipal(Realm realm, String name, String password, List roles) {
 
         super();
         this.realm = realm;
@@ -165,7 +165,7 @@ public class GenericPrincipal implements Principal {
     /**
      * The set of roles associated with this user.
      */
-    protected String roles[] = new String[0];
+    protected String[] roles = new String[0];
 
     public String[] getRoles() {
         return (this.roles);
@@ -194,12 +194,7 @@ public class GenericPrincipal implements Principal {
      * information that should be public.
      */
     public String toString() {
-
-        StringBuffer sb = new StringBuffer("GenericPrincipal[");
-        sb.append(this.name);
-        sb.append("]");
-        return (sb.toString());
-
+        return ("GenericPrincipal[" + this.name + "]");
     }
 
 

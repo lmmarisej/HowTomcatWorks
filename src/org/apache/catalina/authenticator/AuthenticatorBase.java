@@ -125,7 +125,7 @@ import org.apache.catalina.valves.ValveBase;
 
 
 public abstract class AuthenticatorBase
-        extends ValveBase
+        extends ValveBase   // 继承后就是一个阀，安装到StandardContext
         implements Authenticator, Lifecycle {
 
 
@@ -469,7 +469,7 @@ public abstract class AuthenticatorBase
             context.invokeNext(request, response);
             return;
         }
-        if ((debug >= 1) && (constraint != null))
+        if (debug >= 1)
             log(" Subject to constraint " + constraint);
 
         // Make sure that constrained resources are not cached by web proxies
@@ -587,7 +587,7 @@ public abstract class AuthenticatorBase
 
         // Check each role included in this constraint
         Realm realm = context.getRealm();
-        String roles[] = constraint.findAuthRoles();
+        String[] roles = constraint.findAuthRoles();
         if (roles == null)
             roles = new String[0];
 
@@ -599,8 +599,8 @@ public abstract class AuthenticatorBase
                             sm.getString("authenticator.forbidden"));
             return (false); // No listed roles means no access at all
         }
-        for (int i = 0; i < roles.length; i++) {
-            if (realm.hasRole(principal, roles[i]))
+        for (String role : roles) {
+            if (realm.hasRole(principal, role))
                 return (true);
         }
 

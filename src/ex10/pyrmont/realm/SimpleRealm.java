@@ -1,16 +1,17 @@
 package ex10.pyrmont.realm;
 
-import java.beans.PropertyChangeListener;
-import java.security.Principal;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.apache.catalina.Container;
 import org.apache.catalina.Realm;
 import org.apache.catalina.realm.GenericPrincipal;
 
+import java.beans.PropertyChangeListener;
+import java.security.Principal;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 
+/*
+* 演示领域对象如何工作
+* */
 public class SimpleRealm implements Realm {
 
     public SimpleRealm() {
@@ -35,6 +36,9 @@ public class SimpleRealm implements Realm {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
     }
 
+    /*
+    * 由验证器AuthenticatorBase调用，对请求者进行验证
+    * */
     public Principal authenticate(String username, String credentials) {
         System.out.println("SimpleRealm.authenticate()");
         if (username == null || credentials == null)
@@ -54,28 +58,25 @@ public class SimpleRealm implements Realm {
         return null;
     }
 
-    public Principal authenticate(X509Certificate certs[]) {
+    public Principal authenticate(X509Certificate[] certs) {
         return null;
     }
 
     public boolean hasRole(Principal principal, String role) {
-        if ((principal == null) || (role == null) ||
-                !(principal instanceof GenericPrincipal))
+        if ((role == null) || !(principal instanceof GenericPrincipal))
             return (false);
         GenericPrincipal gp = (GenericPrincipal) principal;
         if (!(gp.getRealm() == this))
             return (false);
-        boolean result = gp.hasRole(role);
-        return result;
+        return gp.hasRole(role);
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
     }
 
     private User getUser(String username, String password) {
-        Iterator iterator = users.iterator();
-        while (iterator.hasNext()) {
-            User user = (User) iterator.next();
+        for (Object o : users) {
+            User user = (User) o;
             if (user.username.equals(username) && user.password.equals(password))
                 return user;
         }

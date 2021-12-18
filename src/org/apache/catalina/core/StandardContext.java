@@ -1278,8 +1278,7 @@ public class StandardContext
     public void addChild(Container child) {
 
         if (!(child instanceof Wrapper))
-            throw new IllegalArgumentException
-                    (sm.getString("standardContext.notWrapper"));
+            throw new IllegalArgumentException(sm.getString("standardContext.notWrapper"));
         Wrapper wrapper = (Wrapper) child;
         String jspFile = wrapper.getJspFile();
         if ((jspFile != null) && !jspFile.startsWith("/")) {
@@ -1722,9 +1721,8 @@ public class StandardContext
     public void addWrapperListener(String listener) {
 
         synchronized (wrapperListeners) {
-            String results[] = new String[wrapperListeners.length + 1];
-            for (int i = 0; i < wrapperListeners.length; i++)
-                results[i] = wrapperListeners[i];
+            String[] results = new String[wrapperListeners.length + 1];
+            System.arraycopy(wrapperListeners, 0, results, 0, wrapperListeners.length);
             results[wrapperListeners.length] = listener;
             wrapperListeners = results;
         }

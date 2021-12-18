@@ -77,7 +77,7 @@ import org.apache.catalina.util.RequestUtil;
  * @version $Revision: 1.6 $ $Date: 2001/07/22 20:25:10 $
  */
 
-public final class LoginConfig {
+public final class LoginConfig {    // 封装领域对象名和所要使用的身份验证方法
 
 
     // ----------------------------------------------------------- Constructors
@@ -166,8 +166,7 @@ public final class LoginConfig {
 
 
     /**
-     * The realm name used when challenging the user for authentication
-     * credentials.
+     * The realm name used when challenging the user for authentication credentials.
      */
     private String realmName = null;
 
@@ -188,7 +187,7 @@ public final class LoginConfig {
      */
     public String toString() {
 
-        StringBuffer sb = new StringBuffer("LoginConfig[");
+        StringBuilder sb = new StringBuilder("LoginConfig[");
         sb.append("authMethod=");
         sb.append(authMethod);
         if (realmName != null) {

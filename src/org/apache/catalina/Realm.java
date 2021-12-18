@@ -81,7 +81,7 @@ import java.security.cert.X509Certificate;
  * @version $Revision: 1.4 $ $Date: 2001/07/30 20:04:04 $
  */
 
-public interface Realm {
+public interface Realm {        // 领域对象
 
 
     // ------------------------------------------------------------- Properties
