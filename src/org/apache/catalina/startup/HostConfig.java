@@ -65,11 +65,14 @@
 package org.apache.catalina.startup;
 
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.IOException;
+import org.apache.catalina.*;
+import org.apache.catalina.core.StandardHost;
+import org.apache.catalina.util.StringManager;
+import org.apache.naming.resources.ResourceAttributes;
+
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import java.io.*;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -77,20 +80,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-
-import org.apache.naming.resources.ResourceAttributes;
-import org.apache.catalina.Context;
-import org.apache.catalina.Deployer;
-import org.apache.catalina.Host;
-import org.apache.catalina.Lifecycle;
-import org.apache.catalina.LifecycleEvent;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.LifecycleListener;
-import org.apache.catalina.Logger;
-import org.apache.catalina.core.StandardHost;
-import org.apache.catalina.util.StringManager;
 
 
 /**
@@ -102,8 +91,9 @@ import org.apache.catalina.util.StringManager;
  * @version $Revision: 1.23 $ $Date: 2002/05/30 22:12:28 $
  */
 
-public class HostConfig
-        implements LifecycleListener, Runnable {
+public class HostConfig     // HostConfig的实例添加到Host实例中，作为声明周期监听器；处理StandardHost实例的start方法和stop方法触发的事件
+        implements LifecycleListener,
+        Runnable {
 
 
     // ----------------------------------------------------- Instance Variables
@@ -143,14 +133,13 @@ public class HostConfig
     /**
      * The string resources for this package.
      */
-    protected static final StringManager sm =
-            StringManager.getManager(Constants.Package);
+    protected static final StringManager sm = StringManager.getManager(Constants.Package);
 
 
     /**
      * The number of seconds between checks for web app deployment.
      */
-    private int checkInterval = 15;
+    private final int checkInterval = 15;
 
 
     /**
@@ -195,7 +184,7 @@ public class HostConfig
      * Last modified dates of the web.xml files of the contexts, keyed by
      * context name.
      */
-    private HashMap webXmlLastModified = new HashMap();
+    private final HashMap webXmlLastModified = new HashMap();
 
 
     // ------------------------------------------------------------- Properties
@@ -341,7 +330,7 @@ public class HostConfig
      *
      * @param event The lifecycle event that has occurred
      */
-    public void lifecycleEvent(LifecycleEvent event) {
+    public void lifecycleEvent(LifecycleEvent event) {      // 事件处理程序
 
         // Identify the host we are associated with
         try {
@@ -351,9 +340,9 @@ public class HostConfig
                 if (hostDebug > this.debug) {
                     this.debug = hostDebug;
                 }
-                setDeployXML(((StandardHost) host).isDeployXML());
-                setLiveDeploy(((StandardHost) host).getLiveDeploy());
-                setUnpackWARs(((StandardHost) host).isUnpackWARs());
+                setDeployXML(((StandardHost) host).isDeployXML());      // 部署一个context实例描述符文件
+                setLiveDeploy(((StandardHost) host).getLiveDeploy());   // 指明host实例是否要周期性的检查一个新的部署
+                setUnpackWARs(((StandardHost) host).isUnpackWARs());    // 将war文件解压
             }
         } catch (ClassCastException e) {
             log(sm.getString("hostConfig.cce", event.getLifecycle()), e);
@@ -391,7 +380,7 @@ public class HostConfig
      * Deploy applications for any directories or WAR files that are found
      * in our "application root" directory.
      */
-    protected void deployApps() {
+    protected void deployApps() {       // 完成应用的部署
 
         if (!(host instanceof Deployer))
             return;
@@ -401,10 +390,10 @@ public class HostConfig
         File appBase = appBase();
         if (!appBase.exists() || !appBase.isDirectory())
             return;
-        String files[] = appBase.list();
+        String[] files = appBase.list();
 
         deployDescriptors(appBase, files);
-        deployWARs(appBase, files);
+        deployWARs(appBase, files);             // 以war包部署
         deployDirectories(appBase, files);
 
     }
@@ -418,21 +407,21 @@ public class HostConfig
         if (!deployXML)
             return;
 
-        for (int i = 0; i < files.length; i++) {
+        for (String s : files) {
 
-            if (files[i].equalsIgnoreCase("META-INF"))
+            if (s.equalsIgnoreCase("META-INF"))
                 continue;
-            if (files[i].equalsIgnoreCase("WEB-INF"))
+            if (s.equalsIgnoreCase("WEB-INF"))
                 continue;
-            if (deployed.contains(files[i]))
+            if (deployed.contains(s))
                 continue;
-            File dir = new File(appBase, files[i]);
-            if (files[i].toLowerCase().endsWith(".xml")) {
+            File dir = new File(appBase, s);
+            if (s.toLowerCase().endsWith(".xml")) {
 
-                deployed.add(files[i]);
+                deployed.add(s);
 
                 // Calculate the context path and make sure it is unique
-                String file = files[i].substring(0, files[i].length() - 4);
+                String file = s.substring(0, s.length() - 4);
                 String contextPath = "/" + file;
                 if (file.equals("ROOT")) {
                     contextPath = "";
@@ -442,14 +431,12 @@ public class HostConfig
                 }
 
                 // Assume this is a configuration descriptor and deploy it
-                log(sm.getString("hostConfig.deployDescriptor", files[i]));
+                log(sm.getString("hostConfig.deployDescriptor", s));
                 try {
-                    URL config =
-                            new URL("file", null, dir.getCanonicalPath());
+                    URL config = new URL("file", null, dir.getCanonicalPath());
                     ((Deployer) host).install(config, null);
                 } catch (Throwable t) {
-                    log(sm.getString("hostConfig.deployDescriptor.error",
-                            files[i]), t);
+                    log(sm.getString("hostConfig.deployDescriptor.error", s), t);
                 }
 
             }
@@ -464,56 +451,52 @@ public class HostConfig
      */
     protected void deployWARs(File appBase, String[] files) {
 
-        for (int i = 0; i < files.length; i++) {
+        for (String file : files) {
 
-            if (files[i].equalsIgnoreCase("META-INF"))
+            if (file.equalsIgnoreCase("META-INF"))
                 continue;
-            if (files[i].equalsIgnoreCase("WEB-INF"))
+            if (file.equalsIgnoreCase("WEB-INF"))
                 continue;
-            if (deployed.contains(files[i]))
+            if (deployed.contains(file))
                 continue;
-            File dir = new File(appBase, files[i]);
-            if (files[i].toLowerCase().endsWith(".war")) {
+            File dir = new File(appBase, file);
+            if (file.toLowerCase().endsWith(".war")) {
 
-                deployed.add(files[i]);
+                deployed.add(file);
 
                 // Calculate the context path and make sure it is unique
-                String contextPath = "/" + files[i];
+                String contextPath = "/" + file;
                 int period = contextPath.lastIndexOf(".");
                 if (period >= 0)
                     contextPath = contextPath.substring(0, period);
                 if (contextPath.equals("/ROOT"))
-                    contextPath = "";
+                    contextPath = "";       // 将ROOT应用的contextPath设置为根路径
                 if (host.findChild(contextPath) != null)
                     continue;
 
                 if (isUnpackWARs()) {
 
                     // Expand and deploy this application as a directory
-                    log(sm.getString("hostConfig.expand", files[i]));
+                    log(sm.getString("hostConfig.expand", file));
                     try {
-                        URL url = new URL("jar:file:" +
-                                dir.getCanonicalPath() + "!/");
-                        String path = expand(url);
+                        URL url = new URL("jar:file:" + dir.getCanonicalPath() + "!/");
+                        String path = expand(url);      // 解压
                         url = new URL("file:" + path);
-                        ((Deployer) host).install(contextPath, url);
+                        ((Deployer) host).install(contextPath, url);        // 执行部署，主要就是将其添加到host下，并发送事件通知其它组件
                     } catch (Throwable t) {
-                        log(sm.getString("hostConfig.expand.error", files[i]),
-                                t);
+                        log(sm.getString("hostConfig.expand.error", file), t);
                     }
 
                 } else {
 
                     // Deploy the application in this WAR file
-                    log(sm.getString("hostConfig.deployJar", files[i]));
+                    log(sm.getString("hostConfig.deployJar", file));
                     try {
-                        URL url = new URL("file", null,
-                                dir.getCanonicalPath());
-                        url = new URL("jar:" + url.toString() + "!/");
+                        URL url = new URL("file", null, dir.getCanonicalPath());
+                        url = new URL("jar:" + url + "!/");
                         ((Deployer) host).install(contextPath, url);
                     } catch (Throwable t) {
-                        log(sm.getString("hostConfig.deployJar.error",
-                                files[i]), t);
+                        log(sm.getString("hostConfig.deployJar.error", file), t);
                     }
 
                 }
@@ -530,18 +513,18 @@ public class HostConfig
      */
     protected void deployDirectories(File appBase, String[] files) {
 
-        for (int i = 0; i < files.length; i++) {
+        for (String file : files) {
 
-            if (files[i].equalsIgnoreCase("META-INF"))
+            if (file.equalsIgnoreCase("META-INF"))
                 continue;
-            if (files[i].equalsIgnoreCase("WEB-INF"))
+            if (file.equalsIgnoreCase("WEB-INF"))
                 continue;
-            if (deployed.contains(files[i]))
+            if (deployed.contains(file))
                 continue;
-            File dir = new File(appBase, files[i]);
+            File dir = new File(appBase, file);
             if (dir.isDirectory()) {
 
-                deployed.add(files[i]);
+                deployed.add(file);
 
                 // Make sure there is an application configuration directory
                 // This is needed if the Context appBase is the same as the
@@ -553,19 +536,19 @@ public class HostConfig
                     continue;
 
                 // Calculate the context path and make sure it is unique
-                String contextPath = "/" + files[i];
-                if (files[i].equals("ROOT"))
+                String contextPath = "/" + file;
+                if (file.equals("ROOT"))
                     contextPath = "";
                 if (host.findChild(contextPath) != null)
                     continue;
 
                 // Deploy the application in this directory
-                log(sm.getString("hostConfig.deployDir", files[i]));
+                log(sm.getString("hostConfig.deployDir", file));
                 try {
                     URL url = new URL("file", null, dir.getCanonicalPath());
                     ((Deployer) host).install(contextPath, url);
                 } catch (Throwable t) {
-                    log(sm.getString("hostConfig.deployDir.error", files[i]),
+                    log(sm.getString("hostConfig.deployDir.error", file),
                             t);
                 }
 
@@ -588,9 +571,8 @@ public class HostConfig
 
         String[] contextNames = deployer.findDeployedApps();
 
-        for (int i = 0; i < contextNames.length; i++) {
+        for (String contextName : contextNames) {
 
-            String contextName = contextNames[i];
             Context context = deployer.findDeployedApp(contextName);
 
             if (!(context instanceof Lifecycle))
@@ -622,9 +604,9 @@ public class HostConfig
                     }
                 }
             } catch (LifecycleException e) {
-                ; // Ignore
+                // Ignore
             } catch (NamingException e) {
-                ; // Ignore
+                // Ignore
             }
 
         }
@@ -667,13 +649,10 @@ public class HostConfig
         // Make sure that there is no such directory already existing
         File appBase = new File(host.getAppBase());
         if (!appBase.isAbsolute()) {
-            appBase = new File(System.getProperty("catalina.base"),
-                    host.getAppBase());
+            appBase = new File(System.getProperty("catalina.base"), host.getAppBase());
         }
         if (!appBase.exists() || !appBase.isDirectory()) {
-            throw new IOException
-                    (sm.getString("standardHost.appBase",
-                            appBase.getAbsolutePath()));
+            throw new IOException(sm.getString("standardHost.appBase", appBase.getAbsolutePath()));
         }
         File docBase = new File(appBase, pathname);
         if (docBase.exists()) {
@@ -684,8 +663,7 @@ public class HostConfig
         // Create the new document base directory
         docBase.mkdir();
         if (getDebug() >= 2) {
-            log("  Have created expansion directory " +
-                    docBase.getAbsolutePath());
+            log("  Have created expansion directory " + docBase.getAbsolutePath());
         }
 
         // Expand the WAR into the new document base directory
@@ -770,16 +748,14 @@ public class HostConfig
             if (input != null) {
                 try {
                     input.close();
-                } catch (Throwable t) {
-                    ;
+                } catch (Throwable ignored) {
                 }
                 input = null;
             }
             if (jarFile != null) {
                 try {
                     jarFile.close();
-                } catch (Throwable t) {
-                    ;
+                } catch (Throwable ignored) {
                 }
                 jarFile = null;
             }
@@ -806,7 +782,7 @@ public class HostConfig
         File file = new File(docBase, name);
         BufferedOutputStream output =
                 new BufferedOutputStream(new FileOutputStream(file));
-        byte buffer[] = new byte[2048];
+        byte[] buffer = new byte[2048];
         while (true) {
             int n = input.read(buffer);
             if (n <= 0)
@@ -874,7 +850,7 @@ public class HostConfig
         }
 
         if (isLiveDeploy()) {
-            threadStart();
+            threadStart();          // 启动一个线程用于动态部署，定期检查新应用的部署
         }
 
     }
@@ -905,7 +881,7 @@ public class HostConfig
         if (debug >= 1)
             log(sm.getString("hostConfig.undeploying"));
 
-        String contextPaths[] = ((Deployer) host).findDeployedApps();
+        String[] contextPaths = ((Deployer) host).findDeployedApps();
         for (int i = 0; i < contextPaths.length; i++) {
             if (debug >= 1)
                 log(sm.getString("hostConfig.undeploy", contextPaths[i]));
@@ -961,7 +937,6 @@ public class HostConfig
         try {
             thread.join();
         } catch (InterruptedException e) {
-            ;
         }
 
         thread = null;
@@ -978,7 +953,6 @@ public class HostConfig
         try {
             Thread.sleep(checkInterval * 1000L);
         } catch (InterruptedException e) {
-            ;
         }
 
     }

@@ -88,7 +88,8 @@ import org.apache.commons.digester.Digester;
  * @version $Revision: 1.10 $ $Date: 2002/08/01 01:41:43 $
  */
 
-public class StandardHostDeployer implements Deployer {
+public class StandardHostDeployer   // StandardHost的辅助类，用于完成部署和安装web应用程序的相关任务
+        implements Deployer {
 
 
     // ----------------------------------------------------------- Constructors
@@ -206,21 +207,16 @@ public class StandardHostDeployer implements Deployer {
 
         // Validate the format and state of our arguments
         if (contextPath == null)
-            throw new IllegalArgumentException
-                    (sm.getString("standardHost.pathRequired"));
+            throw new IllegalArgumentException(sm.getString("standardHost.pathRequired"));
         if (!contextPath.equals("") && !contextPath.startsWith("/"))
-            throw new IllegalArgumentException
-                    (sm.getString("standardHost.pathFormat", contextPath));
+            throw new IllegalArgumentException(sm.getString("standardHost.pathFormat", contextPath));
         if (findDeployedApp(contextPath) != null)
-            throw new IllegalStateException
-                    (sm.getString("standardHost.pathUsed", contextPath));
+            throw new IllegalStateException(sm.getString("standardHost.pathUsed", contextPath));
         if (war == null)
-            throw new IllegalArgumentException
-                    (sm.getString("standardHost.warRequired"));
+            throw new IllegalArgumentException(sm.getString("standardHost.warRequired"));
 
         // Calculate the document base for the new web application
-        host.log(sm.getString("standardHost.installing",
-                contextPath, war.toString()));
+        host.log(sm.getString("standardHost.installing", contextPath, war.toString()));
         String url = war.toString();
         String docBase = null;
         if (url.startsWith("jar:")) {
@@ -231,8 +227,7 @@ public class StandardHostDeployer implements Deployer {
         else if (url.startsWith("file:"))
             docBase = url.substring(5);
         else
-            throw new IllegalArgumentException
-                    (sm.getString("standardHost.warURL", url));
+            throw new IllegalArgumentException(sm.getString("standardHost.warURL", url));
 
         // Install the new web application
         try {
@@ -243,16 +238,14 @@ public class StandardHostDeployer implements Deployer {
             context.setDocBase(docBase);
             if (context instanceof Lifecycle) {
                 clazz = Class.forName(host.getConfigClass());
-                LifecycleListener listener =
-                        (LifecycleListener) clazz.newInstance();
+                LifecycleListener listener = (LifecycleListener) clazz.newInstance();
                 ((Lifecycle) context).addLifecycleListener(listener);
             }
             host.fireContainerEvent(PRE_INSTALL_EVENT, context);
             host.addChild(context);
             host.fireContainerEvent(INSTALL_EVENT, context);
         } catch (Exception e) {
-            host.log(sm.getString("standardHost.installError", contextPath),
-                    e);
+            host.log(sm.getString("standardHost.installError", contextPath), e);
             throw new IOException(e.toString());
         }
 
@@ -470,22 +463,18 @@ public class StandardHostDeployer implements Deployer {
 
         // Validate the format and state of our arguments
         if (contextPath == null)
-            throw new IllegalArgumentException
-                    (sm.getString("standardHost.pathRequired"));
+            throw new IllegalArgumentException(sm.getString("standardHost.pathRequired"));
         if (!contextPath.equals("") && !contextPath.startsWith("/"))
-            throw new IllegalArgumentException
-                    (sm.getString("standardHost.pathFormat", contextPath));
-        Context context = findDeployedApp(contextPath);
+            throw new IllegalArgumentException(sm.getString("standardHost.pathFormat", contextPath));
+        Context context = findDeployedApp(contextPath);     // 将该webApp的容器找出来
         if (context == null)
-            throw new IllegalArgumentException
-                    (sm.getString("standardHost.pathMissing", contextPath));
+            throw new IllegalArgumentException(sm.getString("standardHost.pathMissing", contextPath));
         host.log("standardHost.stop " + contextPath);
         try {
-            ((Lifecycle) context).stop();
+            ((Lifecycle) context).stop();       // 停止该webApp
         } catch (LifecycleException e) {
             host.log("standardHost.stop " + contextPath + ": ", e);
-            throw new IllegalStateException
-                    ("standardHost.stop " + contextPath + ": " + e);
+            throw new IllegalStateException("standardHost.stop " + contextPath + ": " + e);
         }
 
     }
@@ -504,14 +493,11 @@ public class StandardHostDeployer implements Deployer {
         context = (Context) child;
         String contextPath = context.getPath();
         if (contextPath == null)
-            throw new IllegalArgumentException
-                    (sm.getString("standardHost.pathRequired"));
+            throw new IllegalArgumentException(sm.getString("standardHost.pathRequired"));
         else if (!contextPath.equals("") && !contextPath.startsWith("/"))
-            throw new IllegalArgumentException
-                    (sm.getString("standardHost.pathFormat", contextPath));
+            throw new IllegalArgumentException(sm.getString("standardHost.pathFormat", contextPath));
         if (host.findChild(contextPath) != null)
-            throw new IllegalStateException
-                    (sm.getString("standardHost.pathUsed", contextPath));
+            throw new IllegalStateException(sm.getString("standardHost.pathUsed", contextPath));
         if (this.overrideDocBase != null)
             context.setDocBase(this.overrideDocBase);
         host.fireContainerEvent(PRE_INSTALL_EVENT, context);

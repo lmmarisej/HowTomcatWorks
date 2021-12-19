@@ -99,7 +99,7 @@ import org.xml.sax.InputSource;
  * @version $Revision: 1.48 $ $Date: 2002/05/23 17:22:37 $
  */
 
-public class Catalina {
+public class Catalina {         // 用于启动或关闭Server对象，并负责解析配置文件
 
 
     // ----------------------------------------------------- Instance Variables
@@ -270,7 +270,7 @@ public class Catalina {
     /**
      * Create and configure the Digester we will be using for startup.
      */
-    protected Digester createStartDigester() {
+    protected Digester createStartDigester() {      // 负责解析配置文件
 
         // Initialize the digester
         Digester digester = new Digester();
@@ -353,9 +353,7 @@ public class Catalina {
         digester.addRuleSet(new ContextRuleSet("Server/Service/Engine/Host/"));
         digester.addRuleSet(new NamingRuleSet("Server/Service/Engine/Host/Context/"));
 
-        digester.addRule("Server/Service/Engine",
-                new SetParentClassLoaderRule(digester,
-                        parentClassLoader));
+        digester.addRule("Server/Service/Engine", new SetParentClassLoaderRule(digester, parentClassLoader));
 
 
         return (digester);
@@ -434,11 +432,10 @@ public class Catalina {
     protected void start() {
 
         // Create and execute our Digester
-        Digester digester = createStartDigester();
+        Digester digester = createStartDigester();      // 获取xml配置文件
         File file = configFile();
         try {
-            InputSource is =
-                    new InputSource("file://" + file.getAbsolutePath());
+            InputSource is = new InputSource("file://" + file.getAbsolutePath());
             FileInputStream fis = new FileInputStream(file);
             is.setByteStream(fis);
             digester.push(this);
@@ -456,18 +453,14 @@ public class Catalina {
         } else {
             System.setProperty("catalina.useNaming", "true");
             String value = "org.apache.naming";
-            String oldValue =
-                    System.getProperty(javax.naming.Context.URL_PKG_PREFIXES);
+            String oldValue = System.getProperty(javax.naming.Context.URL_PKG_PREFIXES);
             if (oldValue != null) {
                 value = value + ":" + oldValue;
             }
             System.setProperty(javax.naming.Context.URL_PKG_PREFIXES, value);
-            value = System.getProperty
-                    (javax.naming.Context.INITIAL_CONTEXT_FACTORY);
+            value = System.getProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY);
             if (value == null) {
-                System.setProperty
-                        (javax.naming.Context.INITIAL_CONTEXT_FACTORY,
-                                "org.apache.naming.java.javaURLContextFactory");
+                System.setProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
             }
         }
 
@@ -506,7 +499,7 @@ public class Catalina {
                 ((Lifecycle) server).start();
                 try {
                     // Register shutdown hook
-                    Runtime.getRuntime().addShutdownHook(shutdownHook);
+                    Runtime.getRuntime().addShutdownHook(shutdownHook);     // Catalina关闭钩子
                 } catch (Throwable t) {
                     // This will fail on JDK 1.2. Ignoring, as Tomcat can run
                     // fine without the shutdown hook.

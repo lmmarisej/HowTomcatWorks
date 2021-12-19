@@ -163,7 +163,7 @@ public final class StandardWrapper      // 载入（load）所代表的Servlet�
     /**
      * The (single) initialized instance of this servlet.
      */
-    private volatile Servlet instance = null;
+    private volatile Servlet instance = null;       // 将要载入的Servlet
 
 
     /**
@@ -800,7 +800,8 @@ public final class StandardWrapper      // 载入（load）所代表的Servlet�
      * load servlets that are marked in the deployment descriptor to be loaded
      * at server startup time.
      */
-    public synchronized Servlet loadServlet() throws ServletException {
+    public synchronized Servlet loadServlet()       // 第一次是调用Servlet实例时，调用本方法，然后调用init
+            throws ServletException {
 
         // Nothing to do if we already have an instance or an instance pool
         if (!singleThreadModel && (instance != null))

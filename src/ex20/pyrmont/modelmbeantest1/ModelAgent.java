@@ -18,7 +18,7 @@ import javax.management.modelmbean.RequiredModelMBean;
 
 public class ModelAgent {
 
-    private String MANAGED_CLASS_NAME = "ex20.pyrmont.modelmbeantest1.Car";
+    private final String MANAGED_CLASS_NAME = "ex20.pyrmont.modelmbeantest1.Car";
     private MBeanServer mBeanServer = null;
 
     public ModelAgent() {
@@ -62,9 +62,8 @@ public class ModelAgent {
             operations[1] = new ModelMBeanOperationInfo("getColor", "get color attribute",
                     null, "java.lang.String", MBeanOperationInfo.ACTION, null);
 
-            Descriptor setColorDesc = new DescriptorSupport(new String[]{
-                    "name=setColor", "descriptorType=operation",
-                    "class=" + MANAGED_CLASS_NAME, "role=operation"});
+            Descriptor setColorDesc = new DescriptorSupport("name=setColor", "descriptorType=operation",
+                    "class=" + MANAGED_CLASS_NAME, "role=operation");
             MBeanParameterInfo[] setColorParams = new MBeanParameterInfo[]{
                     (new MBeanParameterInfo("new color", "java.lang.String",
                             "new Color value"))};
@@ -91,7 +90,7 @@ public class ModelAgent {
         try {
             modelMBean.setManagedResource(car, "ObjectReference");
             mBeanServer.registerMBean(modelMBean, objectName);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         // manage the bean

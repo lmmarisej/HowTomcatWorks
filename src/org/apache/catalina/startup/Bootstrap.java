@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
  * @version $Revision: 1.36 $ $Date: 2002/04/01 19:51:31 $
  */
 
-public final class Bootstrap {
+public final class Bootstrap {      // 入口点，负责创建Catalina实例，并调用其process方法；作为提个独立的应用程序运行tomcat
 
 
     // ------------------------------------------------------- Static Variables
@@ -38,11 +38,11 @@ public final class Bootstrap {
      *
      * @param args Command line arguments to be processed
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {        // sh、bat脚本调用
 
         // Set the debug flag appropriately
-        for (int i = 0; i < args.length; i++) {
-            if ("-debug".equals(args[i]))
+        for (String arg : args) {
+            if ("-debug".equals(arg))
                 debug = 1;
         }
 
@@ -56,9 +56,9 @@ public final class Bootstrap {
         ClassLoader sharedLoader = null;
         try {
 
-            File unpacked[] = new File[1];
-            File packed[] = new File[1];
-            File packed2[] = new File[2];
+            File[] unpacked = new File[1];
+            File[] packed = new File[1];
+            File[] packed2 = new File[2];
             ClassLoaderFactory.setDebug(debug);
 
             unpacked[0] = new File(getCatalinaHome(),
@@ -102,21 +102,18 @@ public final class Bootstrap {
             // Instantiate a startup class instance
             if (debug >= 1)
                 log("Loading startup class");
-            Class startupClass =
-                    catalinaLoader.loadClass
-                            ("org.apache.catalina.startup.Catalina");
+            Class startupClass = catalinaLoader.loadClass("org.apache.catalina.startup.Catalina");
             Object startupInstance = startupClass.newInstance();
 
             // Set the shared extensions class loader
             if (debug >= 1)
                 log("Setting startup class properties");
             String methodName = "setParentClassLoader";
-            Class paramTypes[] = new Class[1];
+            Class[] paramTypes = new Class[1];
             paramTypes[0] = Class.forName("java.lang.ClassLoader");
-            Object paramValues[] = new Object[1];
+            Object[] paramValues = new Object[1];
             paramValues[0] = sharedLoader;
-            Method method =
-                    startupInstance.getClass().getMethod(methodName, paramTypes);
+            Method method = startupInstance.getClass().getMethod(methodName, paramTypes);
             method.invoke(startupInstance, paramValues);
 
             // Call the process() method
@@ -127,8 +124,7 @@ public final class Bootstrap {
             paramTypes[0] = args.getClass();
             paramValues = new Object[1];
             paramValues[0] = args;
-            method =
-                    startupInstance.getClass().getMethod(methodName, paramTypes);
+            method = startupInstance.getClass().getMethod(methodName, paramTypes);
             method.invoke(startupInstance, paramValues);
 
         } catch (Exception e) {
@@ -144,8 +140,7 @@ public final class Bootstrap {
      * Get the value of the catalina.home environment variable.
      */
     private static String getCatalinaHome() {
-        return System.getProperty("catalina.home",
-                System.getProperty("user.dir"));
+        return System.getProperty("catalina.home", System.getProperty("user.dir"));
     }
 
 

@@ -4,43 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="90ea6886-fcac-477e-b0ac-7d53f08e6a66" name="Default" comment="fix README.md">
+    <list default="true" id="90ea6886-fcac-477e-b0ac-7d53f08e6a66" name="Default" comment="add Hots、Engine、Connector、Service、Server等服务组件注释">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Address.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Employee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/EmployeeRuleSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/EmployeeRuleSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Office.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Office.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Test01.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Test01.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Test02.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Test02.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Test03.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cxs15/pyrmont/digestertest/Test03.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cxs15/pyrmont/startup/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cxs15/pyrmont/startup/Bootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ex11/pyrmont/core/SimpleContextConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex11/pyrmont/core/SimpleContextConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ex13/pyrmont/startup/Bootstrap1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex13/pyrmont/startup/Bootstrap1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ex13/pyrmont/startup/Bootstrap2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex13/pyrmont/startup/Bootstrap2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ex14/pyrmont/startup/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex14/pyrmont/startup/Bootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Container.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Container.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Context.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Context.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Engine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Host.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Host.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/Wrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/Wrapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/connector/http/HttpConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/connector/http/HttpConnector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/connector/http/HttpProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/connector/http/HttpProcessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/ApplicationContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/ApplicationContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/tomcat-users.xml" beforeDir="false" afterPath="$PROJECT_DIR$/conf/tomcat-users.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cxs16/pyrmont/shutdownhook/MySwingApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cxs16/pyrmont/shutdownhook/MySwingApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ex20/pyrmont/modelmbeantest1/ModelAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ex20/pyrmont/modelmbeantest1/ModelAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/ContainerServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/ContainerServlet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/ContainerBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/ContainerBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardEngineMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardEngineMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardHost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardHost.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardHostValve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardHostValve.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/loader/WebappLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/loader/WebappLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/servlets/ManagerServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/servlets/ManagerServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardHostDeployer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardHostDeployer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/core/StandardWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/startup/Bootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/startup/Bootstrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/startup/BootstrapService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/startup/BootstrapService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/startup/Catalina.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/startup/Catalina.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/startup/ContextConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/startup/ContextConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/startup/Embedded.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/startup/Embedded.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/apache/catalina/startup/HostConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/apache/catalina/startup/HostConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -189,20 +167,20 @@
   <component name="RebelAgentSelection">
     <selection>jr</selection>
   </component>
-  <component name="RunManager" selected="Application.Test02">
+  <component name="RunManager" selected="Application.Catalina">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="WIDTH" value="400" />
       <option name="HEIGHT" value="300" />
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <module />
     </configuration>
-    <configuration name="Bootstrap" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ex14.pyrmont.startup.Bootstrap" />
+    <configuration name="Bootstrap (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.apache.catalina.startup.Bootstrap" />
       <module name="HowTomcatWorks" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="ex14.pyrmont.startup.*" />
+          <option name="PATTERN" value="org.apache.catalina.startup.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -210,13 +188,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Bootstrap1 (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ex10.pyrmont.startup.Bootstrap1" />
+    <configuration name="Catalina" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.apache.catalina.startup.Catalina" />
       <module name="HowTomcatWorks" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="PROGRAM_PARAMETERS" value="start" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="ex10.pyrmont.startup.*" />
+          <option name="PATTERN" value="org.apache.catalina.startup.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -224,13 +202,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ContainerBase" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.apache.catalina.core.ContainerBase" />
+    <configuration name="MySwingApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="cxs16.pyrmont.shutdownhook.MySwingApp" />
       <module name="HowTomcatWorks" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.apache.catalina.core.*" />
+          <option name="PATTERN" value="cxs16.pyrmont.shutdownhook.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -309,19 +287,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.Bootstrap1 (1)" />
-      <item itemvalue="Application.ContainerBase" />
-      <item itemvalue="Application.Bootstrap" />
       <item itemvalue="Application.Stopper" />
       <item itemvalue="Application.Test02" />
+      <item itemvalue="Application.MySwingApp" />
+      <item itemvalue="Application.Catalina" />
+      <item itemvalue="Application.Bootstrap (1)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Catalina" />
+        <item itemvalue="Application.Bootstrap (1)" />
+        <item itemvalue="Application.MySwingApp" />
         <item itemvalue="Application.Test02" />
         <item itemvalue="Application.Stopper" />
-        <item itemvalue="Application.Bootstrap" />
-        <item itemvalue="Application.ContainerBase" />
-        <item itemvalue="Application.Bootstrap1 (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -348,7 +326,7 @@
       <workItem from="1639818041131" duration="45000" />
       <workItem from="1639818100935" duration="21898000" />
       <workItem from="1639851111529" duration="1234000" />
-      <workItem from="1639895984499" duration="11825000" />
+      <workItem from="1639895984499" duration="18605000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1639729728189</created>
@@ -399,7 +377,14 @@
       <option name="project" value="LOCAL" />
       <updated>1639852006355</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="add Hots、Engine、Connector、Service、Server等服务组件注释">
+      <created>1639908145874</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1639908145874</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -459,7 +444,8 @@
     <MESSAGE value="add StandardWrapper、过滤器等相关类注释" />
     <MESSAGE value="add .gitignore" />
     <MESSAGE value="fix README.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix README.md" />
+    <MESSAGE value="add Hots、Engine、Connector、Service、Server等服务组件注释" />
+    <option name="LAST_COMMIT_MESSAGE" value="add Hots、Engine、Connector、Service、Server等服务组件注释" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/cxs02/pyrmont/HttpServer1.java">

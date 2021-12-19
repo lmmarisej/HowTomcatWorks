@@ -568,8 +568,7 @@ public final class ContextConfig        // 负责配置standardContext监听事�
         if (logger != null)
             logger.log("ContextConfig[" + context.getName() + "]: " + message);
         else
-            System.out.println("ContextConfig[" + context.getName() + "]: "
-                    + message);
+            System.out.println("ContextConfig[" + context.getName() + "]: " + message);
 
     }
 

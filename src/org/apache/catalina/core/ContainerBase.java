@@ -808,17 +808,14 @@ public abstract class ContainerBase
 
         synchronized (children) {
             if (children.get(child.getName()) != null)
-                throw new IllegalArgumentException("addChild:  Child name '" +
-                        child.getName() +
-                        "' is not unique");
+                throw new IllegalArgumentException("addChild:  Child name '" + child.getName() + "' is not unique");
             child.setParent(this);  // May throw IAE
             if (started && (child instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) child).start();    // 是一个组件则启动
                 } catch (LifecycleException e) {
                     log("ContainerBase.addChild: start: ", e);
-                    throw new IllegalStateException
-                            ("ContainerBase.addChild: start: " + e);
+                    throw new IllegalStateException("ContainerBase.addChild: start: " + e);
                 }
             }
             children.put(child.getName(), child);

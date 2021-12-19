@@ -84,7 +84,7 @@ import org.apache.commons.daemon.DaemonContext;
  * @version $Revision: 1.17 $ $Date: 2002/09/16 15:36:54 $
  */
 
-public final class BootstrapService
+public final class BootstrapService     // 可组我诶window NT的服务来运行
         implements Daemon {
 
 

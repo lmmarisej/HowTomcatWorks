@@ -15,11 +15,7 @@ public class MySwingApp extends JFrame {
     public MySwingApp() {
         exitButton.setText("Exit");
         exitButton.setBounds(new Rectangle(304, 248, 76, 37));
-        exitButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                exitButton_actionPerformed(e);
-            }
-        });
+        exitButton.addActionListener(this::exitButton_actionPerformed);
         this.getContentPane().setLayout(null);
         jTextArea1.setText("Click the Exit button to quit");
         jTextArea1.setBounds(new Rectangle(9, 7, 371, 235));
@@ -42,7 +38,7 @@ public class MySwingApp extends JFrame {
         }
     }
 
-    private void shutdown() {
+    private void shutdown() {       // 关闭回调
         // delete the temp file
         File file = new File(dir, filename);
         if (file.exists()) {
@@ -56,7 +52,13 @@ public class MySwingApp extends JFrame {
         System.exit(0);
     }
 
+    void myShutdown() {
+        System.out.println("======myShutdown=========");
+    }
+
     public static void main(String[] args) {
         MySwingApp mySwingApp = new MySwingApp();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(mySwingApp::myShutdown));       // 直接终止虚拟机有效
     }
 }

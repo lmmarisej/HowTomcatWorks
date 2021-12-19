@@ -76,7 +76,7 @@ package org.apache.catalina;
  * @version $Revision: 1.3 $ $Date: 2001/07/22 20:13:30 $
  */
 
-public interface ContainerServlet {
+public interface ContainerServlet {     // 实现后，可以访问StandardWrapper对象
 
 
     // ------------------------------------------------------------- Properties

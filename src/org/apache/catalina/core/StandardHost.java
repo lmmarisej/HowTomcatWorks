@@ -88,9 +88,9 @@ import org.apache.catalina.valves.ErrorDispatcherValve;
  * @version $Revision: 1.29 $ $Date: 2002/06/09 02:19:42 $
  */
 
-public class StandardHost
-        extends ContainerBase
-        implements Deployer,
+public class StandardHost       //
+        extends ContainerBase   // 是同一个容器
+        implements Deployer,    // 是一个部署器
         Host {
 
 
@@ -147,7 +147,7 @@ public class StandardHost
      * The <code>Deployer</code> to whom we delegate application
      * deployment requests.
      */
-    private Deployer deployer = new StandardHostDeployer(this);
+    private Deployer deployer = new StandardHostDeployer(this);     // 部署和安装的辅助工具
 
 
     /**
@@ -559,8 +559,7 @@ public class StandardHost
     public void addChild(Container child) {
 
         if (!(child instanceof Context)) {
-            throw new IllegalArgumentException
-                    (sm.getString("standardHost.notContext"));
+            throw new IllegalArgumentException(sm.getString("standardHost.notContext"));
         }
         super.addChild(child);
 
@@ -748,7 +747,7 @@ public class StandardHost
      */
     public void install(String contextPath, URL war) throws IOException {
 
-        deployer.install(contextPath, war);
+        deployer.install(contextPath, war);     // 使用服务工具来完成安装
 
     }
 
