@@ -146,7 +146,7 @@ public class StandardContext
     public StandardContext() {
 
         super();
-        pipeline.setBasic(new StandardContextValve());
+        pipeline.setBasic(new StandardContextValve());      // 设置基础阀，从连接器接收HTTP请求并处理
         namingResources.setContainer(this);
 
     }
@@ -159,27 +159,27 @@ public class StandardContext
      * The set of application listener class names configured for this
      * application, in the order they were encountered in the web.xml file.
      */
-    private String applicationListeners[] = new String[0];
+    private String[] applicationListeners = new String[0];
 
 
     /**
      * The set of instantiated application listener objects, in a one-to-one
      * correspondence to the class names in <code>applicationListeners</code>.
      */
-    private Object applicationListenersObjects[] = new Object[0];
+    private Object[] applicationListenersObjects = new Object[0];
 
 
     /**
      * The set of application parameters defined for this application.
      */
-    private ApplicationParameter applicationParameters[] =
+    private ApplicationParameter[] applicationParameters =
             new ApplicationParameter[0];
 
 
     /**
      * The application available flag for this Context.
      */
-    private boolean available = false;
+    private boolean available = false;      // 启动失败标志，表示standardContext是否可用
 
 
     /**
@@ -198,13 +198,13 @@ public class StandardContext
     /**
      * The "correctly configured" flag for this Context.
      */
-    private boolean configured = false;
+    private boolean configured = false;     // 表示当前实例是否被正确配置
 
 
     /**
      * The security constraints for this web application.
      */
-    private SecurityConstraint constraints[] = new SecurityConstraint[0];
+    private SecurityConstraint[] constraints = new SecurityConstraint[0];
 
 
     /**
@@ -248,28 +248,28 @@ public class StandardContext
      * The exception pages for this web application, keyed by fully qualified
      * class name of the Java exception.
      */
-    private HashMap exceptionPages = new HashMap();
+    private final HashMap exceptionPages = new HashMap();
 
 
     /**
      * The set of filter configurations (and associated filter instances) we
      * have initialized, keyed by filter name.
      */
-    private HashMap filterConfigs = new HashMap();
+    private final HashMap filterConfigs = new HashMap();
 
 
     /**
      * The set of filter definitions for this application, keyed by
      * filter name.
      */
-    private HashMap filterDefs = new HashMap();
+    private final HashMap filterDefs = new HashMap();
 
 
     /**
      * The set of filter mappings for this application, in the order
      * they were defined in the deployment descriptor.
      */
-    private FilterMap filterMaps[] = new FilterMap[0];
+    private FilterMap[] filterMaps = new FilterMap[0];
 
 
     /**
@@ -283,7 +283,7 @@ public class StandardContext
      * The set of classnames of InstanceListeners that will be added
      * to each newly created Wrapper by <code>createWrapper()</code>.
      */
-    private String instanceListeners[] = new String[0];
+    private String[] instanceListeners = new String[0];
 
 
     /**
@@ -314,14 +314,14 @@ public class StandardContext
     /**
      * The MIME mappings for this web application, keyed by extension.
      */
-    private HashMap mimeMappings = new HashMap();
+    private final HashMap mimeMappings = new HashMap();
 
 
     /**
      * The context initialization parameters for this web application,
      * keyed by name.
      */
-    private HashMap parameters = new HashMap();
+    private final HashMap parameters = new HashMap();
 
 
     /**
@@ -370,20 +370,20 @@ public class StandardContext
      * The security role mappings for this application, keyed by role
      * name (as used within the application).
      */
-    private HashMap roleMappings = new HashMap();
+    private final HashMap roleMappings = new HashMap();
 
 
     /**
      * The security roles for this application, keyed by role name.
      */
-    private String securityRoles[] = new String[0];
+    private String[] securityRoles = new String[0];
 
 
     /**
      * The servlet mappings for this web application, keyed by
      * matching pattern.
      */
-    private HashMap servletMappings = new HashMap();
+    private final HashMap servletMappings = new HashMap();
 
 
     /**
@@ -396,7 +396,7 @@ public class StandardContext
      * The status code error pages for this web application, keyed by
      * HTTP status code (as an Integer).
      */
-    private HashMap statusPages = new HashMap();
+    private final HashMap statusPages = new HashMap();
 
 
     /**
@@ -409,27 +409,27 @@ public class StandardContext
     /**
      * The JSP tag libraries for this web application, keyed by URI
      */
-    private HashMap taglibs = new HashMap();
+    private final HashMap taglibs = new HashMap();
 
 
     /**
      * The welcome files for this application.
      */
-    private String welcomeFiles[] = new String[0];
+    private String[] welcomeFiles = new String[0];
 
 
     /**
      * The set of classnames of LifecycleListeners that will be added
      * to each newly created Wrapper by <code>createWrapper()</code>.
      */
-    private String wrapperLifecycles[] = new String[0];
+    private String[] wrapperLifecycles = new String[0];
 
 
     /**
      * The set of classnames of ContainerListeners that will be added
      * to each newly created Wrapper by <code>createWrapper()</code>.
      */
-    private String wrapperListeners[] = new String[0];
+    private String[] wrapperListeners = new String[0];
 
 
     /**
@@ -539,7 +539,7 @@ public class StandardContext
      *
      * @param listeners The set of instantiated listener objects.
      */
-    public void setApplicationListeners(Object listeners[]) {
+    public void setApplicationListeners(Object[] listeners) {
 
         applicationListenersObjects = listeners;
 
@@ -565,9 +565,8 @@ public class StandardContext
 
         boolean oldAvailable = this.available;
         this.available = available;
-        support.firePropertyChange("available",
-                new Boolean(oldAvailable),
-                new Boolean(this.available));
+        // 启动成功|失败事件
+        support.firePropertyChange("available", Boolean.valueOf(oldAvailable), Boolean.valueOf(this.available));
 
     }
 
@@ -602,8 +601,7 @@ public class StandardContext
 
         CharsetMapper oldCharsetMapper = this.charsetMapper;
         this.charsetMapper = mapper;
-        support.firePropertyChange("charsetMapper", oldCharsetMapper,
-                this.charsetMapper);
+        support.firePropertyChange("charsetMapper", oldCharsetMapper, this.charsetMapper);
 
     }
 
@@ -629,9 +627,8 @@ public class StandardContext
 
         boolean oldConfigured = this.configured;
         this.configured = configured;
-        support.firePropertyChange("configured",
-                new Boolean(oldConfigured),
-                new Boolean(this.configured));
+        // 配置成功|失败发送事件
+        support.firePropertyChange("configured", Boolean.valueOf(oldConfigured), Boolean.valueOf(this.configured));
 
     }
 
@@ -1225,7 +1222,7 @@ public class StandardContext
     public void addApplicationListener(String listener) {
 
         synchronized (applicationListeners) {
-            String results[] = new String[applicationListeners.length + 1];
+            String[] results = new String[applicationListeners.length + 1];
             for (int i = 0; i < applicationListeners.length; i++) {
                 if (listener.equals(applicationListeners[i]))
                     return;
@@ -1255,7 +1252,7 @@ public class StandardContext
                         !applicationParameters[i].getOverride())
                     return;
             }
-            ApplicationParameter results[] =
+            ApplicationParameter[] results =
                     new ApplicationParameter[applicationParameters.length + 1];
             System.arraycopy(applicationParameters, 0, results, 0,
                     applicationParameters.length);
@@ -1302,9 +1299,9 @@ public class StandardContext
     public void addConstraint(SecurityConstraint constraint) {
 
         // Validate the proposed constraint
-        SecurityCollection collections[] = constraint.findCollections();
+        SecurityCollection[] collections = constraint.findCollections();
         for (int i = 0; i < collections.length; i++) {
-            String patterns[] = collections[i].findPatterns();
+            String[] patterns = collections[i].findPatterns();
             for (int j = 0; j < patterns.length; j++) {
                 patterns[j] = adjustURLPattern(patterns[j]);
                 if (!validateURLPattern(patterns[j]))
@@ -1317,7 +1314,7 @@ public class StandardContext
 
         // Add this constraint to the set for our web application
         synchronized (constraints) {
-            SecurityConstraint results[] =
+            SecurityConstraint[] results =
                     new SecurityConstraint[constraints.length + 1];
             for (int i = 0; i < constraints.length; i++)
                 results[i] = constraints[i];
@@ -1458,7 +1455,7 @@ public class StandardContext
 
         // Add this filter mapping to our registered set
         synchronized (filterMaps) {
-            FilterMap results[] = new FilterMap[filterMaps.length + 1];
+            FilterMap[] results = new FilterMap[filterMaps.length + 1];
             System.arraycopy(filterMaps, 0, results, 0, filterMaps.length);
             results[filterMaps.length] = filterMap;
             filterMaps = results;
@@ -1477,7 +1474,7 @@ public class StandardContext
     public void addInstanceListener(String listener) {
 
         synchronized (instanceListeners) {
-            String results[] = new String[instanceListeners.length + 1];
+            String[] results = new String[instanceListeners.length + 1];
             for (int i = 0; i < instanceListeners.length; i++)
                 results[i] = instanceListeners[i];
             results[instanceListeners.length] = listener;
@@ -1610,7 +1607,7 @@ public class StandardContext
     public void addSecurityRole(String role) {
 
         synchronized (securityRoles) {
-            String results[] = new String[securityRoles.length + 1];
+            String[] results = new String[securityRoles.length + 1];
             for (int i = 0; i < securityRoles.length; i++)
                 results[i] = securityRoles[i];
             results[securityRoles.length] = role;
@@ -1680,7 +1677,7 @@ public class StandardContext
                 welcomeFiles = new String[0];
                 setReplaceWelcomeFiles(false);
             }
-            String results[] = new String[welcomeFiles.length + 1];
+            String[] results = new String[welcomeFiles.length + 1];
             for (int i = 0; i < welcomeFiles.length; i++)
                 results[i] = welcomeFiles[i];
             results[welcomeFiles.length] = name;
@@ -1701,7 +1698,7 @@ public class StandardContext
     public void addWrapperLifecycle(String listener) {
 
         synchronized (wrapperLifecycles) {
-            String results[] = new String[wrapperLifecycles.length + 1];
+            String[] results = new String[wrapperLifecycles.length + 1];
             for (int i = 0; i < wrapperLifecycles.length; i++)
                 results[i] = wrapperLifecycles[i];
             results[wrapperLifecycles.length] = listener;
@@ -1906,13 +1903,13 @@ public class StandardContext
 
         synchronized (exceptionPages) {
             synchronized (statusPages) {
-                ErrorPage results1[] = new ErrorPage[exceptionPages.size()];
+                ErrorPage[] results1 = new ErrorPage[exceptionPages.size()];
                 results1 =
                         (ErrorPage[]) exceptionPages.values().toArray(results1);
-                ErrorPage results2[] = new ErrorPage[statusPages.size()];
+                ErrorPage[] results2 = new ErrorPage[statusPages.size()];
                 results2 =
                         (ErrorPage[]) statusPages.values().toArray(results2);
-                ErrorPage results[] =
+                ErrorPage[] results =
                         new ErrorPage[results1.length + results2.length];
                 for (int i = 0; i < results1.length; i++)
                     results[i] = results1[i];
@@ -1946,7 +1943,7 @@ public class StandardContext
     public FilterDef[] findFilterDefs() {
 
         synchronized (filterDefs) {
-            FilterDef results[] = new FilterDef[filterDefs.size()];
+            FilterDef[] results = new FilterDef[filterDefs.size()];
             return ((FilterDef[]) filterDefs.values().toArray(results));
         }
 
@@ -2020,7 +2017,7 @@ public class StandardContext
     public String[] findMimeMappings() {
 
         synchronized (mimeMappings) {
-            String results[] = new String[mimeMappings.size()];
+            String[] results = new String[mimeMappings.size()];
             return
                     ((String[]) mimeMappings.keySet().toArray(results));
         }
@@ -2051,7 +2048,7 @@ public class StandardContext
     public String[] findParameters() {
 
         synchronized (parameters) {
-            String results[] = new String[parameters.size()];
+            String[] results = new String[parameters.size()];
             return ((String[]) parameters.keySet().toArray(results));
         }
 
@@ -2204,7 +2201,7 @@ public class StandardContext
     public String[] findServletMappings() {
 
         synchronized (servletMappings) {
-            String results[] = new String[servletMappings.size()];
+            String[] results = new String[servletMappings.size()];
             return
                     ((String[]) servletMappings.keySet().toArray(results));
         }
@@ -2233,7 +2230,7 @@ public class StandardContext
     public int[] findStatusPages() {
 
         synchronized (statusPages) {
-            int results[] = new int[statusPages.size()];
+            int[] results = new int[statusPages.size()];
             Iterator elements = statusPages.keySet().iterator();
             int i = 0;
             while (elements.hasNext())
@@ -2267,7 +2264,7 @@ public class StandardContext
     public String[] findTaglibs() {
 
         synchronized (taglibs) {
-            String results[] = new String[taglibs.size()];
+            String[] results = new String[taglibs.size()];
             return ((String[]) taglibs.keySet().toArray(results));
         }
 
@@ -2337,15 +2334,14 @@ public class StandardContext
      * @throws ServletException if a ServletException was thrown
      *                          while processing this request
      */
-    public void invoke(Request request, Response response)
+    public void invoke(Request request, Response response)  // 由相关的连接器、HOST调用
             throws IOException, ServletException {
 
         // Wait if we are reloading
-        while (getPaused()) {
+        while (getPaused()) {       // 如果还在重载中
             try {
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                ;
+            } catch (InterruptedException ignored) {
             }
         }
 
@@ -2353,7 +2349,7 @@ public class StandardContext
         if (swallowOutput) {
             try {
                 SystemLogHandler.startCapture();
-                super.invoke(request, response);
+                super.invoke(request, response);        // 对于每个引入的HTTP请求，都会调用基础阀的invoke方法来处理
             } finally {
                 String log = SystemLogHandler.stopCapture();
                 if (log != null && log.length() > 0) {
@@ -2383,8 +2379,7 @@ public class StandardContext
 
         // Validate our current component state
         if (!started)
-            throw new IllegalStateException
-                    (sm.getString("containerBase.notStarted", logName()));
+            throw new IllegalStateException(sm.getString("containerBase.notStarted", logName()));
 
         // Make sure reloading is enabled
         //      if (!reloadable)
@@ -2434,8 +2429,7 @@ public class StandardContext
 
         if (isUseNaming()) {
             // Start
-            namingContextListener.lifecycleEvent
-                    (new LifecycleEvent(this, Lifecycle.STOP_EVENT));
+            namingContextListener.lifecycleEvent(new LifecycleEvent(this, Lifecycle.STOP_EVENT));
         }
 
         // Binding thread
@@ -2470,8 +2464,7 @@ public class StandardContext
         boolean ok = true;
         if (isUseNaming()) {
             // Start
-            namingContextListener.lifecycleEvent
-                    (new LifecycleEvent(this, Lifecycle.START_EVENT));
+            namingContextListener.lifecycleEvent(new LifecycleEvent(this, Lifecycle.START_EVENT));
         }
 
         // Binding thread
@@ -2563,7 +2556,7 @@ public class StandardContext
 
             // Remove the specified constraint
             int j = 0;
-            String results[] = new String[applicationListeners.length - 1];
+            String[] results = new String[applicationListeners.length - 1];
             for (int i = 0; i < applicationListeners.length; i++) {
                 if (i != n)
                     results[j++] = applicationListeners[i];
@@ -2603,7 +2596,7 @@ public class StandardContext
 
             // Remove the specified parameter
             int j = 0;
-            ApplicationParameter results[] =
+            ApplicationParameter[] results =
                     new ApplicationParameter[applicationParameters.length - 1];
             for (int i = 0; i < applicationParameters.length; i++) {
                 if (i != n)
@@ -2641,7 +2634,7 @@ public class StandardContext
 
             // Remove the specified constraint
             int j = 0;
-            SecurityConstraint results[] =
+            SecurityConstraint[] results =
                     new SecurityConstraint[constraints.length - 1];
             for (int i = 0; i < constraints.length; i++) {
                 if (i != n)
@@ -2743,7 +2736,7 @@ public class StandardContext
                 return;
 
             // Remove the specified filter mapping
-            FilterMap results[] = new FilterMap[filterMaps.length - 1];
+            FilterMap[] results = new FilterMap[filterMaps.length - 1];
             System.arraycopy(filterMaps, 0, results, 0, n);
             System.arraycopy(filterMaps, n + 1, results, n,
                     (filterMaps.length - 1) - n);
@@ -2780,7 +2773,7 @@ public class StandardContext
 
             // Remove the specified constraint
             int j = 0;
-            String results[] = new String[instanceListeners.length - 1];
+            String[] results = new String[instanceListeners.length - 1];
             for (int i = 0; i < instanceListeners.length; i++) {
                 if (i != n)
                     results[j++] = instanceListeners[i];
@@ -2916,7 +2909,7 @@ public class StandardContext
 
             // Remove the specified security role
             int j = 0;
-            String results[] = new String[securityRoles.length - 1];
+            String[] results = new String[securityRoles.length - 1];
             for (int i = 0; i < securityRoles.length; i++) {
                 if (i != n)
                     results[j++] = securityRoles[i];
@@ -2984,7 +2977,7 @@ public class StandardContext
 
             // Remove the specified constraint
             int j = 0;
-            String results[] = new String[welcomeFiles.length - 1];
+            String[] results = new String[welcomeFiles.length - 1];
             for (int i = 0; i < welcomeFiles.length; i++) {
                 if (i != n)
                     results[j++] = welcomeFiles[i];
@@ -3024,7 +3017,7 @@ public class StandardContext
 
             // Remove the specified constraint
             int j = 0;
-            String results[] = new String[wrapperLifecycles.length - 1];
+            String[] results = new String[wrapperLifecycles.length - 1];
             for (int i = 0; i < wrapperLifecycles.length; i++) {
                 if (i != n)
                     results[j++] = wrapperLifecycles[i];
@@ -3063,7 +3056,7 @@ public class StandardContext
 
             // Remove the specified constraint
             int j = 0;
-            String results[] = new String[wrapperListeners.length - 1];
+            String[] results = new String[wrapperListeners.length - 1];
             for (int i = 0; i < wrapperListeners.length; i++) {
                 if (i != n)
                     results[j++] = wrapperListeners[i];
@@ -3172,13 +3165,12 @@ public class StandardContext
 
         // Instantiate the required listeners
         ClassLoader loader = getLoader().getClassLoader();
-        String listeners[] = findApplicationListeners();
-        Object results[] = new Object[listeners.length];
+        String[] listeners = findApplicationListeners();
+        Object[] results = new Object[listeners.length];
         boolean ok = true;
         for (int i = 0; i < results.length; i++) {
             if (debug >= 2)
-                log(" Configuring event listener class '" +
-                        listeners[i] + "'");
+                log(" Configuring event listener class '" + listeners[i] + "'");
             try {
                 Class clazz = loader.loadClass(listeners[i]);
                 results[i] = clazz.newInstance();
@@ -3199,26 +3191,23 @@ public class StandardContext
             log("Sending application start events");
 
         setApplicationListeners(results);
-        Object instances[] = getApplicationListeners();
+        Object[] instances = getApplicationListeners();
         if (instances == null)
             return (ok);
-        ServletContextEvent event =
-                new ServletContextEvent(getServletContext());
-        for (int i = 0; i < instances.length; i++) {
-            if (instances[i] == null)
+        ServletContextEvent event = new ServletContextEvent(getServletContext());
+        for (Object instance : instances) {
+            if (instance == null)
                 continue;
-            if (!(instances[i] instanceof ServletContextListener))
+            if (!(instance instanceof ServletContextListener))
                 continue;
-            ServletContextListener listener =
-                    (ServletContextListener) instances[i];
+            ServletContextListener listener = (ServletContextListener) instance;
             try {
                 fireContainerEvent("beforeContextInitialized", listener);
                 listener.contextInitialized(event);
                 fireContainerEvent("afterContextInitialized", listener);
             } catch (Throwable t) {
                 fireContainerEvent("afterContextInitialized", listener);
-                log(sm.getString("standardContext.listenerStart",
-                        instances[i].getClass().getName()), t);
+                log(sm.getString("standardContext.listenerStart", instance.getClass().getName()), t);
                 ok = false;
             }
         }
@@ -3238,7 +3227,7 @@ public class StandardContext
             log("Sending application stop events");
 
         boolean ok = true;
-        Object listeners[] = getApplicationListeners();
+        Object[] listeners = getApplicationListeners();
         if (listeners == null)
             return (ok);
         ServletContextEvent event =
@@ -3275,12 +3264,12 @@ public class StandardContext
      * @param children Array of wrappers for all currently defined
      *                 servlets (including those not declared load on startup)
      */
-    public void loadOnStartup(Container children[]) {
+    public void loadOnStartup(Container[] children) {
 
         // Collect "load on startup" servlets that need to be initialized
         TreeMap map = new TreeMap();
-        for (int i = 0; i < children.length; i++) {
-            Wrapper wrapper = (Wrapper) children[i];
+        for (Container child : children) {
+            Wrapper wrapper = (Wrapper) child;
             int loadOnStartup = wrapper.getLoadOnStartup();
             if (loadOnStartup < 0)
                 continue;
@@ -3296,18 +3285,15 @@ public class StandardContext
         }
 
         // Load the collected "load on startup" servlets
-        Iterator keys = map.keySet().iterator();
-        while (keys.hasNext()) {
-            Integer key = (Integer) keys.next();
+        for (Object o : map.keySet()) {
+            Integer key = (Integer) o;
             ArrayList list = (ArrayList) map.get(key);
-            Iterator wrappers = list.iterator();
-            while (wrappers.hasNext()) {
-                Wrapper wrapper = (Wrapper) wrappers.next();
+            for (Object value : list) {
+                Wrapper wrapper = (Wrapper) value;
                 try {
                     wrapper.load();
                 } catch (ServletException e) {
-                    log(sm.getString("standardWrapper.loadException",
-                            getName()), e);
+                    log(sm.getString("standardWrapper.loadException", getName()), e);
                     // NOTE: load errors (including a servlet that throws
                     // UnavailableException from tht init() method) are NOT
                     // fatal to application startup
@@ -3321,9 +3307,10 @@ public class StandardContext
     /**
      * Start this Context component.
      *
-     * @throws LifecycleException if a startup error occurs
+     * 主要对当前实例进行初始化、用生命周期监听器配置当前实例、将状态改为true，子子容器、组件都被正确启动，开始为HTTP提供服务
      */
-    public synchronized void start() throws LifecycleException {
+    public synchronized void start()    // 为引入的每个HTTP请求提供服务
+            throws LifecycleException {
         if (started)
             throw new LifecycleException
                     (sm.getString("containerBase.alreadyStarted", logName()));
@@ -3336,12 +3323,12 @@ public class StandardContext
 
         if (debug >= 1)
             log("Processing start(), current available=" + getAvailable());
-        setAvailable(false);
-        setConfigured(false);
+        setAvailable(false);        // 未被正常启动
+        setConfigured(false);       // 未被正确配置
         boolean ok = true;
 
         // Add missing components as necessary
-        if (getResources() == null) {   // (1) Required by Loader
+        if (getResources() == null) {   // (1) Required by Loader       // 设置资源
             if (debug >= 1)
                 log("Configuring default Resources");
             try {
@@ -3355,41 +3342,36 @@ public class StandardContext
             }
         }
         if (ok && (resources instanceof ProxyDirContext)) {
-            DirContext dirContext =
-                    ((ProxyDirContext) resources).getDirContext();
-            if ((dirContext != null)
-                    && (dirContext instanceof BaseDirContext)) {
+            DirContext dirContext = ((ProxyDirContext) resources).getDirContext();
+            if ((dirContext != null) && (dirContext instanceof BaseDirContext)) {
                 ((BaseDirContext) dirContext).setDocBase(getBasePath());
                 ((BaseDirContext) dirContext).allocate();
             }
         }
-        if (getLoader() == null) {      // (2) Required by Manager
+        if (getLoader() == null) {      // (2) Required by Manager      // 设置加载器
             if (getPrivileged()) {
-                if (debug >= 1)
-                    log("Configuring privileged default Loader");
+                if (debug >= 1) log("Configuring privileged default Loader");
                 setLoader(new WebappLoader(this.getClass().getClassLoader()));
             } else {
-                if (debug >= 1)
-                    log("Configuring non-privileged default Loader");
+                if (debug >= 1) log("Configuring non-privileged default Loader");
                 setLoader(new WebappLoader(getParentClassLoader()));
             }
         }
         if (getManager() == null) {     // (3) After prerequisites
             if (debug >= 1)
                 log("Configuring default Manager");
-            setManager(new StandardManager());
+            setManager(new StandardManager());      // 设置session管理器
         }
 
         // Initialize character set mapper
-        getCharsetMapper();
+        getCharsetMapper();     // 初始化字符集映射器
 
         // Post work directory
         postWorkDirectory();
 
         // Reading the "catalina.useNaming" environment variable
         String useNamingProperty = System.getProperty("catalina.useNaming");
-        if ((useNamingProperty != null)
-                && (useNamingProperty.equals("false"))) {
+        if ((useNamingProperty != null) && (useNamingProperty.equals("false"))) {
             useNaming = false;
         }
 
@@ -3436,29 +3418,29 @@ public class StandardContext
                     ((Lifecycle) resources).start();
 
                 // Start our Mappers, if any
-                Mapper mappers[] = findMappers();
-                for (int i = 0; i < mappers.length; i++) {
-                    if (mappers[i] instanceof Lifecycle)
-                        ((Lifecycle) mappers[i]).start();
+                Mapper[] mappers = findMappers();
+                for (Mapper value : mappers) {
+                    if (value instanceof Lifecycle)
+                        ((Lifecycle) value).start();
                 }
 
                 // Start our child containers, if any
-                Container children[] = findChildren();
-                for (int i = 0; i < children.length; i++) {
-                    if (children[i] instanceof Lifecycle)
-                        ((Lifecycle) children[i]).start();
+                Container[] children = findChildren();
+                for (Container child : children) {
+                    if (child instanceof Lifecycle)
+                        ((Lifecycle) child).start();        // 启动子容器
                 }
 
                 // Start the Valves in our pipeline (including the basic),
                 // if any
                 if (pipeline instanceof Lifecycle)
-                    ((Lifecycle) pipeline).start();
+                    ((Lifecycle) pipeline).start();     // 启动管道对象
 
                 // Notify our interested LifecycleListeners
                 lifecycle.fireLifecycleEvent(START_EVENT, null);
 
                 if ((manager != null) && (manager instanceof Lifecycle))
-                    ((Lifecycle) manager).start();
+                    ((Lifecycle) manager).start();      // 启动session管理器
 
             } finally {
                 // Unbinding thread
@@ -3471,17 +3453,15 @@ public class StandardContext
 
         // We put the resources into the servlet context
         if (ok)
-            getServletContext().setAttribute
-                    (Globals.RESOURCES_ATTR, getResources());
+            getServletContext().setAttribute(Globals.RESOURCES_ATTR, getResources());
 
         // Binding thread
         oldCCL = bindThread();
 
         // Create context attributes that will be required
         if (ok) {
-            if (debug >= 1)
-                log("Posting standard context attributes");
-            postWelcomeFiles();
+            if (debug >= 1) log("Posting standard context attributes");
+            postWelcomeFiles();     // 欢迎页
         }
 
         // Configure and call application event listeners and filters
@@ -3495,29 +3475,27 @@ public class StandardContext
         }
 
         // Load and initialize all "load on startup" servlets
-        if (ok)
-            loadOnStartup(findChildren());
+        if (ok) loadOnStartup(findChildren());      // 载入在启动时加载的Servlets
 
         // Unbinding thread
         unbindThread(oldCCL);
 
         // Set available status depending upon startup success
         if (ok) {
-            if (debug >= 1)
-                log("Starting completed");
+            if (debug >= 1) log("Starting completed");
             setAvailable(true);
         } else {
             log(sm.getString("standardContext.startFailed"));
             try {
-                stop();
+                stop();     // 对上述流程检查，检查启动失败，将关闭已经启动的所有组件
             } catch (Throwable t) {
                 log(sm.getString("standardContext.startCleanup"), t);
             }
-            setAvailable(false);
+            setAvailable(false);        // 启动失败
         }
 
         // Notify our interested LifecycleListeners
-        lifecycle.fireLifecycleEvent(AFTER_START_EVENT, null);
+        lifecycle.fireLifecycleEvent(AFTER_START_EVENT, null);      // 触发启动完成事件
 
     }
 
@@ -3531,8 +3509,7 @@ public class StandardContext
 
         // Validate and update our current component state
         if (!started)
-            throw new LifecycleException
-                    (sm.getString("containerBase.notStarted", logName()));
+            throw new LifecycleException(sm.getString("containerBase.notStarted", logName()));
 
         if (debug >= 1)
             log("Stopping");
@@ -3571,14 +3548,14 @@ public class StandardContext
             }
 
             // Stop our child containers, if any
-            Container children[] = findChildren();
+            Container[] children = findChildren();
             for (int i = 0; i < children.length; i++) {
                 if (children[i] instanceof Lifecycle)
                     ((Lifecycle) children[i]).stop();
             }
 
             // Stop our Mappers, if any
-            Mapper mappers[] = findMappers();
+            Mapper[] mappers = findMappers();
             for (int i = 0; i < mappers.length; i++) {
                 if (mappers[(mappers.length - 1) - i] instanceof Lifecycle)
                     ((Lifecycle) mappers[(mappers.length - 1) - i]).stop();
@@ -3664,14 +3641,13 @@ public class StandardContext
 
 
     /**
-     * Add a default Mapper implementation if none have been configured
-     * explicitly.
+     * Add a default Mapper implementation if none have been configured explicitly.
      *
      * @param mapperClass Java class name of the default Mapper
      */
     protected void addDefaultMapper(String mapperClass) {
 
-        super.addDefaultMapper(this.mapperClass);
+        super.addDefaultMapper(this.mapperClass);   // 添加默认映射器
 
     }
 
@@ -3706,11 +3682,8 @@ public class StandardContext
 
         if (this.publicId == null)
             return (false);
-        if (this.publicId.equals
-                (org.apache.catalina.startup.Constants.WebDtdPublicId_22))
-            return (true);
-        else
-            return (false);
+        return this.publicId.equals
+                (org.apache.catalina.startup.Constants.WebDtdPublicId_22);
 
     }
 
@@ -3737,14 +3710,12 @@ public class StandardContext
      */
     private ClassLoader bindThread() {
 
-        ClassLoader oldContextClassLoader =
-                Thread.currentThread().getContextClassLoader();
+        ClassLoader oldContextClassLoader = Thread.currentThread().getContextClassLoader();
 
         if (getResources() == null)
             return oldContextClassLoader;
 
-        Thread.currentThread().setContextClassLoader
-                (getLoader().getClassLoader());
+        Thread.currentThread().setContextClassLoader(getLoader().getClassLoader());
 
         DirContextURLStreamHandler.bind(getResources());
 
@@ -3768,8 +3739,6 @@ public class StandardContext
     private void unbindThread(ClassLoader oldContextClassLoader) {
 
         Thread.currentThread().setContextClassLoader(oldContextClassLoader);
-
-        oldContextClassLoader = null;
 
         if (isUseNaming()) {
             ContextBindings.unbindThread(this, this);
@@ -3864,8 +3833,7 @@ public class StandardContext
      */
     private void postWelcomeFiles() {
 
-        getServletContext().setAttribute("org.apache.catalina.WELCOME_FILES",
-                welcomeFiles);
+        getServletContext().setAttribute("org.apache.catalina.WELCOME_FILES", welcomeFiles);
 
     }
 
@@ -3960,15 +3928,9 @@ public class StandardContext
         if (urlPattern == null)
             return (false);
         if (urlPattern.startsWith("*.")) {
-            if (urlPattern.indexOf('/') < 0)
-                return (true);
-            else
-                return (false);
+            return urlPattern.indexOf('/') < 0;
         }
-        if (urlPattern.startsWith("/"))
-            return (true);
-        else
-            return (false);
+        return urlPattern.startsWith("/");
 
     }
 

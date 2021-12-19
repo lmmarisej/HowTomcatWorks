@@ -99,13 +99,13 @@ public final class StandardService
     /**
      * The set of Connectors associated with this Service.
      */
-    private Connector connectors[] = new Connector[0];
+    private Connector connectors[] = new Connector[0];      // 一个服务组件可以有多个连接器示例，一个连接器处理HTTP、一个处理HTTPS等
 
 
     /**
      * The Container associated with this Service.
      */
-    private Container container = null;
+    private Container container = null;                     // 一个服务组件可以有一个容器示例
 
 
     /**
@@ -569,14 +569,13 @@ public final class StandardService
     public void initialize()
             throws LifecycleException {
         if (initialized)
-            throw new LifecycleException(
-                    sm.getString("standardService.initialize.initialized"));
+            throw new LifecycleException(sm.getString("standardService.initialize.initialized"));
         initialized = true;
 
         // Initialize our defined Connectors
         synchronized (connectors) {
-            for (int i = 0; i < connectors.length; i++) {
-                connectors[i].initialize();
+            for (Connector connector : connectors) {
+                connector.initialize();             // 初始化所有连接器
             }
         }
     }

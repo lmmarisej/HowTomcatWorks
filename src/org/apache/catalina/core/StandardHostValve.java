@@ -144,8 +144,7 @@ final class StandardHostValve
             throws IOException, ServletException {
 
         // Validate the request and response object types
-        if (!(request.getRequest() instanceof HttpServletRequest) ||
-                !(response.getResponse() instanceof HttpServletResponse)) {
+        if (!(request.getRequest() instanceof HttpServletRequest) || !(response.getResponse() instanceof HttpServletResponse)) {
             return;     // NOTE - Not much else we can do generically
         }
 
@@ -153,25 +152,22 @@ final class StandardHostValve
         StandardHost host = (StandardHost) getContainer();
         Context context = (Context) host.map(request, true);
         if (context == null) {
-            ((HttpServletResponse) response.getResponse()).sendError
-                    (HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                            sm.getString("standardHost.noContext"));
+            ((HttpServletResponse) response.getResponse()).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, sm.getString("standardHost.noContext"));
             return;
         }
 
         // Bind the context CL to the current thread
-        Thread.currentThread().setContextClassLoader
-                (context.getLoader().getClassLoader());
+        Thread.currentThread().setContextClassLoader(context.getLoader().getClassLoader());
 
         // Update the session last access time for our session (if any)
         HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
         String sessionId = hreq.getRequestedSessionId();
         if (sessionId != null) {
-            Manager manager = context.getManager();
+            Manager manager = context.getManager();     // 获取session管理器
             if (manager != null) {
                 Session session = manager.findSession(sessionId);
                 if ((session != null) && session.isValid())
-                    session.access();
+                    session.access();       // 将本次HTTP请求的session获取，修改最后访问时间
             }
         }
 

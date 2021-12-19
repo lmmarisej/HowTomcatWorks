@@ -172,7 +172,7 @@ public abstract class ContainerBase
     protected class PrivilegedAddChild
             implements PrivilegedAction {
 
-        private Container child;
+        private final Container child;
 
         PrivilegedAddChild(Container child) {
             this.child = child;
@@ -811,7 +811,7 @@ public abstract class ContainerBase
                 throw new IllegalArgumentException("addChild:  Child name '" +
                         child.getName() +
                         "' is not unique");
-            child.setParent((Container) this);  // May throw IAE
+            child.setParent(this);  // May throw IAE
             if (started && (child instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) child).start();    // 是一个组件则启动
@@ -856,7 +856,7 @@ public abstract class ContainerBase
                 throw new IllegalArgumentException("addMapper:  Protocol '" +
                         mapper.getProtocol() +
                         "' is not unique");
-            mapper.setContainer((Container) this);      // May throw IAE
+            mapper.setContainer(this);      // May throw IAE
             if (started && (mapper instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) mapper).start();
@@ -997,12 +997,11 @@ public abstract class ContainerBase
      * @param request Request being processed
      * @param update  Update the Request to reflect the mapping selection?
      */
-    public Container map(Request request, boolean update) {
+    public Container map(Request request, boolean update) {     // 返回用来处理HTTP请求的子容器
 
         // Select the Mapper we will use
         Mapper mapper = findMapper(request.getRequest().getProtocol());
-        if (mapper == null)
-            return (null);
+        if (mapper == null) return (null);
 
         // Use this Mapper to perform this mapping
         return (mapper.map(request, update));
@@ -1143,8 +1142,7 @@ public abstract class ContainerBase
 
         // Validate and update our current component state
         if (started)
-            throw new LifecycleException
-                    (sm.getString("containerBase.alreadyStarted", logName()));
+            throw new LifecycleException(sm.getString("containerBase.alreadyStarted", logName()));
 
         // Notify our interested LifecycleListeners
         lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);
@@ -1167,17 +1165,17 @@ public abstract class ContainerBase
             ((Lifecycle) resources).start();
 
         // Start our Mappers, if any
-        Mapper mappers[] = findMappers();
-        for (int i = 0; i < mappers.length; i++) {
-            if (mappers[i] instanceof Lifecycle)
-                ((Lifecycle) mappers[i]).start();
+        Mapper[] mappers = findMappers();
+        for (Mapper value : mappers) {
+            if (value instanceof Lifecycle)
+                ((Lifecycle) value).start();
         }
 
         // Start our child containers, if any
-        Container children[] = findChildren();
-        for (int i = 0; i < children.length; i++) {
-            if (children[i] instanceof Lifecycle)
-                ((Lifecycle) children[i]).start();
+        Container[] children = findChildren();
+        for (Container child : children) {
+            if (child instanceof Lifecycle)
+                ((Lifecycle) child).start();
         }
 
         // Start the Valves in our pipeline (including the basic), if any
@@ -1219,14 +1217,14 @@ public abstract class ContainerBase
         }
 
         // Stop our child containers, if any
-        Container children[] = findChildren();
+        Container[] children = findChildren();
         for (int i = 0; i < children.length; i++) {
             if (children[i] instanceof Lifecycle)
                 ((Lifecycle) children[i]).stop();
         }
 
         // Stop our Mappers, if any
-        Mapper mappers[] = findMappers();
+        Mapper[] mappers = findMappers();
         for (int i = 0; i < mappers.length; i++) {
             if (mappers[(mappers.length - 1) - i] instanceof Lifecycle)
                 ((Lifecycle) mappers[(mappers.length - 1) - i]).stop();

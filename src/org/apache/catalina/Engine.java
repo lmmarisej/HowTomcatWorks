@@ -89,8 +89,9 @@ package org.apache.catalina;
  * @author Craig R. McClanahan
  * @version $Revision: 1.9 $ $Date: 2002/09/09 23:39:03 $
  */
-
-public interface Engine extends Container {
+// engine也是Servlet容器，若tomcat想要支持多个jvm就要使用engine容器
+public interface Engine     // 最顶层的容器，tomcat默认使用Engine容器，且其中有一个host容器；可以与一个服务实例相关联
+        extends Container {
 
 
     // ------------------------------------------------------------- Properties

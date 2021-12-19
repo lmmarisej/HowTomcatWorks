@@ -1,4 +1,4 @@
-package src.cxs15.pyrmont.digestertest;
+package cxs15.pyrmont.digestertest;
 
 import java.io.File;
 

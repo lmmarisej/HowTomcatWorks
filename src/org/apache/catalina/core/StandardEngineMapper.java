@@ -199,12 +199,12 @@ public class StandardEngineMapper
         if (host == null) {
             if (debug >= 2)
                 engine.log(" Trying an alias match");
-            Container children[] = engine.findChildren();
-            for (int i = 0; i < children.length; i++) {
-                String aliases[] = ((Host) children[i]).findAliases();
-                for (int j = 0; j < aliases.length; j++) {
-                    if (server.equals(aliases[j])) {
-                        host = (Host) children[i];
+            Container[] children = engine.findChildren();
+            for (Container child : children) {
+                String[] aliases = ((Host) child).findAliases();
+                for (String alias : aliases) {
+                    if (server.equals(alias)) {
+                        host = (Host) child;
                         break;
                     }
                 }
@@ -221,7 +221,7 @@ public class StandardEngineMapper
         }
 
         // Update the Request if requested, and return the selected Host
-        ;       // No update to the Request is required
+        // No update to the Request is required
         return (host);
 
     }

@@ -79,7 +79,7 @@ package org.apache.catalina;
  * @version $Revision: 1.7 $ $Date: 2001/11/06 22:33:46 $
  */
 
-public interface Service {
+public interface Service {      // Server的服务组件
 
 
     // ------------------------------------------------------------- Properties

@@ -52,7 +52,7 @@ public final class Bootstrap1 {
         context.addServletMapping("/Primitive", "Primitive");
         context.addServletMapping("/Modern", "Modern");
 
-        connector.setContainer(host);
+        connector.setContainer(host);       // 将host连接到连接器
         try {
             connector.initialize();
             ((Lifecycle) connector).start();

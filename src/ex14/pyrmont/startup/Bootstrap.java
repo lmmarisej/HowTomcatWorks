@@ -45,50 +45,46 @@ public final class Bootstrap {
         LifecycleListener listener = new SimpleContextConfig();
         ((Lifecycle) context).addLifecycleListener(listener);
 
-        Host host = new StandardHost();
-        host.addChild(context);
-        host.setName("localhost");
-        host.setAppBase("webapps");
-
         Loader loader = new WebappLoader();
         context.setLoader(loader);
         // context.addServletMapping(pattern, name);
         context.addServletMapping("/Primitive", "Primitive");
         context.addServletMapping("/Modern", "Modern");
 
+        Host host = new StandardHost();
+        host.addChild(context);     // 关联一个context实例
+        host.setName("localhost");
+        host.setAppBase("webapps");
+
         Engine engine = new StandardEngine();
-        engine.addChild(host);
+        engine.addChild(host);      // 关联一个host实例，也就将context和host组装为engine
         engine.setDefaultHost("localhost");
 
         Service service = new StandardService();
         service.setName("Stand-alone Service");
         Server server = new StandardServer();
         server.addService(service);
-        service.addConnector(connector);
+        service.addConnector(connector);        // service使用的connector
 
         //StandardService class's setContainer will call all its connector's setContainer method
-        service.setContainer(engine);
+        service.setContainer(engine);       // 组件关联到容器，最终拼装出Servlet容器
 
         // Start the new server
-        if (server instanceof Lifecycle) {
-            try {
-                server.initialize();
-                ((Lifecycle) server).start();
-                server.await();
-                // the program waits until the await method returns,
-                // i.e. until a shutdown command is received.
-            } catch (LifecycleException e) {
-                e.printStackTrace(System.out);
-            }
+        try {
+            server.initialize();        // 初始化
+            ((Lifecycle) server).start();   // 启动整个容器
+            server.await();
+            // the program waits until the await method returns,
+            // i.e. until a shutdown command is received.
+        } catch (LifecycleException e) {
+            e.printStackTrace(System.out);
         }
 
         // Shut down the server
-        if (server instanceof Lifecycle) {
-            try {
-                ((Lifecycle) server).stop();
-            } catch (LifecycleException e) {
-                e.printStackTrace(System.out);
-            }
+        try {
+            ((Lifecycle) server).stop();
+        } catch (LifecycleException e) {
+            e.printStackTrace(System.out);
         }
     }
 }

@@ -23,7 +23,6 @@ public final class Bootstrap2 {
     public static void main(String[] args) {
         //invoke: http://localhost:8080/app1/Primitive or http://localhost:8080/app1/Modern
         System.setProperty("catalina.base", System.getProperty("user.dir"));
-        Connector connector = new HttpConnector();
 
         Wrapper wrapper1 = new StandardWrapper();
         wrapper1.setName("Primitive");
@@ -57,6 +56,8 @@ public final class Bootstrap2 {
         Engine engine = new StandardEngine();
         engine.addChild(host);
         engine.setDefaultHost("localhost");
+
+        Connector connector = new HttpConnector();
 
         connector.setContainer(engine);
         try {

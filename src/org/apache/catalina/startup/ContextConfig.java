@@ -123,7 +123,7 @@ import org.xml.sax.SAXParseException;
  * @version $Revision: 1.66 $ $Date: 2002/06/23 20:35:30 $
  */
 
-public final class ContextConfig
+public final class ContextConfig        // 负责配置standardContext监听事件
         implements LifecycleListener {
 
 
@@ -167,14 +167,14 @@ public final class ContextConfig
      * The <code>Digester</code> we will use to process tag library
      * descriptor files.
      */
-    private static Digester tldDigester = createTldDigester();
+    private static final Digester tldDigester = createTldDigester();
 
 
     /**
      * The <code>Digester</code> we will use to process web application
      * deployment descriptor files.
      */
-    private static Digester webDigester = createWebDigester();
+    private static final Digester webDigester = createWebDigester();
 
 
     // ------------------------------------------------------------- Properties
@@ -298,7 +298,7 @@ public final class ContextConfig
     private synchronized void authenticatorConfig() {
 
         // Does this Context require an Authenticator?
-        SecurityConstraint constraints[] = context.findConstraints();
+        SecurityConstraint[] constraints = context.findConstraints();
         if ((constraints == null) || (constraints.length == 0))
             return;
         LoginConfig loginConfig = context.getLoginConfig();
@@ -316,7 +316,7 @@ public final class ContextConfig
                 Valve basic = pipeline.getBasic();
                 if ((basic != null) && (basic instanceof Authenticator))
                     return;
-                Valve valves[] = pipeline.getValves();
+                Valve[] valves = pipeline.getValves();
                 for (int i = 0; i < valves.length; i++) {
                     if (valves[i] instanceof Authenticator)
                         return;
@@ -466,11 +466,9 @@ public final class ContextConfig
         Digester tldDigester = new Digester();
         tldDigester.setValidating(true);
         url = ContextConfig.class.getResource(Constants.TldDtdResourcePath_11);
-        tldDigester.register(Constants.TldDtdPublicId_11,
-                url.toString());
+        tldDigester.register(Constants.TldDtdPublicId_11, url.toString());
         url = ContextConfig.class.getResource(Constants.TldDtdResourcePath_12);
-        tldDigester.register(Constants.TldDtdPublicId_12,
-                url.toString());
+        tldDigester.register(Constants.TldDtdPublicId_12, url.toString());
         tldDigester.addRuleSet(new TldRuleSet());
         return (tldDigester);
 
@@ -651,7 +649,7 @@ public final class ContextConfig
         if ((debug >= 1) && (context instanceof ContainerBase)) {
             log("Pipline Configuration:");
             Pipeline pipeline = ((ContainerBase) context).getPipeline();
-            Valve valves[] = null;
+            Valve[] valves = null;
             if (pipeline != null)
                 valves = pipeline.getValves();
             if (valves != null) {
@@ -886,7 +884,7 @@ public final class ContextConfig
                         (sm.getString("contextConfig.tldResourcePath",
                                 resourcePath));
             }
-            url = new URL("jar:" + url.toString() + "!/");
+            url = new URL("jar:" + url + "!/");
             JarURLConnection conn =
                     (JarURLConnection) url.openConnection();
             conn.setUseCaches(false);
@@ -926,8 +924,7 @@ public final class ContextConfig
             if (inputStream != null) {
                 try {
                     inputStream.close();
-                } catch (Throwable t) {
-                    ;
+                } catch (Throwable ignored) {
                 }
                 inputStream = null;
             }
@@ -1000,7 +997,6 @@ public final class ContextConfig
                 try {
                     inputStream.close();
                 } catch (Throwable t) {
-                    ;
                 }
                 inputStream = null;
             }
@@ -1031,17 +1027,16 @@ public final class ContextConfig
         if (debug >= 2) {
             log("  Scanning <taglib> elements in web.xml");
         }
-        String taglibs[] = context.findTaglibs();
-        for (int i = 0; i < taglibs.length; i++) {
-            String resourcePath = context.findTaglib(taglibs[i]);
+        String[] taglibs = context.findTaglibs();
+        for (String taglib : taglibs) {
+            String resourcePath = context.findTaglib(taglib);
             // FIXME - Servlet 2.3 DTD implies that the location MUST be
             // a context-relative path starting with '/'?
             if (!resourcePath.startsWith("/")) {
                 resourcePath = "/WEB-INF/web.xml/../" + resourcePath;
             }
             if (debug >= 3) {
-                log("   Adding path '" + resourcePath +
-                        "' for URI '" + taglibs[i] + "'");
+                log("   Adding path '" + resourcePath + "' for URI '" + taglib + "'");
             }
             resourcePaths.add(resourcePath);
         }
@@ -1067,7 +1062,7 @@ public final class ContextConfig
                 resourcePaths.add(resourcePath);
             }
         } catch (NamingException e) {
-            ; // Silent catch: it's valid that no /WEB-INF directory exists
+            // Silent catch: it's valid that no /WEB-INF directory exists
         }
 
         // Scan JARs in the /WEB-INF/lib subdirectory of the web application
@@ -1088,7 +1083,7 @@ public final class ContextConfig
                 resourcePaths.add(resourcePath);
             }
         } catch (NamingException e) {
-            ; // Silent catch: it's valid that no /WEB-INF/lib directory exists
+            // Silent catch: it's valid that no /WEB-INF/lib directory exists
         }
 
         // Return the completed set
@@ -1107,30 +1102,30 @@ public final class ContextConfig
     private void validateSecurityRoles() {
 
         // Check role names used in <security-constraint> elements
-        SecurityConstraint constraints[] = context.findConstraints();
-        for (int i = 0; i < constraints.length; i++) {
-            String roles[] = constraints[i].findAuthRoles();
-            for (int j = 0; j < roles.length; j++) {
-                if (!"*".equals(roles[j]) &&
-                        !context.findSecurityRole(roles[j])) {
-                    log(sm.getString("contextConfig.role.auth", roles[j]));
-                    context.addSecurityRole(roles[j]);
+        SecurityConstraint[] constraints = context.findConstraints();
+        for (SecurityConstraint constraint : constraints) {
+            String[] roles = constraint.findAuthRoles();
+            for (String role : roles) {
+                if (!"*".equals(role) &&
+                        !context.findSecurityRole(role)) {
+                    log(sm.getString("contextConfig.role.auth", role));
+                    context.addSecurityRole(role);
                 }
             }
         }
 
         // Check role names used in <servlet> elements
-        Container wrappers[] = context.findChildren();
-        for (int i = 0; i < wrappers.length; i++) {
-            Wrapper wrapper = (Wrapper) wrappers[i];
+        Container[] wrappers = context.findChildren();
+        for (Container container : wrappers) {
+            Wrapper wrapper = (Wrapper) container;
             String runAs = wrapper.getRunAs();
             if ((runAs != null) && !context.findSecurityRole(runAs)) {
                 log(sm.getString("contextConfig.role.runas", runAs));
                 context.addSecurityRole(runAs);
             }
-            String names[] = wrapper.findSecurityReferences();
-            for (int j = 0; j < names.length; j++) {
-                String link = wrapper.findSecurityReference(names[j]);
+            String[] names = wrapper.findSecurityReferences();
+            for (String name : names) {
+                String link = wrapper.findSecurityReference(name);
                 if ((link != null) && !context.findSecurityRole(link)) {
                     log(sm.getString("contextConfig.role.link", link));
                     context.addSecurityRole(link);

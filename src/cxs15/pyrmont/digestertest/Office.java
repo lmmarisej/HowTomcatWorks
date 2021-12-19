@@ -1,4 +1,4 @@
-package src.cxs15.pyrmont.digestertest;
+package cxs15.pyrmont.digestertest;
 
 public class Office {
     private Address address;

@@ -963,8 +963,7 @@ final class HttpProcessor
 
             // Ask our Container to process this request
             try {
-                ((HttpServletResponse) response).setHeader
-                        ("Date", FastHttpDateFormat.getCurrentDate());
+                ((HttpServletResponse) response).setHeader("Date", FastHttpDateFormat.getCurrentDate());
                 if (ok) {
                     connector.getContainer().invoke(request, response);     // 交给容器，容器交给servlet来进行业务处理
                 }

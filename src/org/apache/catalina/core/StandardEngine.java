@@ -293,7 +293,7 @@ public class StandardEngine
      */
     public void addChild(Container child) {
 
-        if (!(child instanceof Host))
+        if (!(child instanceof Host))       // engine容器的子容器只能是host类型
             throw new IllegalArgumentException
                     (sm.getString("standardEngine.notHost"));
         super.addChild(child);

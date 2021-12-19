@@ -93,7 +93,8 @@ import javax.servlet.UnavailableException;
  * @version $Revision: 1.5 $ $Date: 2001/07/22 20:13:30 $
  */
 
-public interface Wrapper extends Container {
+public interface Wrapper    // 一个wrapper表示一个Servlet实例
+        extends Container {
 
 
     // ------------------------------------------------------------- Properties

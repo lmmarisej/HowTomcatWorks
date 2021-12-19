@@ -10,7 +10,7 @@ public class SimpleContextConfig implements LifecycleListener {
     public void lifecycleEvent(LifecycleEvent event) {
         if (Lifecycle.START_EVENT.equals(event.getType())) {
             Context context = (Context) event.getLifecycle();
-            context.setConfigured(true);
+            context.setConfigured(true);        // 将配置成功属性设置为true，使standardContext认为自己已经正确配置过了
         }
     }
 }

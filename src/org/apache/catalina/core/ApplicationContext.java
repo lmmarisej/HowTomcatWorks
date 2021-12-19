@@ -633,26 +633,22 @@ public class ApplicationContext
             String fullPath = context.getName() + path;
 
             // this is the problem. Host must not be null
-            String hostName = context.getParent().getName();
+            String hostName = context.getParent().getName();        // 要使用ContextConfig实例来进行配置，context实例必须要有一个host实例作为容器
 
             try {
                 resources.lookup(path);
                 if (System.getSecurityManager() != null) {
                     try {
-                        PrivilegedGetResource dp =
-                                new PrivilegedGetResource
-                                        (hostName, fullPath, resources);
+                        PrivilegedGetResource dp = new PrivilegedGetResource(hostName, fullPath, resources);
                         return (URL) AccessController.doPrivileged(dp);
                     } catch (PrivilegedActionException pe) {
                         throw pe.getException();
                     }
                 } else {
-                    return new URL
-                            ("jndi", null, 0, getJNDIUri(hostName, fullPath),
-                                    new DirContextURLStreamHandler(resources));
+                    return new URL("jndi", null, 0, getJNDIUri(hostName, fullPath), new DirContextURLStreamHandler(resources));
                 }
             } catch (Exception e) {
-                //e.printStackTrace();
+                // e.printStackTrace();
             }
         }
         return (null);

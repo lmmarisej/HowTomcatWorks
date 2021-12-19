@@ -1,4 +1,4 @@
-package src.cxs15.pyrmont.startup;
+package cxs15.pyrmont.startup;
 
 //explain Digester and StandardContext
 // use ContextConfig so we don't need to instantiate wrapper
@@ -48,8 +48,7 @@ public final class Bootstrap {
             ((Lifecycle) host).start();
             Container[] c = context.findChildren();
             int length = c.length;
-            for (int i = 0; i < length; i++) {
-                Container child = c[i];
+            for (Container child : c) {
                 System.out.println(child.getName());
             }
 

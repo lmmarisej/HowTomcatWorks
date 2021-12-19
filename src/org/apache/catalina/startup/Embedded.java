@@ -190,7 +190,7 @@ public class Embedded implements Lifecycle {
     /**
      * The set of Connectors that have been deployed in this server.
      */
-    protected Connector connectors[] = new Connector[0];
+    protected Connector[] connectors = new Connector[0];
 
 
     /**
@@ -209,7 +209,7 @@ public class Embedded implements Lifecycle {
      * The set of Engines that have been deployed in this server.  Normally
      * there will only be one.
      */
-    protected Engine engines[] = new Engine[0];
+    protected Engine[] engines = new Engine[0];
 
 
     /**
@@ -409,16 +409,14 @@ public class Embedded implements Lifecycle {
 
         // Make sure we have a Container to send requests to
         if (engines.length < 1)
-            throw new IllegalStateException
-                    (sm.getString("embedded.noEngines"));
+            throw new IllegalStateException(sm.getString("embedded.noEngines"));
 
         // Configure this Connector as needed
-        connector.setContainer(engines[engines.length - 1]);
+        connector.setContainer(engines[engines.length - 1]);        // 将Servlet容器传给每隔连接器，形成关联关系
 
         // Add this Connector to our set of defined Connectors
-        Connector results[] = new Connector[connectors.length + 1];
-        for (int i = 0; i < connectors.length; i++)
-            results[i] = connectors[i];
+        Connector[] results = new Connector[connectors.length + 1];
+        System.arraycopy(connectors, 0, results, 0, connectors.length);
         results[connectors.length] = connector;
         connectors = results;
 
@@ -448,7 +446,7 @@ public class Embedded implements Lifecycle {
             logger.log("Adding engine (" + engine.getInfo() + ")");
 
         // Add this Engine to our set of defined Engines
-        Engine results[] = new Engine[engines.length + 1];
+        Engine[] results = new Engine[engines.length + 1];
         for (int i = 0; i < engines.length; i++)
             results[i] = engines[i];
         results[engines.length] = engine;
@@ -685,7 +683,7 @@ public class Embedded implements Lifecycle {
      */
     public String getInfo() {
 
-        return (this.info);
+        return (info);
 
     }
 
@@ -727,7 +725,7 @@ public class Embedded implements Lifecycle {
         if (debug >= 1)
             logger.log(" Removing this Connector");
         int k = 0;
-        Connector results[] = new Connector[connectors.length - 1];
+        Connector[] results = new Connector[connectors.length - 1];
         for (int i = 0; i < connectors.length; i++) {
             if (i != j)
                 results[k++] = connectors[i];
@@ -752,11 +750,11 @@ public class Embedded implements Lifecycle {
         // Is this Context actually among those that are defined?
         boolean found = false;
         for (int i = 0; i < engines.length; i++) {
-            Container hosts[] = engines[i].findChildren();
+            Container[] hosts = engines[i].findChildren();
             for (int j = 0; j < hosts.length; j++) {
-                Container contexts[] = hosts[j].findChildren();
+                Container[] contexts = hosts[j].findChildren();
                 for (int k = 0; k < contexts.length; k++) {
-                    if (context == (Context) contexts[k]) {
+                    if (context == contexts[k]) {
                         found = true;
                         break;
                     }
@@ -807,7 +805,7 @@ public class Embedded implements Lifecycle {
         while (true) {
             int n = -1;
             for (int i = 0; i < connectors.length; i++) {
-                if (connectors[i].getContainer() == (Container) engine) {
+                if (connectors[i].getContainer() == engine) {
                     n = i;
                     break;
                 }
@@ -832,7 +830,7 @@ public class Embedded implements Lifecycle {
         if (debug >= 1)
             logger.log(" Removing this Engine");
         int k = 0;
-        Engine results[] = new Engine[engines.length - 1];
+        Engine[] results = new Engine[engines.length - 1];
         for (int i = 0; i < engines.length; i++) {
             if (i != j)
                 results[k++] = engines[i];
@@ -857,9 +855,9 @@ public class Embedded implements Lifecycle {
         // Is this Host actually among those that are defined?
         boolean found = false;
         for (int i = 0; i < engines.length; i++) {
-            Container hosts[] = engines[i].findChildren();
+            Container[] hosts = engines[i].findChildren();
             for (int j = 0; j < hosts.length; j++) {
-                if (host == (Host) hosts[j]) {
+                if (host == hosts[j]) {
                     found = true;
                     break;
 
@@ -1041,7 +1039,7 @@ public class Embedded implements Lifecycle {
      *
      * @param args The command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         Embedded embedded = new Embedded(new SystemOutLogger(),
                 new MemoryRealm());
@@ -1063,7 +1061,7 @@ public class Embedded implements Lifecycle {
         try {
             embedded.start();
         } catch (LifecycleException e) {
-            System.err.println("start: " + e.toString());
+            System.err.println("start: " + e);
             e.printStackTrace();
         }
 
@@ -1105,7 +1103,6 @@ public class Embedded implements Lifecycle {
         try {
             Thread.sleep(2 * 60 * 1000L);       // Two minutes
         } catch (InterruptedException e) {
-            ;
         }
 
         // Remove the examples context dynamically
@@ -1118,7 +1115,7 @@ public class Embedded implements Lifecycle {
         try {
             embedded.stop();
         } catch (LifecycleException e) {
-            System.err.println("stop: " + e.toString());
+            System.err.println("stop: " + e);
             e.printStackTrace();
         }
 

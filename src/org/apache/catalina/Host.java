@@ -89,7 +89,8 @@ package org.apache.catalina;
  * @version $Revision: 1.9 $ $Date: 2002/09/09 23:39:03 $
  */
 
-public interface Host extends Container {
+public interface Host   // 在同一个tomcat运行多个context容器，需要使用Host容器；只有一个context无需host。
+        extends Container {
 
 
     // ----------------------------------------------------- Manifest Constants
@@ -208,7 +209,7 @@ public interface Host extends Container {
      *
      * @param uri Request URI to be mapped
      */
-    public Context map(String uri);
+    public Context map(String uri);     // 返回一个用来处理HTTP请求的context容器实例
 
 
     /**

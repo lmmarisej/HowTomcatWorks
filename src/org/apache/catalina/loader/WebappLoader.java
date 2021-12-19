@@ -330,7 +330,7 @@ public class WebappLoader
      *
      * @param container The associated Container
      */
-    public void setContainer(Container container) {
+    public void setContainer(Container container) {     // 映射器和容器相关联
 
         // Deregister from the old Container (if any)
         if ((this.container != null) && (this.container instanceof Context))
@@ -858,8 +858,7 @@ public class WebappLoader
             return;
 
         // Tell the class loader the root of the context
-        ServletContext servletContext =
-                ((Context) container).getServletContext();
+        ServletContext servletContext = ((Context) container).getServletContext();
 
         // Assigning permissions for the work directory
         File workDir =
@@ -885,17 +884,14 @@ public class WebappLoader
             String contextRoot = servletContext.getRealPath("/");
             if (contextRoot != null) {
                 try {
-                    contextRoot =
-                            (new File(contextRoot)).getCanonicalPath()
-                                    + File.separator;
+                    contextRoot = (new File(contextRoot)).getCanonicalPath() + File.separator;
                     classLoader.addPermission(contextRoot);
                 } catch (IOException e) {
                     // Ignore
                 }
             }
 
-            URL classesURL =
-                    servletContext.getResource("/WEB-INF/classes/");
+            URL classesURL = servletContext.getResource("/WEB-INF/classes/");
             if (classesURL != null)
                 classLoader.addPermission(classesURL);
 

@@ -78,6 +78,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessControlException;
 import java.sql.Timestamp;
 import java.util.Enumeration;
@@ -144,7 +145,7 @@ public final class StandardServer
      * The set of class/property combinations that should <strong>NOT</strong>
      * be persisted because they are automatically calculated.
      */
-    private static String exceptions[][] = {
+    private static final String[][] exceptions = {
             {"org.apache.catalina.core.StandardContext", "available"},
             {"org.apache.catalina.core.StandardContext", "configured"},
             {"org.apache.catalina.core.StandardContext", "distributable"},
@@ -162,7 +163,7 @@ public final class StandardServer
     /**
      * The set of classes that represent persistable properties.
      */
-    private static Class persistables[] = {
+    private static final Class[] persistables = {
             String.class,
             Integer.class, Integer.TYPE,
             Boolean.class, Boolean.TYPE,
@@ -180,7 +181,7 @@ public final class StandardServer
      * because the corresponding listeners, valves, etc. are configured
      * automatically at startup time.
      */
-    private static String skippables[] = {
+    private static final String[] skippables = {
             "org.apache.catalina.authenticator.BasicAuthenticator",
             "org.apache.catalina.authenticator.DigestAuthenticator",
             "org.apache.catalina.authenticator.FormAuthenticator",
@@ -202,7 +203,7 @@ public final class StandardServer
     /**
      * ServerLifecycleListener classname.
      */
-    private static String SERVER_LISTENER_CLASS_NAME =
+    private static final String SERVER_LISTENER_CLASS_NAME =
             "org.apache.catalina.mbeans.ServerLifecycleListener";
 
 
@@ -262,7 +263,7 @@ public final class StandardServer
     /**
      * The lifecycle event support for this component.
      */
-    private LifecycleSupport lifecycle = new LifecycleSupport(this);
+    private final LifecycleSupport lifecycle = new LifecycleSupport(this);
 
 
     /**
@@ -287,13 +288,13 @@ public final class StandardServer
     /**
      * The set of Services associated with this Server.
      */
-    private Service services[] = new Service[0];
+    private Service[] services = new Service[0];
 
 
     /**
      * The shutdown command string we are looking for.
      */
-    private String shutdown = "SHUTDOWN";
+    private String shutdown = "SHUTDOWN";       // 保存关闭关键字
 
 
     /**
@@ -462,12 +463,12 @@ public final class StandardServer
      *
      * @param service The Service to be added
      */
-    public void addService(Service service) {
+    public void addService(Service service) {       // 添加服务组件
 
         service.setServer(this);
 
         synchronized (services) {
-            Service results[] = new Service[services.length + 1];
+            Service[] results = new Service[services.length + 1];
             System.arraycopy(services, 0, results, 0, services.length);
             results[services.length] = service;
             services = results;
@@ -483,8 +484,7 @@ public final class StandardServer
             if (started && (service instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) service).start();
-                } catch (LifecycleException e) {
-                    ;
+                } catch (LifecycleException ignored) {
                 }
             }
 
@@ -498,17 +498,14 @@ public final class StandardServer
     /**
      * Wait until a proper shutdown command is received, then return.
      */
-    public void await() {
+    public void await() {       // 负责等待关闭整个tomcat部署的命令
 
         // Set up a server socket to wait on
         ServerSocket serverSocket = null;
         try {
-            serverSocket =
-                    new ServerSocket(port, 1,
-                            InetAddress.getByName("127.0.0.1"));
+            serverSocket = new ServerSocket(port, 1, InetAddress.getByName("127.0.0.1"));       // 监听本机网卡上的数据
         } catch (IOException e) {
-            System.err.println("StandardServer.await: create[" + port
-                    + "]: " + e);
+            System.err.println("StandardServer.await: create[" + port + "]: " + e);
             e.printStackTrace();
             System.exit(1);
         }
@@ -520,12 +517,11 @@ public final class StandardServer
             Socket socket = null;
             InputStream stream = null;
             try {
-                socket = serverSocket.accept();
-                socket.setSoTimeout(10 * 1000);  // Ten seconds
+                socket = serverSocket.accept();     // 阻塞等待数据到来
+                socket.setSoTimeout(10 * 1000);  // Ten seconds     // 每隔十秒醒来检查一次
                 stream = socket.getInputStream();
             } catch (AccessControlException ace) {
-                System.err.println("StandardServer.accept security exception: "
-                        + ace.getMessage());
+                System.err.println("StandardServer.accept security exception: " + ace.getMessage());
                 continue;
             } catch (IOException e) {
                 System.err.println("StandardServer.await: accept: " + e);
@@ -534,7 +530,7 @@ public final class StandardServer
             }
 
             // Read a set of characters from the socket
-            StringBuffer command = new StringBuffer();
+            StringBuilder command = new StringBuilder();
             int expected = 1024; // Cut off to avoid DoS attack
             while (expected < shutdown.length()) {
                 if (random == null)
@@ -559,25 +555,21 @@ public final class StandardServer
             // Close the socket now that we are done with it
             try {
                 socket.close();
-            } catch (IOException e) {
-                ;
+            } catch (IOException ignored) {
             }
 
             // Match against our command string
             boolean match = command.toString().equals(shutdown);
             if (match) {
-                break;
+                break;      // 是关闭命令，不再阻塞当前线程
             } else
-                System.err.println("StandardServer.await: Invalid command '" +
-                        command.toString() + "' received");
-
+                System.err.println("StandardServer.await: Invalid command '" + command + "' received");
         }
 
         // Close the server socket and return
         try {
-            serverSocket.close();
-        } catch (IOException e) {
-            ;
+            serverSocket.close();       // 关闭连接
+        } catch (IOException ignored) {
         }
 
     }
@@ -638,11 +630,10 @@ public final class StandardServer
                 try {
                     ((Lifecycle) services[j]).stop();
                 } catch (LifecycleException e) {
-                    ;
                 }
             }
             int k = 0;
-            Service results[] = new Service[services.length - 1];
+            Service[] results = new Service[services.length - 1];
             for (int i = 0; i < services.length; i++) {
                 if (i != j)
                     results[k++] = services[i];
@@ -725,29 +716,28 @@ public final class StandardServer
         //        yyyy-mm-dd hh:mm:ss
         //        0123456789012345678
         StringBuffer sb = new StringBuffer(".");
-        sb.append(ts.substring(0, 10));
+        sb.append(ts, 0, 10);
         sb.append('.');
-        sb.append(ts.substring(11, 13));
+        sb.append(ts, 11, 13);
         sb.append('-');
-        sb.append(ts.substring(14, 16));
+        sb.append(ts, 14, 16);
         sb.append('-');
-        sb.append(ts.substring(17, 19));
-        File configSave = new File(configFile + sb.toString());
+        sb.append(ts, 17, 19);
+        File configSave = new File(configFile + sb);
         if (!configSave.isAbsolute()) {
             configSave = new File(System.getProperty("catalina.base"),
-                    configFile + sb.toString());
+                    configFile + sb);
         }
 
         // Open an output writer for the new configuration file
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(configNew), "UTF8"));
+            writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(configNew), StandardCharsets.UTF_8));
         } catch (IOException e) {
             if (writer != null) {
                 try {
                     writer.close();
                 } catch (Throwable t) {
-                    ;
                 }
             }
             throw (e);
@@ -762,7 +752,6 @@ public final class StandardServer
                 try {
                     writer.close();
                 } catch (Throwable t) {
-                    ;
                 }
             }
             throw (e);
@@ -843,14 +832,11 @@ public final class StandardServer
             return (false);
         }
         WebappLoader wloader = (WebappLoader) loader;
-        if ((wloader.getCheckInterval() != 15) ||
-                (wloader.getDebug() != 0) ||
-                (wloader.getDelegate() != false) ||
-                !wloader.getLoaderClass().equals
-                        ("org.apache.catalina.loader.WebappClassLoader")) {
-            return (false);
-        }
-        return (true);
+        return (wloader.getCheckInterval() == 15) &&
+                (wloader.getDebug() == 0) &&
+                (wloader.getDelegate() == false) &&
+                wloader.getLoaderClass().equals
+                        ("org.apache.catalina.loader.WebappClassLoader");
 
     }
 
@@ -867,15 +853,12 @@ public final class StandardServer
             return (false);
         }
         StandardManager smanager = (StandardManager) manager;
-        if ((smanager.getDebug() != 0) ||
-                !smanager.getPathname().equals("SESSIONS.ser") ||
-                (smanager.getCheckInterval() != 60) ||
-                !smanager.getRandomClass().equals("java.security.SecureRandom") ||
-                (smanager.getMaxActiveSessions() != -1) ||
-                !smanager.getAlgorithm().equals("MD5")) {
-            return (false);
-        }
-        return (true);
+        return (smanager.getDebug() == 0) &&
+                smanager.getPathname().equals("SESSIONS.ser") &&
+                (smanager.getCheckInterval() == 60) &&
+                smanager.getRandomClass().equals("java.security.SecureRandom") &&
+                (smanager.getMaxActiveSessions() == -1) &&
+                smanager.getAlgorithm().equals("MD5");
 
     }
 
@@ -973,7 +956,7 @@ public final class StandardServer
         }
 
         // Acquire the list of properties for this bean
-        PropertyDescriptor descriptors[] =
+        PropertyDescriptor[] descriptors =
                 PropertyUtils.getPropertyDescriptors(bean);
         if (descriptors == null) {
             descriptors = new PropertyDescriptor[0];
@@ -1040,7 +1023,7 @@ public final class StandardServer
 
         // Store nested <Listener> elements
         if (connector instanceof Lifecycle) {
-            LifecycleListener listeners[] =
+            LifecycleListener[] listeners =
                     ((Lifecycle) connector).findLifecycleListeners();
             if (listeners == null) {
                 listeners = new LifecycleListener[0];
@@ -1083,7 +1066,7 @@ public final class StandardServer
         writer.println(">");
 
         // Store nested <InstanceListener> elements
-        String iListeners[] = context.findInstanceListeners();
+        String[] iListeners = context.findInstanceListeners();
         for (int i = 0; i < iListeners.length; i++) {
             for (int j = 0; j < indent; j++) {
                 writer.print(' ');
@@ -1095,7 +1078,7 @@ public final class StandardServer
 
         // Store nested <Listener> elements
         if (context instanceof Lifecycle) {
-            LifecycleListener listeners[] =
+            LifecycleListener[] listeners =
                     ((Lifecycle) context).findLifecycleListeners();
             for (int i = 0; i < listeners.length; i++) {
                 if (listeners[i].getClass().getName().equals
@@ -1161,14 +1144,14 @@ public final class StandardServer
 
         // Store nested <Valve> elements
         if (context instanceof Pipeline) {
-            Valve valves[] = ((Pipeline) context).getValves();
+            Valve[] valves = ((Pipeline) context).getValves();
             for (int i = 0; i < valves.length; i++) {
                 storeValve(writer, indent + 2, valves[i]);
             }
         }
 
         // Store nested <WrapperLifecycle> elements
-        String wLifecycles[] = context.findWrapperLifecycles();
+        String[] wLifecycles = context.findWrapperLifecycles();
         for (int i = 0; i < wLifecycles.length; i++) {
             for (int j = 0; j < indent; j++) {
                 writer.print(' ');
@@ -1179,7 +1162,7 @@ public final class StandardServer
         }
 
         // Store nested <WrapperListener> elements
-        String wListeners[] = context.findWrapperListeners();
+        String[] wListeners = context.findWrapperListeners();
         for (int i = 0; i < wListeners.length; i++) {
             for (int j = 0; j < indent; j++) {
                 writer.print(' ');
@@ -1225,7 +1208,7 @@ public final class StandardServer
         writer.println(">");
 
         // Store nested <InstanceListener> elements
-        String iListeners[] = dcontext.findInstanceListeners();
+        String[] iListeners = dcontext.findInstanceListeners();
         for (int i = 0; i < iListeners.length; i++) {
             for (int j = 0; j < indent; j++) {
                 writer.print(' ');
@@ -1237,7 +1220,7 @@ public final class StandardServer
 
         // Store nested <Listener> elements
         if (dcontext instanceof Lifecycle) {
-            LifecycleListener listeners[] =
+            LifecycleListener[] listeners =
                     ((Lifecycle) dcontext).findLifecycleListeners();
             for (int i = 0; i < listeners.length; i++) {
                 if (listeners[i].getClass().getName().equals
@@ -1308,14 +1291,14 @@ public final class StandardServer
 
         // Store nested <Valve> elements
         if (dcontext instanceof Pipeline) {
-            Valve valves[] = ((Pipeline) dcontext).getValves();
+            Valve[] valves = ((Pipeline) dcontext).getValves();
             for (int i = 0; i < valves.length; i++) {
                 storeValve(writer, indent + 2, valves[i]);
             }
         }
 
         // Store nested <WrapperLifecycle> elements
-        String wLifecycles[] = dcontext.findWrapperLifecycles();
+        String[] wLifecycles = dcontext.findWrapperLifecycles();
         for (int i = 0; i < wLifecycles.length; i++) {
             for (int j = 0; j < indent; j++) {
                 writer.print(' ');
@@ -1326,7 +1309,7 @@ public final class StandardServer
         }
 
         // Store nested <WrapperListener> elements
-        String wListeners[] = dcontext.findWrapperListeners();
+        String[] wListeners = dcontext.findWrapperListeners();
         for (int i = 0; i < wListeners.length; i++) {
             for (int j = 0; j < indent; j++) {
                 writer.print(' ');
@@ -1373,14 +1356,14 @@ public final class StandardServer
         // Store nested <DefaultContext> element
         if (engine instanceof StandardEngine) {
             DefaultContext dcontext =
-                    ((StandardEngine) engine).getDefaultContext();
+                    engine.getDefaultContext();
             if (dcontext != null) {
                 storeDefaultContext(writer, indent + 2, dcontext);
             }
         }
 
         // Store nested <Host> elements (or other relevant containers)
-        Container children[] = engine.findChildren();
+        Container[] children = engine.findChildren();
         for (int i = 0; i < children.length; i++) {
             if (children[i] instanceof Context) {
                 storeContext(writer, indent + 2, (Context) children[i]);
@@ -1393,7 +1376,7 @@ public final class StandardServer
 
         // Store nested <Listener> elements
         if (engine instanceof Lifecycle) {
-            LifecycleListener listeners[] =
+            LifecycleListener[] listeners =
                     ((Lifecycle) engine).findLifecycleListeners();
             for (int i = 0; i < listeners.length; i++) {
                 if (listeners[i].getClass().getName().equals
@@ -1430,7 +1413,7 @@ public final class StandardServer
 
         // Store nested <Valve> elements
         if (engine instanceof Pipeline) {
-            Valve valves[] = ((Pipeline) engine).getValves();
+            Valve[] valves = ((Pipeline) engine).getValves();
             for (int i = 0; i < valves.length; i++) {
                 storeValve(writer, indent + 2, valves[i]);
             }
@@ -1486,7 +1469,7 @@ public final class StandardServer
         writer.println(">");
 
         // Store nested <Alias> elements
-        String aliases[] = host.findAliases();
+        String[] aliases = host.findAliases();
         for (int i = 0; i < aliases.length; i++) {
             for (int j = 0; j < indent; j++) {
                 writer.print(' ');
@@ -1497,10 +1480,10 @@ public final class StandardServer
         }
 
         // Store nested <Cluster> elements
-        ; // FIXME - But it's not supported by any standard Host implementation
+        // FIXME - But it's not supported by any standard Host implementation
 
         // Store nested <Context> elements (or other relevant containers)
-        Container children[] = host.findChildren();
+        Container[] children = host.findChildren();
         for (int i = 0; i < children.length; i++) {
             if (children[i] instanceof Context) {
                 storeContext(writer, indent + 2, (Context) children[i]);
@@ -1514,7 +1497,7 @@ public final class StandardServer
         // Store nested <DefaultContext> element
         if (host instanceof StandardHost) {
             DefaultContext dcontext =
-                    ((StandardHost) host).getDefaultContext();
+                    host.getDefaultContext();
             if (dcontext != null) {
                 Container parent = host.getParent();
                 if ((parent != null) &&
@@ -1530,7 +1513,7 @@ public final class StandardServer
 
         // Store nested <Listener> elements
         if (host instanceof Lifecycle) {
-            LifecycleListener listeners[] =
+            LifecycleListener[] listeners =
                     ((Lifecycle) host).findLifecycleListeners();
             for (int i = 0; i < listeners.length; i++) {
                 if (listeners[i].getClass().getName().equals
@@ -1567,7 +1550,7 @@ public final class StandardServer
 
         // Store nested <Valve> elements
         if (host instanceof Pipeline) {
-            Valve valves[] = ((Pipeline) host).getValves();
+            Valve[] valves = ((Pipeline) host).getValves();
             for (int i = 0; i < valves.length; i++) {
                 storeValve(writer, indent + 2, valves[i]);
             }
@@ -1908,7 +1891,7 @@ public final class StandardServer
 
         // Store nested <Listener> elements
         if (server instanceof Lifecycle) {
-            LifecycleListener listeners[] =
+            LifecycleListener[] listeners =
                     ((Lifecycle) server).findLifecycleListeners();
             for (int i = 0; i < listeners.length; i++) {
                 storeListener(writer, indent + 2, listeners[i]);
@@ -1931,7 +1914,7 @@ public final class StandardServer
         }
 
         // Store nested <Service> elements
-        Service services[] = server.findServices();
+        Service[] services = server.findServices();
         for (int i = 0; i < services.length; i++) {
             storeService(writer, indent + 2, services[i]);
         }
@@ -1965,9 +1948,9 @@ public final class StandardServer
         writer.println(">");
 
         // Store nested <Connector> elements
-        Connector connectors[] = service.findConnectors();
-        for (int i = 0; i < connectors.length; i++) {
-            storeConnector(writer, indent + 2, connectors[i]);
+        Connector[] connectors = service.findConnectors();
+        for (Connector connector : connectors) {
+            storeConnector(writer, indent + 2, connector);
         }
 
         // Store nested <Engine> element (or other appropriate container)
@@ -1984,14 +1967,14 @@ public final class StandardServer
 
         // Store nested <Listener> elements
         if (service instanceof Lifecycle) {
-            LifecycleListener listeners[] =
+            LifecycleListener[] listeners =
                     ((Lifecycle) service).findLifecycleListeners();
-            for (int i = 0; i < listeners.length; i++) {
-                if (listeners[i].getClass().getName().equals
+            for (LifecycleListener listener : listeners) {
+                if (listener.getClass().getName().equals
                         (SERVER_LISTENER_CLASS_NAME)) {
                     continue;
                 }
-                storeListener(writer, indent + 2, listeners[i]);
+                storeListener(writer, indent + 2, listener);
             }
         }
 
@@ -2062,8 +2045,8 @@ public final class StandardServer
     private boolean isSameAddress(InetAddress server, InetAddress client) {
 
         // Compare the byte array versions of the two addresses
-        byte serverAddr[] = server.getAddress();
-        byte clientAddr[] = client.getAddress();
+        byte[] serverAddr = server.getAddress();
+        byte[] clientAddr = client.getAddress();
         if (serverAddr.length != clientAddr.length)
             return (false);
         boolean match = true;
@@ -2148,23 +2131,23 @@ public final class StandardServer
      * @throws LifecycleException if this component detects a fatal error
      *                            that prevents this component from being used
      */
-    public void start() throws LifecycleException {
+    public void start()     // 用于启动服务器组件
+            throws LifecycleException {
 
         // Validate and update our current component state
         if (started)
-            throw new LifecycleException
-                    (sm.getString("standardServer.start.started"));
+            throw new LifecycleException(sm.getString("standardServer.start.started"));
         // Notify our interested LifecycleListeners
-        lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);
+        lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);     // 启动事件
 
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
 
         // Start our defined Services
         synchronized (services) {
-            for (int i = 0; i < services.length; i++) {
-                if (services[i] instanceof Lifecycle)
-                    ((Lifecycle) services[i]).start();
+            for (Service service : services) {
+                if (service instanceof Lifecycle)
+                    ((Lifecycle) service).start();      // 逐个启动所有组件
             }
         }
 
@@ -2187,8 +2170,7 @@ public final class StandardServer
 
         // Validate and update our current component state
         if (!started)
-            throw new LifecycleException
-                    (sm.getString("standardServer.stop.notStarted"));
+            throw new LifecycleException(sm.getString("standardServer.stop.notStarted"));
 
         // Notify our interested LifecycleListeners
         lifecycle.fireLifecycleEvent(BEFORE_STOP_EVENT, null);
@@ -2197,9 +2179,9 @@ public final class StandardServer
         started = false;
 
         // Stop our defined Services
-        for (int i = 0; i < services.length; i++) {
-            if (services[i] instanceof Lifecycle)
-                ((Lifecycle) services[i]).stop();
+        for (Service service : services) {
+            if (service instanceof Lifecycle)
+                ((Lifecycle) service).stop();       // 逐个停止所有组件
         }
 
         // Notify our interested LifecycleListeners
@@ -2211,16 +2193,15 @@ public final class StandardServer
      * Invoke a pre-startup initialization. This is used to allow connectors
      * to bind to restricted ports under Unix operating environments.
      */
-    public void initialize()
+    public void initialize()        // 用于初始化添加到其中的服务器组件
             throws LifecycleException {
         if (initialized)
-            throw new LifecycleException(
-                    sm.getString("standardServer.initialize.initialized"));
-        initialized = true;
+            throw new LifecycleException(sm.getString("standardServer.initialize.initialized"));
+        initialized = true;     // 状态变量，防止初始化多次
 
         // Initialize our defined Services
-        for (int i = 0; i < services.length; i++) {
-            services[i].initialize();
+        for (Service service : services) {
+            service.initialize();
         }
     }
 

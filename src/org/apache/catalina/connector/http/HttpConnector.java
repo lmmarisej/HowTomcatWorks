@@ -408,8 +408,7 @@ public final class HttpConnector
 
 
     /**
-     * Return the Container used for processing requests received by this
-     * Connector.
+     * Return the Container used for processing requests received by this Connector.
      */
     public Container getContainer() {
 

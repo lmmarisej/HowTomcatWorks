@@ -738,8 +738,7 @@ public class ManagerServlet
             writer.println(sm.getString("managerServlet.reloaded", displayPath));
         } catch (Throwable t) {
             log("ManagerServlet.reload[" + displayPath + "]", t);
-            writer.println(sm.getString("managerServlet.exception",
-                    t.toString()));
+            writer.println(sm.getString("managerServlet.exception", t.toString()));
         }
 
     }
@@ -1276,7 +1275,7 @@ public class ManagerServlet
      * specified file location.
      *
      * @param request The servlet request we are processing
-     * @param file    The file into which we should store the uploaded WAR
+     * @param war    The file into which we should store the uploaded WAR
      * @throws IOException if an I/O error occurs during processing
      */
     protected void uploadWar(HttpServletRequest request, File war)

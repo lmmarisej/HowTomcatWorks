@@ -372,7 +372,7 @@ public interface Container {
      * @throws ServletException if a ServletException was thrown
      *                          while processing this request
      */
-    public void invoke(Request request, Response response)
+    public void invoke(Request request, Response response)      // 每当引入一个HTTP都会调用
             throws IOException, ServletException;
 
 

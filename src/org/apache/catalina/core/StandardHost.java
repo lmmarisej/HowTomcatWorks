@@ -90,7 +90,8 @@ import org.apache.catalina.valves.ErrorDispatcherValve;
 
 public class StandardHost
         extends ContainerBase
-        implements Deployer, Host {
+        implements Deployer,
+        Host {
 
 
     // ----------------------------------------------------------- Constructors
@@ -102,7 +103,7 @@ public class StandardHost
     public StandardHost() {
 
         super();
-        pipeline.setBasic(new StandardHostValve());
+        pipeline.setBasic(new StandardHostValve());     // 将StandardHostValve作为自己的基础阀
 
     }
 
@@ -132,16 +133,14 @@ public class StandardHost
      * The Java class name of the default context configuration class
      * for deployed web applications.
      */
-    private String configClass =
-            "org.apache.catalina.startup.ContextConfig";
+    private String configClass = "org.apache.catalina.startup.ContextConfig";
 
 
     /**
      * The Java class name of the default Context implementation class for
      * deployed web applications.
      */
-    private String contextClass =
-            "org.apache.catalina.core.StandardContext";
+    private String contextClass = "org.apache.catalina.core.StandardContext";
 
 
     /**
@@ -161,15 +160,13 @@ public class StandardHost
      * The Java class name of the default error reporter implementation class
      * for deployed web applications.
      */
-    private String errorReportValveClass =
-            "org.apache.catalina.valves.ErrorReportValve";
+    private String errorReportValveClass = "org.apache.catalina.valves.ErrorReportValve";
 
 
     /**
      * The descriptive information string for this implementation.
      */
-    private static final String info =
-            "org.apache.catalina.core.StandardHost/1.0";
+    private static final String info = "org.apache.catalina.core.StandardHost/1.0";
 
 
     /**
@@ -181,8 +178,7 @@ public class StandardHost
     /**
      * The Java class name of the default Mapper class for this Container.
      */
-    private String mapperClass =
-            "org.apache.catalina.core.StandardHostMapper";
+    private String mapperClass = "org.apache.catalina.core.StandardHostMapper";
 
 
     /**
@@ -703,28 +699,23 @@ public class StandardHost
     /**
      * Start this host.
      *
-     * @throws LifecycleException if this component detects a fatal error
-     *                            that prevents it from being started
+     * @throws LifecycleException if this component detects a fatal error that prevents it from being started
      */
     public synchronized void start() throws LifecycleException {
         // Set error report valve
-        if ((errorReportValveClass != null)
-                && (!errorReportValveClass.equals(""))) {
+        if ((errorReportValveClass != null) && (!errorReportValveClass.equals(""))) {
             try {
-                Valve valve = (Valve) Class.forName(errorReportValveClass)
-                        .newInstance();
-                addValve(valve);
+                Valve valve = (Valve) Class.forName(errorReportValveClass).newInstance();
+                addValve(valve);        // 添加一个阀
             } catch (Throwable t) {
-                log(sm.getString
-                        ("standardHost.invalidErrorReportValveClass",
-                                errorReportValveClass));
+                log(sm.getString("standardHost.invalidErrorReportValveClass", errorReportValveClass));
             }
         }
 
         // Set dispatcher valve
-        addValve(new ErrorDispatcherValve());
+        addValve(new ErrorDispatcherValve());       // 添加一个阀
 
-        super.start();
+        super.start();      // 确保默认映射器创建完成
 
     }
 

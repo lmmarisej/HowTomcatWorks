@@ -91,7 +91,7 @@ import org.apache.catalina.deploy.NamingResources;
  * @version $Revision: 1.10 $ $Date: 2002/03/06 06:49:10 $
  */
 
-public interface Server {
+public interface Server {       // 其实例表示整个Catalina的Servlet引擎，囊括了所有的组件；优点：提供一键启动关闭整个系统
 
 
     // ------------------------------------------------------------- Properties
@@ -162,7 +162,7 @@ public interface Server {
     /**
      * Wait until a proper shutdown command is received, then return.
      */
-    public void await();
+    public void await();        // 启动后，无限等待关闭命令
 
 
     /**

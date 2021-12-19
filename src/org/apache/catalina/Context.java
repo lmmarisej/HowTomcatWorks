@@ -101,8 +101,9 @@ import org.apache.catalina.util.CharsetMapper;
  * @author Craig R. McClanahan
  * @version $Revision: 1.21 $ $Date: 2002/05/12 01:22:18 $
  */
-
-public interface Context extends Container {
+// context还需要其它组件支持，loader、session管理器
+public interface Context        // 一个Context实例表示一个web应用程序，其中可以包含一个或多个wrapper实例
+        extends Container {
 
 
     // ----------------------------------------------------- Manifest Constants

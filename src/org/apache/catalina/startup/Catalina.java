@@ -512,7 +512,7 @@ public class Catalina {
                     // fine without the shutdown hook.
                 }
                 // Wait for the server to be told to shut down
-                server.await();
+                server.await();     // 阻塞直到shutdown命令到来
             } catch (LifecycleException e) {
                 System.out.println("Catalina.start: " + e);
                 e.printStackTrace(System.out);
